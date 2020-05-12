@@ -1,0 +1,8 @@
+/* sider 高度百分之百 */
+.ivu-layout.ivu-layout-has-sider{  
+    height: 100%;
+}
+.ivu-layout-footer{
+    padding: 0;
+    text-align: center;
+}

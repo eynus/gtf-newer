@@ -1,0 +1,35 @@
+@charset "utf-8";
+/* 设定所有元素为边框盒 */
+*{
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+}
+/* 将所有的元素设置统一边距 */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,
+form,fieldset,input,textarea,p,blockquote,th,td {
+    padding: 0;
+    margin: 0;
+}
+/* 使table元素的边框合并 */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+/* 去掉列表元素的默认样式 */
+ul,dl,ol,li,dl,dt{
+    list-style: none;
+}
+a{
+    text-decoration: none;
+}
+/* 设置height*/
+.h100{
+    height: 100%;
+}
+.h80{
+    height: 80%;
+}
+.h20{
+    height: 20%;
+}
