@@ -5,16 +5,16 @@
       <i-col span="2">
         <div style="color:transparent">1</div>
       </i-col>
-      <i-col span="20">
+      <i-col span="21">
         <div class="guide-body">
           <div class="guide-body-top">
             <div
               class="guide-body-top-left"
             >昭通，云南省下辖地级市，位于云南省东北部地处云、贵、川结合部的乌蒙山区腹地，金沙江下游沿岸坐落在四川盆地向云贵高原抬升的过渡地带，东侧紧邻贵州省毕节市，南侧紧邻云南曲靖市，西侧紧邻四川凉山彝族自治州以金沙江为界相邻，北侧紧邻四川宜宾市以金沙江为界相邻，辖区面积23021平方公里。</div>
-            <div class="guide-body-top-right">
-              视频
-              <video src></video>
-            </div>
+            <!-- <div class="guide-body-top-right"> -->
+              
+              <video class="guide-body-top-right" src="movie.ogg" controls="controls">您的浏览器不支持 video 标签。</video>
+            <!-- </div> -->
           </div>
           <div class="guide-body-bottom">
             <div
@@ -133,7 +133,7 @@ export default {
         box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
       }
       &-right {
-        width: 30rem;
+        width: 30%;
         height: 10rem;
         background-color: rgba(0, 0, 0, 0.1);
       }
@@ -145,22 +145,21 @@ export default {
         justify-content: center;
         align-items: center;
         cursor: pointer;
-        font-size: 1.25rem;
+        font-size: 1.2rem;
         background-repeat: no-repeat;
         background-position: center center;
         background-size: 100% 100%;
         width: 14%;
-      
+
         padding-top: 4rem;
         padding-bottom: 2rem;
-        font-size: 1.25rem;
         color: rgba(0, 0, 0, 0.6);
         font-weight: 700;
 
         &-icon {
           width: 56%;
           height: 120px;
-          display:flex;
+          display: flex;
           align-items: center;
           justify-content: center;
           text-align: center;
