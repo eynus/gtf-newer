@@ -1,13 +1,14 @@
 import axios from 'axios'
-import store from '@/store'
-import iview from 'iview'
+// import iview from 'iview'
 import { getToken, removeToken } from '@/utils/auth'
 import Cookies from 'js-cookie'
+let baseUrls ='http://192.168.6.15:9995/'
 // create an axios instance
 const service = axios.create({
-  baseURL: '/epr/api/', // api 的 base_url
+  baseURL:baseUrls + 'lsp/api/', // api 的 base_url
   timeout: 500000 // request timeout
 })
+
 
 // request interceptor
 service.interceptors.request.use(
