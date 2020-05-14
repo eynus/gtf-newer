@@ -15,5 +15,6 @@ export default {
         // tilesUri: 'http://58.215.18.119:5555/',
         // ip: BaseProUri
     },
-    //   homeName: 'decision'
+    //   homeName: 'decision' 
+    //
 }
