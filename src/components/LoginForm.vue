@@ -74,21 +74,20 @@ export default {
       form: {
         userName: "",
         password: "",
-        validateCode:""
+        validateCode: ""
       },
       validateCodeSrc: "",
       publicKey: ""
     };
   },
   created() {
-   getPublicKey().then(res => {
-      console.log("获取返回结果", res);
+    // 获取publickey
+    getPublicKey().then(res => {
       const { code, data } = res.data;
       if (code === 1000) {
         this.publicKey = data;
-         this.validateCodeSrc =
-      "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1589339447&di=ef59a56d62a52ef1552731461b87c295&src=http://a3.att.hudong.com/14/75/01300000164186121366756803686.jpg";
-    
+        this.validateCodeSrc =
+          "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1589339447&di=ef59a56d62a52ef1552731461b87c295&src=http://a3.att.hudong.com/14/75/01300000164186121366756803686.jpg";
       }
     });
   },
@@ -103,9 +102,9 @@ export default {
   },
   methods: {
     refresh() {},
+    //登录提交
     handleSubmit() {
       this.$refs.loginForm.validate(valid => {
-        //   console.log(this.form)
         if (valid) {
           this.$emit("on-success-valid", {
             userName: this.form.userName,
@@ -119,5 +118,4 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-
 </style>

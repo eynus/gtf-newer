@@ -2,7 +2,8 @@
   <div>
     <div class="card-container">
       <div class="card-title">
-        <Icon type="ios-navigate"></Icon>分类汇总
+           <Icon custom="iconfont  icon-type" size="16" color="#2d8cf0"/>
+       分类汇总
       </div>
       <div class="card-body">
         <Row>
@@ -44,7 +45,7 @@
     </div>
     <div class="card-container">
       <div class="card-title">
-        <Icon type="ios-navigate"></Icon>入库历史
+       <Icon custom="iconfont  icon-input" size="16" color="#2d8cf0" />入库历史
       </div>
       <div class="card-body">
         <div>查询条件</div>
@@ -146,6 +147,10 @@ export default {
   .card-title {
     background-color: rgba(0, 0, 0, 0.1);
     font-weight: bold;
+    
+    line-height: 1.75;
+    color:rgb(81,81,81);
+    padding: 0 4px;
   }
   .card-body {
     .card-left-item {

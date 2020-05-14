@@ -12,25 +12,30 @@
               class="guide-body-top-left"
             >昭通，云南省下辖地级市，位于云南省东北部地处云、贵、川结合部的乌蒙山区腹地，金沙江下游沿岸坐落在四川盆地向云贵高原抬升的过渡地带，东侧紧邻贵州省毕节市，南侧紧邻云南曲靖市，西侧紧邻四川凉山彝族自治州以金沙江为界相邻，北侧紧邻四川宜宾市以金沙江为界相邻，辖区面积23021平方公里。</div>
             <!-- <div class="guide-body-top-right"> -->
-              
-              <video class="guide-body-top-right" src="movie.ogg" controls="controls">您的浏览器不支持 video 标签。</video>
-            <!-- </div> -->
+
+            <video
+              class="guide-body-top-right"
+              src="movie.ogg"
+              controls="controls"
+            >您的浏览器不支持 video 标签。</video>
           </div>
           <div class="guide-body-bottom">
-            <div
-              class="guide-body-bottom-item"
-              v-for="(item,index) in guideList"
-              :key="`item_${index}`"
-              :style="{backgroundImage:`url(${item.bg})`}"
-            >
+            <template v-for="(item,index) in guideList">
               <div
-                class="guide-body-bottom-item-icon"
-                :style="{'border-bottom': `0.2rem dashed ${item.color}`}"
+                class="guide-body-bottom-item"
+                :key="`item_${index}`"
+                :style="{backgroundImage:`url(${item.bg})`}"
+                @click="changeRoute(item.show,item.to)"
               >
-                <img :src="`${item.icon}`" alt />
+                <div
+                  class="guide-body-bottom-item-icon"
+                  :style="{'border-bottom': `0.2rem dashed ${item.color}`}"
+                >
+                  <img :src="`${item.icon}`" alt />
+                </div>
+                <div class="guide-body-bottom-item-title">{{item.name}}</div>
               </div>
-              <div class="guide-body-bottom-item-title">{{item.name}}</div>
-            </div>
+            </template>
           </div>
         </div>
       </i-col>
@@ -43,52 +48,64 @@
 <script>
 // @ is an alias to /src
 import MyFooter from "@/components/MyFooter";
-
+import { mapGetters } from "vuex";
 export default {
   name: "Home",
   components: { MyFooter },
   data() {
     return {
       guideList: [
-        { name: "一张图可视化", color: "#E63A3D" },
-        { name: "实施监督管理", color: "#F76110" },
-        { name: "模型指标配置管理", color: "#F0B800" },
-        { name: "数据管理", color: "#00C6FF" },
-        { name: "运维管理", color: "#0083FF" }
+        { name: "一张图可视化", color: "#E63A3D", show: false ,to:'data/overview'},
+        { name: "实施监督管理", color: "#F76110", show: false ,to:'data'},
+        { name: "模型指标配置管理", color: "#F0B800", show: false ,to:'data'},
+        { name: "数据管理", color: "#00C6FF", show: false ,to:'data/overview'},
+        { name: "运维管理", color: "#0083FF", show: false ,to:'data'}
       ]
     };
   },
+  computed: {
+    ...mapGetters(["role"])
+  },
   created() {
+    // 请求图片
     this.guideList = this.guideList.map((item, index) => ({
       ...item,
       bg: require(`../assets/img/guide/beijing-${index + 1}.png`),
       icon: require(`../assets/img/guide/icon-${index + 1}.png`)
     }));
-  },
-  computed: {
-    menuitemClasses() {
-      return ["menu-item", this.isCollapsed ? "collapsed-menu" : ""];
+    // 根据用户权限判断模块的显示
+
+    switch (this.role) {
+      case "sjgly": //数据管理员 root sjgly 
+
+        this.$set(this.guideList[3], "show", true);
+
+        break;
+      case "cjgly": //系统管理员 admin cjgly 
+         this.$set(this.guideList[3], "show", true);
+        break;
+      case "ywy": //业务员 aa
+         this.$set(this.guideList[3], "show", true);
+        break;
+
+      default:
+        break;
     }
   },
-  watch: {
-    // "$route.path": function(newVal) {
-    //   switch (newVal) {
-    //     case "/query":
-    //     case "/inspection":
-    //     case "/service":
-    //     case "/overview":
-    //       this.activeMenuItem = newVal.slice(1);
-    //       break;
-    //     default:
-    //       break;
-    //   }
-    // }
-  },
+
+  watch: {},
   methods: {
-    // changeRoute(data) {
-    //   this.activeMenuItem = data;
-    //   this.$router.push("/" + data);
-    // }
+    changeRoute(show,path) {
+      if(show){
+
+        this.$router.push("/" + path);
+      }else{
+           this.$Message.error({
+                content: '暂无权限',
+                duration: 3
+              });
+      }
+    }
   }
 };
 </script>

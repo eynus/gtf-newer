@@ -1,7 +1,8 @@
 <template>
   <div class="home h100">
-    <Layout style="height:100%;background-color:yellow">
+    <Layout style="height:100%;">
       <Sider class="h100" width="110" :style="{background: '#fff'}">
+         
         <Menu
           :active-name="activeMenuItem"
           theme="light"
@@ -9,35 +10,36 @@
           :class="menuitemClasses"
           @on-select="changeRoute"
         >
-          <MenuItem name="overview">
-            <Icon type="ios-navigate"></Icon>
+          <MenuItem name="overview" class="menu-item">
+            <Icon custom="iconfont  icon-overview" size="22" :color="activeMenuItem==='overview'?'#2d8cf0':'#8391B8'" />
+         
+         
             <div>数据总览</div>
           </MenuItem>
-          <MenuItem name="query">
-            <Icon type="ios-search"></Icon>
+          <MenuItem name="query" class="menu-item">
+            <Icon custom="iconfont  icon-file" size="22" :color="activeMenuItem==='query'?'#2d8cf0':'#8391B8'"  />
             <div>查询浏览</div>
           </MenuItem>
-          <MenuItem name="service">
-            <Icon type="ios-settings"></Icon>
+          <MenuItem name="service" class="menu-item">
+            <Icon custom="iconfont  icon-jiangbei" size="22" :color="activeMenuItem==='service'?'#2d8cf0':'#8391B8'"  />
             <div>服务管理</div>
           </MenuItem>
-          <MenuItem name="inspection">
-            <Icon type="ios-settings"></Icon>
+          <MenuItem name="inspection" class="menu-item">
+            <Icon custom="iconfont  icon-setting" size="22" :color="activeMenuItem==='inspection'?'#2d8cf0':'#8391B8'" />
             <div>质检管理</div>
           </MenuItem>
         </Menu>
         <div slot="trigger"></div>
       </Sider>
-      <Layout class="h100">
+      <Layout class="h90">
         <Content id="content" style="height:94%;padding:15px">
           <Card style="height:100%">
             <router-view />
           </Card>
         </Content>
-        <!-- <Footer id="foot" style="height:6%">
-          <div>版权所有：昭通市自然资源与规划局</div>
-          <div>技术支持：中国科学院地理科学与资源研究所 北京山海础石信息技术有限公司</div>
-        </Footer> -->
+        <div class="h10">
+          <my-footer color="rgb(200,200,200)"></my-footer>
+        </div>
       </Layout>
     </Layout>
   </div>
@@ -45,15 +47,16 @@
 
 <script>
 // @ is an alias to /src
-
+import MyFooter from "@/components/MyFooter";
 export default {
   name: "Home",
+  components: { MyFooter },
   data() {
     return {
       activeMenuItem: "overview"
     };
   },
- 
+
   computed: {
     menuitemClasses() {
       return ["menu-item", this.isCollapsed ? "collapsed-menu" : ""];
@@ -76,14 +79,13 @@ export default {
   methods: {
     changeRoute(data) {
       this.activeMenuItem = data;
-      this.$router.push("/" + data);
+      this.$router.push("/data/" + data);
     }
   }
 };
 </script>
 <style lang="scss" scoped>
 .card-container {
-  // margin:4px;
   .card-title {
     background-color: rgba(0, 0, 0, 0.1);
     font-weight: bold;
@@ -106,6 +108,15 @@ export default {
       }
     }
   }
+}
+.menu-item{
+  text-align: center;
+  color: #8391B8;
+  padding:10px 0;
+  font-weight: 600;
+ div{
+   margin-top: 6px;
+ }
 }
 </style>
 
