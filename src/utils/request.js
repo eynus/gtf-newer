@@ -2,10 +2,11 @@ import axios from 'axios'
 // import iview from 'iview'
 import { getToken, removeToken } from '@/utils/auth'
 import Cookies from 'js-cookie'
-let baseUrls ='http://192.168.6.15:9995/'
+import config from '@/config'
+
 // create an axios instance
 const service = axios.create({
-  baseURL:baseUrls + 'lsp/api/', // api 的 base_url
+  baseURL:config.baseUrl.dev + 'lsp/api/', // api 的 base_url
   timeout: 500000 // request timeout
 })
 

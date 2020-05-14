@@ -49,7 +49,6 @@ export default {
   components: { MyFooter },
   data() {
     return {
-      // activeMenuItem: "overview",
       guideList: [
         { name: "一张图可视化", color: "#E63A3D" },
         { name: "实施监督管理", color: "#F76110" },
@@ -60,13 +59,11 @@ export default {
     };
   },
   created() {
-    // console.log(require(`../assets/img/guide/beijing-1.png`));
     this.guideList = this.guideList.map((item, index) => ({
       ...item,
       bg: require(`../assets/img/guide/beijing-${index + 1}.png`),
       icon: require(`../assets/img/guide/icon-${index + 1}.png`)
     }));
-    // console.log(this.guideList);
   },
   computed: {
     menuitemClasses() {

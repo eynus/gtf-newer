@@ -73,6 +73,7 @@
 import MyFooter from "@/components/MyFooter";
 import { login, getPublicKey} from "@/api/user";
 import { JSEncrypt } from "jsencrypt";
+import config from '@/config'
 export default {
   components: { MyFooter },
   data() {
@@ -125,7 +126,7 @@ export default {
       console.log("key2", this.publicKey);
     //   this.validateCodeSrc =
     //     // "http://192.168.6.15:9995/lsp/api/system/getGenerationVerificationCode?time=" + new Date();
-        this.validateCodeSrc = "http://192.168.6.15:9995/lsp/api/system/getGenerationVerificationCode?publicKey=" +
+        this.validateCodeSrc = config.baseUrl.dev+"lsp/api/system/getGenerationVerificationCode?publicKey=" +
         this.publicKey;
     // getGenerationVerificationCode({
     //     publicKey:this.publicKey
