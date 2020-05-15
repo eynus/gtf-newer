@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import { getToken } from '@/utils/auth'
-// import {  removeToken,canTurnTo } from '@/utils/auth'
+// import { removeToken } from '@/utils/auth'
 import Main from '@/components/Main.vue'
 Vue.use(VueRouter)
 
@@ -10,7 +10,8 @@ const routes = [
     path: '/login',
     name: 'login',
     meta: {
-      title: '登录'
+      title: '登录',
+      auth: false
     },
     component: () => import('@/views/login')
   },
@@ -24,7 +25,7 @@ const routes = [
   },
   {
     path: '/',
-    redirect:'/home',
+    redirect: '/home',
     component: Main,
     children: [
       {
@@ -37,7 +38,8 @@ const routes = [
             name: 'Overview',
             component: () => import('../views/dataManage/components/overview/Overview.vue'),
             meta: {
-              title: '数据总览'
+              title: '数据总览',
+              id: 'page_5_1'
             }
           },
           {
@@ -45,7 +47,8 @@ const routes = [
             name: 'Query',
             component: () => import('../views/dataManage/components/query/Query.vue'),
             meta: {
-              title: '查询浏览'
+              title: '查询浏览',
+              id: 'page_5_2'
             }
           },
           {
@@ -53,7 +56,8 @@ const routes = [
             name: 'Service',
             component: () => import('../views/dataManage/components/service/Service.vue'),
             meta: {
-              title: '服务管理'
+              title: '服务管理',
+              id: 'page_5_3'
             }
           },
           {
@@ -61,7 +65,8 @@ const routes = [
             name: 'inspection',
             component: () => import('../views/dataManage/components/inspection/Inspection.vue'),
             meta: {
-              title: '质检管理'
+              title: '质检管理',
+              id: 'page_5_4'
             }
           },
         ]
@@ -71,7 +76,7 @@ const routes = [
 
   {
     path: '*',
-    name: '404',
+    name: 'error_401',
     component: () => import('../views/error'),
     meta: {
       title: '404'
@@ -83,11 +88,48 @@ const router = new VueRouter({
   routes
 })
 const LOGIN_PAGE_NAME = 'login';
+
+/**
+ * 权鉴
+ * @param {*} name 即将跳转的路由
+ * @param {*} roles 用户权限 1,2,3
+ * @param {*} routes 路由列表 this.$router [{name:'xx',children:[{..}]},{name:'xx'},children:[{...}]]
+ * @description 用户是否可跳转到该页
+ */
+export const canTurnTo = (name, roles, routes) => {//roles:localStorage存的role
+  console.log('name:', name, 'roles:', roles, 'routes:', routes)
+  const routePermissionJudge = list => {
+    return list.some(item => {
+      if (item.children && item.children.length) {
+        return routePermissionJudge(item.children)
+      } else if (item.name === name) {
+        return hasAccess(roles, item)
+      }
+    })
+  }
+  return routePermissionJudge(routes)
+}
 // 设置路由权限
-// const turnTo = (to, role, next) => {
-//   if (canTurnTo(to.name, role, routes)) next();// 有权限，可访问
-//   else next({ replace: true, name: 'error_401' });// 无权限，重定向到401页面
-// };
+const turnTo = (to, role, next) => {
+  if (canTurnTo(to.name, role, routes)) next();// 有权限，可访问
+  else next({ replace: true, name: 'error_401' });// 无权限，重定向到401页面
+};
+/**
+ * @param {*} roles 用户权限 1,2,3
+ * @param {*} route 路由列表
+ */
+const hasAccess = (roles, route) => {
+  console.log('判断权限哦：',roles,route.meta.id)
+  
+  if (route.meta && route.meta.id) {
+    //判断route.meta.id在不在roles里面
+    console.log('...0000')
+    return true
+
+  } else return true
+  // if (route.meta && route.meta.roles) return hasOneOf(roles, route.meta.roles)
+  // else return true
+}
 
 router.beforeEach((to, from, next) => {
   const token = getToken();
@@ -104,14 +146,15 @@ router.beforeEach((to, from, next) => {
     next();
   } else {
     next()
-    // if (localStorage.getItem('role')) {
-    //   turnTo(to, JSON.parse(localStorage.getItem('role')), next);
-    // } else {
-    //   removeToken()
-    //   next({
-    //     name: LOGIN_PAGE_NAME // 跳转到登录页
-    //   });
-    // }
+    if (localStorage.getItem('role')) {
+      turnTo(to, JSON.parse(localStorage.getItem('role')), next);
+    } else {
+      // removeToken()
+      alert('你没有权限')
+      // next({
+      //   name: LOGIN_PAGE_NAME // 跳转到登录页
+      // });
+    }
   }
 });
 

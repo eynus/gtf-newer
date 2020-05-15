@@ -55,11 +55,21 @@ export default {
   data() {
     return {
       guideList: [
-        { name: "一张图可视化", color: "#E63A3D", show: false ,to:'data/overview'},
-        { name: "实施监督管理", color: "#F76110", show: false ,to:'data'},
-        { name: "模型指标配置管理", color: "#F0B800", show: false ,to:'data'},
-        { name: "数据管理", color: "#00C6FF", show: false ,to:'data/overview'},
-        { name: "运维管理", color: "#0083FF", show: false ,to:'data'}
+        {
+          name: "一张图可视化",
+          color: "#E63A3D",
+          show: false,
+          to: "data/overview"
+        },
+        { name: "实施监督管理", color: "#F76110", show: false, to: "data" },
+        { name: "模型指标配置管理", color: "#F0B800", show: false, to: "data" },
+        {
+          name: "数据管理",
+          color: "#00C6FF",
+          show: false,
+          to: "data/overview"
+        },
+        { name: "运维管理", color: "#0083FF", show: false, to: "data" }
       ]
     };
   },
@@ -74,36 +84,43 @@ export default {
       icon: require(`../../assets/img/guide/icon-${index + 1}.png`)
     }));
     // 根据用户权限判断模块的显示
+    this.role.forEach((item, index) => {
+      switch (item.resIdentif) {
+        case "main_menu_1":
+          this.$set(this.guideList[0], "show", true);
 
-    switch (this.role) {
-      case "sjgly": //数据管理员 root sjgly 
+          break;
+        case "main_menu_2":
+          this.$set(this.guideList[1], "show", true);
 
-        this.$set(this.guideList[3], "show", true);
+          break;
+        case "main_menu_3":
+          this.$set(this.guideList[2], "show", true);
+          break;
+        case "main_menu_4":
+          this.$set(this.guideList[4], "show", true);
+          break;
+        case "main_menu_5":
+          this.$set(this.guideList[3], "show", true);
+          break;
 
-        break;
-      case "cjgly": //系统管理员 admin cjgly 
-         this.$set(this.guideList[3], "show", true);
-        break;
-      case "ywy": //业务员 aa
-         this.$set(this.guideList[3], "show", true);
-        break;
-
-      default:
-        break;
-    }
+        default:
+          break;
+      }
+    });
+    console.log('?',this.guideList)
   },
 
   watch: {},
   methods: {
-    changeRoute(show,path) {
-      if(show){
-
+    changeRoute(show, path) {
+      if (show) {
         this.$router.push("/" + path);
-      }else{
-           this.$Message.error({
-                content: '暂无权限',
-                duration: 3
-              });
+      } else {
+        this.$Message.error({
+          content: "暂无权限",
+          duration: 3
+        });
       }
     }
   }
@@ -112,7 +129,7 @@ export default {
 <style lang="scss" scoped>
 .guide-bg {
   background-image: url("../../assets/img/guide/guide_bg.png");
-  
+
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 100% 100%;

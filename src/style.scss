@@ -90,6 +90,12 @@ a{
 .position-r{
     position: relative;
 }
+.position-a-b-c{
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
 .scroll-y{
     overflow-y: scroll;
     overflow-x: hidden;

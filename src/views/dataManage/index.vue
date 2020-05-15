@@ -9,46 +9,24 @@
           :class="menuitemClasses"
           @on-select="changeRoute"
         >
-          <MenuItem name="overview" class="menu-item">
-            <Icon
-              custom="iconfont  icon-overview"
-              size="22"
-              :color="activeMenuItem==='overview'?'#2d8cf0':'#8391B8'"
-            />
+          <template v-for="(item,index ) in dataManageList">
+            <MenuItem :name="item.key" class="menu-item" :key="`dml_${index}`" v-if="item.show">
+              <Icon
+                :custom="item.icon"
+                size="22"
+                :color="activeMenuItem===`${item.key}`?'#2d8cf0':'#8391B8'"
+              />
 
-            <div>数据总览</div>
-          </MenuItem>
-          <MenuItem name="query" class="menu-item">
-            <Icon
-              custom="iconfont  icon-file"
-              size="22"
-              :color="activeMenuItem==='query'?'#2d8cf0':'#8391B8'"
-            />
-            <div>查询浏览</div>
-          </MenuItem>
-          <MenuItem name="service" class="menu-item">
-            <Icon
-              custom="iconfont  icon-jiangbei"
-              size="22"
-              :color="activeMenuItem==='service'?'#2d8cf0':'#8391B8'"
-            />
-            <div>服务管理</div>
-          </MenuItem>
-          <MenuItem name="inspection" class="menu-item">
-            <Icon
-              custom="iconfont  icon-setting"
-              size="22"
-              :color="activeMenuItem==='inspection'?'#2d8cf0':'#8391B8'"
-            />
-            <div>质检管理</div>
-          </MenuItem>
+              <div>{{item.name}}</div>
+            </MenuItem>
+          </template>
         </Menu>
         <div slot="trigger"></div>
       </Sider>
       <Layout class="h100">
-        <div :style="{ height: `calc(100% - 42px)` }" class=" pd">
-          <div  class="scroll-y h100 card-style">
-          <router-view />
+        <div :style="{ height: `calc(100% - 42px)` }" class="pd">
+          <div class="scroll-y h100 card-style">
+            <router-view />
           </div>
         </div>
 
@@ -63,16 +41,46 @@
 <script>
 // @ is an alias to /src
 import MyFooter from "@/components/MyFooter";
+import { mapGetters } from "vuex";
 export default {
   name: "Home",
   components: { MyFooter },
   data() {
     return {
-      activeMenuItem: "overview"
+      activeMenuItem: "overview",
+       dataManageList: [
+        {
+          name: "数据总览",
+          key: "overview",
+          show: false,
+          icon:'iconfont  icon-overview',
+        },
+        {
+          name: "查询浏览",
+          key: "query",
+          show: false,
+          icon:'iconfont  icon-file',
+        },
+        {
+          name: "服务管理",
+          key: "service",
+          show: false,
+          icon:'iconfont  icon-jiangbei',
+        },
+        {
+          name: "质检管理",
+          key: "inspection",
+          show: false,
+          icon:'iconfont  icon-setting',
+        },
+     ]
     };
   },
-
+created(){
+  // this.role = 1
+},
   computed: {
+    ...mapGetters(["role"]),
     menuitemClasses() {
       return ["menu-item", this.isCollapsed ? "collapsed-menu" : ""];
     }
@@ -100,10 +108,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.card-style{
+.card-style {
   background: #fff;
   border-radius: 4px;
-  
 }
 .menu-item {
   text-align: center;
