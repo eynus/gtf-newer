@@ -24,8 +24,8 @@ export default {
     //保存用户权限
     setRole(state, role) {
       state.role = role
-      console.log(state.role,'this is role');
-      
+      console.log(state.role, 'this is role');
+
       localStorage.setItem('role', JSON.stringify(role))
     },
     //保存token
@@ -52,10 +52,20 @@ export default {
           .then(res => {
             const { code, data } = res.data;
             if (code === 1000) {
-
+              let authList = data.userPower.map((item, index) => {
+                let list = []
+                if(item.childs&&item.childs.length){
+                  list = item.childs.map((item,index)=>item.resIdentif)
+                }
+                return {
+                  resIdentif: item.resIdentif,
+                  // id: item.pkId,
+                  childs: list 
+                }
+              })
               commit('setUserInfo', data.userInfo)
               commit('setUserPower', data.userPower)
-              commit('setRole', data.userPower[0]&&data.userPower[0].resIdentif||'')
+              commit('setRole', authList)
               commit('setToken', data.token)
               resolve(data.userInfo.realName)
             } else {

@@ -65,7 +65,9 @@
         </div>
       </Card>
     </div>
-    <my-footer color="rgb(200,200,200)"></my-footer>
+    <div class="position-a-b-c">
+      <my-footer color="rgb(200,200,200)"></my-footer>
+    </div>
   </div>
 </template>
 
