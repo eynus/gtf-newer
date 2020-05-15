@@ -46,7 +46,7 @@
   </Form>
 </template>
 <script>
-import { getPublicKey } from "@/api/user";
+import { getPublicKey } from "@/api/user/user";
 export default {
   name: "LoginForm",
   props: {

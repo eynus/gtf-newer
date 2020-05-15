@@ -41,7 +41,7 @@ export default {
   font-weight: bold;
   color: rgba(255, 255, 255, 0.9);
   padding-left: 10px;
-  background-image: url("../assets/img/home/head_bg.png");
+  background-image: url("../assets/img/dataManage/head_bg.png");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;

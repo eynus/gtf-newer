@@ -71,7 +71,7 @@
 
 <script>
 import MyFooter from "@/components/MyFooter";
-import { getPublicKey } from "@/api/user";
+import { getPublicKey } from "@/api/user/user";
 import { JSEncrypt } from "jsencrypt";
 import config from "@/config";
 import { mapActions } from "vuex";
@@ -165,7 +165,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-image: url("../assets/img/login_bg.png");
+  background-image: url("../../assets/img/login/login_bg.png");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 100% 100%;

@@ -5,7 +5,7 @@
         <Tree :data="data1"></Tree>
       </i-col>
       <i-col span="18">
-          <img src="../assets/img/map.png" alt="">
+         <img src="../../../assets/img/dataManage/query/map.png" alt="">
       </i-col>
     </Row>
   </div>

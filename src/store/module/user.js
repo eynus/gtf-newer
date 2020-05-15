@@ -1,4 +1,4 @@
-import { login } from '@/api/user'
+import { login } from '@/api/user/user'
 import { setToken, getToken, removeToken } from '@/utils/auth'
 
 export default {

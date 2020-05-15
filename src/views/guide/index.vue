@@ -70,8 +70,8 @@ export default {
     // 请求图片
     this.guideList = this.guideList.map((item, index) => ({
       ...item,
-      bg: require(`../assets/img/guide/beijing-${index + 1}.png`),
-      icon: require(`../assets/img/guide/icon-${index + 1}.png`)
+      bg: require(`../../assets/img/guide/beijing-${index + 1}.png`),
+      icon: require(`../../assets/img/guide/icon-${index + 1}.png`)
     }));
     // 根据用户权限判断模块的显示
 
@@ -111,7 +111,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .guide-bg {
-  background-image: url("../assets/img/guide_bg.png");
+  background-image: url("../../assets/img/guide/guide_bg.png");
+  
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 100% 100%;

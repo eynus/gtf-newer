@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import { getToken } from '@/utils/auth'
 // import {  removeToken,canTurnTo } from '@/utils/auth'
-import Data from '@/views/Data.vue'
 import Main from '@/components/Main.vue'
 Vue.use(VueRouter)
 
@@ -13,12 +12,12 @@ const routes = [
     meta: {
       title: '登录'
     },
-    component: () => import('@/views/Login.vue')
+    component: () => import('@/views/login')
   },
   {
     path: '/home',
     name: 'home',
-    component: () => import('../views/Guide.vue'),
+    component: () => import('../views/guide'),
     meta: {
       title: '引导页'
     }
@@ -30,12 +29,12 @@ const routes = [
       {
         path: '/data',
         name: 'data',
-        component: Data,
+        component: () => import('../views/dataManage'),
         children: [
           {
             path: 'overview',
             name: 'Overview',
-            component: () => import('../views/Overview.vue'),
+            component: () => import('../views/dataManage/components/Inspection'),
             meta: {
               title: '数据总览'
             }
@@ -43,7 +42,7 @@ const routes = [
           {
             path: 'query',
             name: 'Query',
-            component: () => import('../views/Query.vue'),
+            component: () => import('../views/dataManage/components/Query.vue'),
             meta: {
               title: '查询浏览'
             }
@@ -51,7 +50,7 @@ const routes = [
           {
             path: 'service',
             name: 'Service',
-            component: () => import('../views/Service.vue'),
+            component: () => import('../views/dataManage/components/Service.vue'),
             meta: {
               title: '服务管理'
             }
@@ -59,7 +58,7 @@ const routes = [
           {
             path: 'inspection',
             name: 'inspection',
-            component: () => import('../views/Inspection.vue'),
+            component: () => import('../views/dataManage/components/Inspection.vue'),
             meta: {
               title: '质检管理'
             }
@@ -72,7 +71,7 @@ const routes = [
   {
     path: '*',
     name: '404',
-    component: () => import('../views/Error.vue'),
+    component: () => import('../views/error'),
     meta: {
       title: '404'
     }
