@@ -1,11 +1,17 @@
 <template>
   <div>
     <Row>
-      <i-col span="6">
-        <Tree :data="data1"></Tree>
+      <i-col span="4">
+        <div style="padding:10px">
+          <i-input placeholder="搜索" v-model="inputVal" @on-change="handleSearch" >
+            <Button slot="append" icon="ios-search"></Button>
+          </i-input>
+          {{inputVal}}
+          <Tree :data="data1"></Tree>
+        </div>
       </i-col>
-      <i-col span="18">
-          <img src="../../../assets/img/dataManage/query/map.png" alt="">
+      <i-col span="20">
+        <img src="../../../../assets/img/dataManage/query/map.png" alt />
       </i-col>
     </Row>
   </div>
@@ -17,14 +23,15 @@ export default {
   name: "Home",
   data() {
     return {
+      inputVal:'',
       data1: [
         {
           title: "parent 1",
-          expand: true,
+          expand: false,
           children: [
             {
               title: "parent 1-1",
-              expand: true,
+              expand: false,
               children: [
                 {
                   title: "leaf 1-1-1"
@@ -52,7 +59,11 @@ export default {
     };
   },
   computed: {},
-  methods: {}
+  methods: {
+    handleSearch(e) {
+      console.log(e)
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

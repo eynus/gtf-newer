@@ -24,6 +24,7 @@ const routes = [
   },
   {
     path: '/',
+    redirect:'/home',
     component: Main,
     children: [
       {
@@ -34,7 +35,7 @@ const routes = [
           {
             path: 'overview',
             name: 'Overview',
-            component: () => import('../views/dataManage/components/Inspection'),
+            component: () => import('../views/dataManage/components/overview/Overview.vue'),
             meta: {
               title: '数据总览'
             }
@@ -42,7 +43,7 @@ const routes = [
           {
             path: 'query',
             name: 'Query',
-            component: () => import('../views/dataManage/components/Query.vue'),
+            component: () => import('../views/dataManage/components/query/Query.vue'),
             meta: {
               title: '查询浏览'
             }
@@ -50,7 +51,7 @@ const routes = [
           {
             path: 'service',
             name: 'Service',
-            component: () => import('../views/dataManage/components/Service.vue'),
+            component: () => import('../views/dataManage/components/service/Service.vue'),
             meta: {
               title: '服务管理'
             }
@@ -58,7 +59,7 @@ const routes = [
           {
             path: 'inspection',
             name: 'inspection',
-            component: () => import('../views/dataManage/components/Inspection.vue'),
+            component: () => import('../views/dataManage/components/inspection/Inspection.vue'),
             meta: {
               title: '质检管理'
             }

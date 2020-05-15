@@ -20,10 +20,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 .myfooter {
-  position: absolute;
-  bottom: 0;
+  // position: absolute;
+  // bottom: 0;
   width: 100%;
   background-color: transparent;
   text-align: center;
+  height: 42px;
 }
 </style>

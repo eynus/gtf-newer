@@ -47,12 +47,54 @@ a{
 .let-spc{
     letter-spacing: 0.25rem;
 }
+// 文本居中
+.text-center{
+    text-align: center;
+}
+.text-right{
+    text-align: right;
+}
 // flex
 .flex{
     display: flex;
 }
 .flex-sb {
-    display: flex;
     justify-content: space-between;
     align-items: center;
   }
+.flex-center{
+    justify-content: center;
+    align-items: center;
+}
+//   margin
+.ml{
+    margin-left: 10px;
+}
+.mr{
+    margin-right: 10px;
+}
+.ml-lg{
+    margin-left: 20px;
+}
+.mr-lg{
+    margin-right: 20px;
+}
+//padding
+.pd{
+    padding: 10px;
+}
+.pd-lg{
+    padding: 20px;
+}
+// position
+.position-r{
+    position: relative;
+}
+.scroll-y{
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+// 字體大小
+.fs16{
+    font-size: 1rem;
+}

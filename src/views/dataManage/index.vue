@@ -2,7 +2,6 @@
   <div class="home h100">
     <Layout style="height:100%;">
       <Sider class="h100" width="110" :style="{background: '#fff'}">
-         
         <Menu
           :active-name="activeMenuItem"
           theme="light"
@@ -11,33 +10,49 @@
           @on-select="changeRoute"
         >
           <MenuItem name="overview" class="menu-item">
-            <Icon custom="iconfont  icon-overview" size="22" :color="activeMenuItem==='overview'?'#2d8cf0':'#8391B8'" />
-         
-         
+            <Icon
+              custom="iconfont  icon-overview"
+              size="22"
+              :color="activeMenuItem==='overview'?'#2d8cf0':'#8391B8'"
+            />
+
             <div>数据总览</div>
           </MenuItem>
           <MenuItem name="query" class="menu-item">
-            <Icon custom="iconfont  icon-file" size="22" :color="activeMenuItem==='query'?'#2d8cf0':'#8391B8'"  />
+            <Icon
+              custom="iconfont  icon-file"
+              size="22"
+              :color="activeMenuItem==='query'?'#2d8cf0':'#8391B8'"
+            />
             <div>查询浏览</div>
           </MenuItem>
           <MenuItem name="service" class="menu-item">
-            <Icon custom="iconfont  icon-jiangbei" size="22" :color="activeMenuItem==='service'?'#2d8cf0':'#8391B8'"  />
+            <Icon
+              custom="iconfont  icon-jiangbei"
+              size="22"
+              :color="activeMenuItem==='service'?'#2d8cf0':'#8391B8'"
+            />
             <div>服务管理</div>
           </MenuItem>
           <MenuItem name="inspection" class="menu-item">
-            <Icon custom="iconfont  icon-setting" size="22" :color="activeMenuItem==='inspection'?'#2d8cf0':'#8391B8'" />
+            <Icon
+              custom="iconfont  icon-setting"
+              size="22"
+              :color="activeMenuItem==='inspection'?'#2d8cf0':'#8391B8'"
+            />
             <div>质检管理</div>
           </MenuItem>
         </Menu>
         <div slot="trigger"></div>
       </Sider>
-      <Layout class="h90">
-        <Content id="content" style="height:94%;padding:15px">
-          <Card style="height:100%">
-            <router-view />
-          </Card>
-        </Content>
-        <div class="h10">
+      <Layout class="h100">
+        <div :style="{ height: `calc(100% - 42px)` }" class=" pd">
+          <div  class="scroll-y h100 card-style">
+          <router-view />
+          </div>
+        </div>
+
+        <div>
           <my-footer color="rgb(200,200,200)"></my-footer>
         </div>
       </Layout>
@@ -85,38 +100,19 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.card-container {
-  .card-title {
-    background-color: rgba(0, 0, 0, 0.1);
-    font-weight: bold;
-  }
-  .card-body {
-    .card-left-item {
-      background-color: rgba(0, 0, 0, 0.3);
-      border-radius: 2px;
-      margin: 10px;
-      padding: 6px;
-      color: white;
-      .card-left-item-title {
-        font-size: 26px;
-
-        font-weight: bold;
-      }
-      .card-left-item-total {
-        font-size: 26px;
-        font-weight: bold;
-      }
-    }
-  }
+.card-style{
+  background: #fff;
+  border-radius: 4px;
+  
 }
-.menu-item{
+.menu-item {
   text-align: center;
-  color: #8391B8;
-  padding:10px 0;
+  color: #8391b8;
+  padding: 10px 0;
   font-weight: 600;
- div{
-   margin-top: 6px;
- }
+  div {
+    margin-top: 6px;
+  }
 }
 </style>
 

@@ -5,7 +5,7 @@
 <script>
 import echarts from 'echarts'
 import tdTheme from './theme.json'
-import { on, off } from '@/libs/tools'
+import { on, off } from '@/utils/common'
 import { BarOptionModel } from '../../model/echarts/bar.model'
 echarts.registerTheme('tdTheme', tdTheme)
 export default {
