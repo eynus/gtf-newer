@@ -8,13 +8,17 @@ import './style.scss';
 import 'view-design/dist/styles/iview.css';
 // iview覆盖样式
 import './assets/css/reset.css'
-import { Tree,Input } from 'ant-design-vue';
+import { Tree } from 'ant-design-vue';
+import 'ant-design-vue/dist/antd.css';
+
+// import { Button } from 'ant-design-vue';
+// Vue.use(Button);
 import Mixin from './mixins';
 Vue.mixin(Mixin);
 Vue.config.productionTip = false
 
 Vue.use(ViewUI);
-Vue.use(Tree,Input);
+Vue.use(Tree);
 new Vue({
   router,
   store,

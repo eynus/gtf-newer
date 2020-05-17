@@ -83,14 +83,14 @@
             </Select>
           </FormItem>
           <FormItem label="上传用户：">
-            <!-- <Input v-model.trim="formInline.uploader" placeholder="请选择" clearable /> -->
-             <Select v-model="formInline.uploader" class="scroll dropdown" style="width:8.75rem">
+            <Input v-model.trim="formInline.uploader" placeholder="请选择" clearable />
+            <!-- <Select v-model="formInline.uploader" class="scroll dropdown" style="width:8.75rem">
               <Option v-for="item in uploaderList" :value="item.id" :key="item.id">
                 {{
                 item.name
                 }}
-              </Option>
-            </Select>
+              </Option> 
+            </Select>-->
           </FormItem>
           <FormItem :label-width="remToPx(2)">
             <Button type="primary" class="smzx-search-btn" @click="handleSubmit">查询</Button>
@@ -117,198 +117,198 @@
   </div>
 </template>
 <script>
-// @ is an alias to /src
-import { format } from "date-fns";
-import RoseChart from "./components/RoseChart.vue";
-export default {
-  name: "Home",
-  components: {
-    RoseChart
-  },
-  data() {
-    return {
-      typesTotal: [
-        {
-          name: "现状数据",
-          firstChilds: 1,
-          secondChilds: 2,
-          totalChilds: 3,
-          bgColor: "rgb(0,131,255)",
-          icon: "iconfont icon-earth"
-        },
-        {
-          name: "规划数据",
-          firstChilds: 1,
-          secondChilds: 21,
-          totalChilds: 22,
-          bgColor: "rgb(255,195,0)",
-          icon: "iconfont icon-hill"
-        },
-        {
-          name: "管理数据",
-          firstChilds: 1,
-          secondChilds: 12,
-          totalChilds: 13,
-          bgColor: "rgb(67,207,124)",
-          icon: "iconfont icon-setting"
-        },
-        {
-          name: "社会经济数据",
-          firstChilds: 12,
-          secondChilds: 12,
-          totalChilds: 24,
-          bgColor: "rgb(227,60,100)",
-          icon: "iconfont icon-person"
-        }
-      ],
-      columnsPutIn: [
-        {
-          title: "入库时间",
-          key: "time",
-          align: "center"
-        },
-        {
-          title: "数据路径",
-          slot: "path",
-          align: "center"
-        },
-        {
-          title: "数据类型",
-          key: "type",
-          align: "center"
-        },
-        {
-          title: "上传用户",
-          key: "uploader",
-          align: "center"
-        }
-      ],
-      dataPutIn: [
-        {
-          uploader: "user1",
-          type: "矢量",
-          time: "2016-10-03"
-        },
-        {
-          uploader: "user2",
-          type: "影像",
-          time: "2016-10-11"
-        },
-        {
-          uploader: "user1",
-          type: "矢量",
-          time: "2016-10-03"
-        },
-        {
-          uploader: "user2",
-          type: "影像",
-          time: "2016-10-11"
-        },
-        {
-          uploader: "user1",
-          type: "矢量",
-          time: "2016-10-03"
-        },
-        {
-          uploader: "user1",
-          type: "矢量",
-          time: "2016-10-03"
-        }
-      ],
-      formInline: {
-        path: "",
-        date: [
-          format(new Date(), "yyyy-mm-dd"),
-          format(new Date(), "yyyy-mm-dd")
-        ],
-        uploader: "",
-        type: "-1"
-      },
-      typeList: [
-        {
-          id: "-1",
-          name: "全部"
-        },
-        {
-          id: "0",
-          name: "无"
-        },
-        {
-          id: "1",
-          name: "进入"
-        },
-        {
-          id: "2",
-          name: "出去"
-        }
-      ],
-      uploaderList: [
-        {
-          id: "-1",
-          name: "张三"
-        },
-      
-        {
-          id: "2",
-          name: "李四"
-        }
-      ],
-      page: {
-        current: 1,
-        total: 0,
-        pageSize: 8
-      }
-    };
-  },
-  computed: {
-    menuitemClasses() {
-      return ["menu-item", this.isCollapsed ? "collapsed-menu" : ""];
-    }
-  },
-  methods: {
-    handleSubmit() {},
-    handleDateChange(e) {
-      this.formInline.date = e;
+  // @ is an alias to /src
+  import { format } from 'date-fns'
+  import RoseChart from './components/RoseChart.vue'
+  export default {
+    name: 'Home',
+    components: {
+      RoseChart
     },
-    changePage(index) {
-      this.page.current = index;
-      this.getrlsbcx2();
+    data() {
+      return {
+        typesTotal: [
+          {
+            name: '现状数据',
+            firstChilds: 1,
+            secondChilds: 2,
+            totalChilds: 3,
+            bgColor: 'rgb(0,131,255)',
+            icon: 'iconfont icon-earth'
+          },
+          {
+            name: '规划数据',
+            firstChilds: 1,
+            secondChilds: 21,
+            totalChilds: 22,
+            bgColor: 'rgb(255,195,0)',
+            icon: 'iconfont icon-hill'
+          },
+          {
+            name: '管理数据',
+            firstChilds: 1,
+            secondChilds: 12,
+            totalChilds: 13,
+            bgColor: 'rgb(67,207,124)',
+            icon: 'iconfont icon-setting'
+          },
+          {
+            name: '社会经济数据',
+            firstChilds: 12,
+            secondChilds: 12,
+            totalChilds: 24,
+            bgColor: 'rgb(227,60,100)',
+            icon: 'iconfont icon-person'
+          }
+        ],
+        columnsPutIn: [
+          {
+            title: '入库时间',
+            key: 'time',
+            align: 'center'
+          },
+          {
+            title: '数据路径',
+            slot: 'path',
+            align: 'center'
+          },
+          {
+            title: '数据类型',
+            key: 'type',
+            align: 'center'
+          },
+          {
+            title: '上传用户',
+            key: 'uploader',
+            align: 'center'
+          }
+        ],
+        dataPutIn: [
+          {
+            uploader: 'user1',
+            type: '矢量',
+            time: '2016-10-03'
+          },
+          {
+            uploader: 'user2',
+            type: '影像',
+            time: '2016-10-11'
+          },
+          {
+            uploader: 'user1',
+            type: '矢量',
+            time: '2016-10-03'
+          },
+          {
+            uploader: 'user2',
+            type: '影像',
+            time: '2016-10-11'
+          },
+          {
+            uploader: 'user1',
+            type: '矢量',
+            time: '2016-10-03'
+          },
+          {
+            uploader: 'user1',
+            type: '矢量',
+            time: '2016-10-03'
+          }
+        ],
+        formInline: {
+          path: '',
+          date: [
+            format(new Date(), 'yyyy-mm-dd'),
+            format(new Date(), 'yyyy-mm-dd')
+          ],
+          uploader: '',
+          type: '-1'
+        },
+        typeList: [
+          {
+            id: '-1',
+            name: '全部'
+          },
+          {
+            id: '0',
+            name: '无'
+          },
+          {
+            id: '1',
+            name: '进入'
+          },
+          {
+            id: '2',
+            name: '出去'
+          }
+        ],
+        // uploaderList: [
+        //   {
+        //     id: "-1",
+        //     name: "张三"
+        //   },
+
+        //   {
+        //     id: "2",
+        //     name: "李四"
+        //   }
+        // ],
+        page: {
+          current: 1,
+          total: 0,
+          pageSize: 8
+        }
+      }
+    },
+    computed: {
+      menuitemClasses() {
+        return ['menu-item', this.isCollapsed ? 'collapsed-menu' : '']
+      }
+    },
+    methods: {
+      handleSubmit() {},
+      handleDateChange(e) {
+        this.formInline.date = e
+      },
+      changePage(index) {
+        this.page.current = index
+        this.getrlsbcx2()
+      }
     }
   }
-};
 </script>
 <style lang="scss" scoped>
-.card-container {
-  // &:nth-of-type(1){
-  //   height: 45%;
-  // }
-  // &:nth-of-type(2){
-  //   height: 55%;
-  // }
-  .card-title {
-    background-color: rgba(0, 0, 0, 0.1);
-    font-weight: bold;
+  .card-container {
+    // &:nth-of-type(1){
+    //   height: 45%;
+    // }
+    // &:nth-of-type(2){
+    //   height: 55%;
+    // }
+    .card-title {
+      background-color: rgba(0, 0, 0, 0.1);
+      font-weight: bold;
 
-    line-height: 1.75;
-    color: rgb(81, 81, 81);
-    padding: 0 4px;
-  }
-  .card-body {
-    .card-left-item {
-      border-radius: 0.25rem;
-      margin: 1rem;
-      padding: 0.75rem;
-      color: white;
-      .card-left-item-title {
-        font-size: 1.5rem;
+      line-height: 1.75;
+      color: rgb(81, 81, 81);
+      padding: 0 4px;
+    }
+    .card-body {
+      .card-left-item {
+        border-radius: 0.25rem;
+        margin: 1rem;
+        padding: 0.75rem;
+        color: white;
+        .card-left-item-title {
+          font-size: 1.5rem;
 
-        font-weight: 500;
-      }
-      .card-left-item-total {
-        font-size: 2rem;
-        font-weight: bold;
+          font-weight: 500;
+        }
+        .card-left-item-total {
+          font-size: 2rem;
+          font-weight: bold;
+        }
       }
     }
   }
-}
 </style>
