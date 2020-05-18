@@ -64,7 +64,7 @@
     &-inner {
       position: absolute;
       top: 50%;
-      left: 45%;
+      left: 35%;
       transform: translate(-50%, -50%);
       // z-index: 9;
     }

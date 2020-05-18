@@ -19,7 +19,7 @@ export class RosePieOptionModel {
     }
   }
   legend = {
-    x: 'right',
+    x: '66%',
     y: 'center',
     icon: 'circle',
     orient: 'vertical',
@@ -43,7 +43,7 @@ export class RosePieOptionModel {
       name: '半径模式',
       type: 'pie',
       radius: ['50%', '90%'],
-      center: ['45%', '50%'],
+      center: ['35%', '50%'],
       // roseType : 'radius',
       label: {
         normal: {

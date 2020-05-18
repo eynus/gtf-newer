@@ -20,7 +20,7 @@
                       <i-col span="18">
                         <Row type="flex">
                           <i-col span="12">
-                            <span>{{item.firstChilds}}个一级子类</span>
+                            <span class="fs16">{{item.firstChilds}}个一级子类</span>
                           </i-col>
                           <i-col span="12">
                             <span>{{item.secondChilds}}个二级子类</span>
@@ -109,7 +109,7 @@
             <a href="#">现状数据/基础测绘/基础地理/水系/2019年昭通市水系</a>
           </template>
         </Table>
-        <div class="text-right mr-lg">
+        <div class="text-right mr-lg mt">
           <Page
             :total="page.total"
             @on-change="changePage"
@@ -459,7 +459,7 @@ export default {
         font-weight: 500;
       }
       .card-left-item-total {
-        font-size: 2rem;
+        font-size: 2.75rem;
         font-weight: bold;
       }
     }
