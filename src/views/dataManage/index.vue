@@ -10,7 +10,7 @@
           @on-select="changeRoute"
         >
           <template v-for="(item,index ) in dataManageList">
-            <MenuItem :name="item.key" class="menu-item" :key="`dml_${index}`" v-if="item.show">
+            <MenuItem :name="item.key" class="menu-item mb" :key="`dml_${index}`" v-if="item.show">
               <Icon
                 :custom="item.icon"
                 size="22"
@@ -80,7 +80,7 @@
       }
     },
     created() {
-      // this.role = 1
+       this.activeMenuItem = this.$route.path.replace('/data/','')
       //判断当前用户是否有权限显示左侧列表menu
       let dataSiderAuth = this.role.find(
         (item, index) => item.resIdentif === 'main_menu_5'

@@ -77,6 +77,7 @@
       ...mapGetters(['role'])
     },
     created() {
+    
       // 请求图片
       this.guideList = this.guideList.map((item, index) => ({
         ...item,
@@ -108,7 +109,7 @@
             break
         }
       })
-      // console.log('?',this.guideList)
+      
     },
 
     watch: {},

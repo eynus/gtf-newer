@@ -13,6 +13,23 @@
   import { RosePieOptionModel } from '_model/echarts/rose-pie.model'
   export default {
     name: 'rose-chart',
+    props:{
+      dataTotal:{
+        type:Number,
+        default:0
+      },
+      data:{
+        type:Array,
+        default:function(){
+          return [['暂无数据',0]]
+        }
+      }
+    },
+    watch:{
+      data(newVal,old){
+        console.log('change:',newVal,old)
+      }
+    },
     components: {
       ChartRosePie
     },
@@ -28,19 +45,14 @@
     data() {
       return {
         option: new RosePieOptionModel(),
-        data: [
-          ['现状数据', 188],
-          ['规划数据', 88],
-          ['管理数据', 156],
-          ['社会经济资源', 218]
-        ]
+      
       }
     },
-    computed: {
-      dataTotal() {
-        return 1000
-      }
-    },
+    // computed: {
+    //   dataTotal() {
+    //     return 1000
+    //   }
+    // },
     methods: {}
   }
 </script>

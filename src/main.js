@@ -10,7 +10,6 @@ import 'view-design/dist/styles/iview.css';
 import './assets/css/reset.css'
 import { Tree } from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
-
 // import { Button } from 'ant-design-vue';
 // Vue.use(Button);
 import Mixin from './mixins';

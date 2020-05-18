@@ -13,3 +13,10 @@
 .ivu-table th{
     background-color: rgb(229,229,229);
 }
+.ivu-table-overflowX {
+    overflow-x: hidden !important;
+  }
+  
+  .ivu-table-tip {
+    overflow-x: hidden !important;
+  }

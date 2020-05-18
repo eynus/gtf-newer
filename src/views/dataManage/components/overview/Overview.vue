@@ -39,7 +39,7 @@
             </Row>
           </i-col>
           <i-col span="10">
-            <rose-chart style="height:260px"></rose-chart>
+            <rose-chart style="height:260px" :data="chartData" :dataTotal="chartDataTotal"></rose-chart>
           </i-col>
         </Row>
       </div>
@@ -57,44 +57,51 @@
           style="margin-top:.75rem"
           class="search-box smzx-search-box"
           label-position="right"
-          :label-width="100"
+          :label-width="90"
+          width="100%"
         >
-          <FormItem label="入库时间：">
-            <DatePicker
-              type="daterange"
-              :value="formInline.date"
-              @on-change="handleDateChange"
-              placeholder="请选择起止日期"
-              :clearable="false"
-              class="smzx-normal-datepick smzx-date-range"
-            ></DatePicker>
-          </FormItem>
-          <FormItem label="数据路径：">
-            <Input v-model.trim="formInline.path" placeholder="请选择" clearable />
-          </FormItem>
-          <FormItem label="数据类型：">
-            <!-- <Input v-model.trim="formInline.facename" placeholder="请选择" clearable /> -->
-            <Select v-model="formInline.type" class="scroll dropdown" style="width:8.75rem">
-              <Option v-for="item in typeList" :value="item.id" :key="item.id">
-                {{
-                item.name
-                }}
-              </Option>
-            </Select>
-          </FormItem>
-          <FormItem label="上传用户：">
-            <Input v-model.trim="formInline.uploader" placeholder="请选择" clearable />
-            <!-- <Select v-model="formInline.uploader" class="scroll dropdown" style="width:8.75rem">
-              <Option v-for="item in uploaderList" :value="item.id" :key="item.id">
-                {{
-                item.name
-                }}
-              </Option> 
-            </Select>-->
-          </FormItem>
-          <FormItem :label-width="remToPx(2)">
-            <Button type="primary" class="smzx-search-btn" @click="handleSubmit">查询</Button>
-          </FormItem>
+          <Row>
+            <i-col :md="6" :xxl="5">
+              <FormItem label="入库时间：">
+                <DatePicker
+                  type="daterange"
+                  :value="formInline.date"
+                  @on-change="handleDateChange"
+                  placeholder="请选择起止日期"
+                  :clearable="false"
+                  class="smzx-normal-datepick smzx-date-range"
+                ></DatePicker>
+              </FormItem>
+            </i-col>
+            <i-col :md="6" :xxl="5">
+              <FormItem label="数据路径：">
+                <!-- <Input v-model.trim="formInline.path" placeholder="请选择" clearable /> -->
+                <Cascader :data="dataPaths" v-model="formInline.path" @on-change="handlePathChange"></Cascader>
+              </FormItem>
+            </i-col>
+            <i-col :md="5" :xxl="4">
+              <FormItem label="数据类型：">
+                <!-- <Input v-model.trim="formInline.facename" placeholder="请选择" clearable /> -->
+                <Select v-model="formInline.type" class="scroll dropdown" style="width:8.75rem">
+                  <Option v-for="item in typeList" :value="item.id" :key="item.id">
+                    {{
+                    item.name
+                    }}
+                  </Option>
+                </Select>
+              </FormItem>
+            </i-col>
+            <i-col :md="5" :xxl="5">
+              <FormItem label="上传用户：">
+                <Input v-model.trim="formInline.uploader" placeholder="请选择" clearable />
+              </FormItem>
+            </i-col>
+            <i-col :md="2">
+              <FormItem :label-width="remToPx(2)">
+                <Button type="primary" class="smzx-search-btn" @click="handleSubmit">查询</Button>
+              </FormItem>
+            </i-col>
+          </Row>
         </Form>
 
         <Table border size="small" :columns="columnsPutIn" :data="dataPutIn" class="ml-lg mr-lg">
@@ -117,198 +124,343 @@
   </div>
 </template>
 <script>
-  // @ is an alias to /src
-  import { format } from 'date-fns'
-  import RoseChart from './components/RoseChart.vue'
-  export default {
-    name: 'Home',
-    components: {
-      RoseChart
-    },
-    data() {
-      return {
-        typesTotal: [
-          {
-            name: '现状数据',
-            firstChilds: 1,
-            secondChilds: 2,
-            totalChilds: 3,
-            bgColor: 'rgb(0,131,255)',
-            icon: 'iconfont icon-earth'
-          },
-          {
-            name: '规划数据',
-            firstChilds: 1,
-            secondChilds: 21,
-            totalChilds: 22,
-            bgColor: 'rgb(255,195,0)',
-            icon: 'iconfont icon-hill'
-          },
-          {
-            name: '管理数据',
-            firstChilds: 1,
-            secondChilds: 12,
-            totalChilds: 13,
-            bgColor: 'rgb(67,207,124)',
-            icon: 'iconfont icon-setting'
-          },
-          {
-            name: '社会经济数据',
-            firstChilds: 12,
-            secondChilds: 12,
-            totalChilds: 24,
-            bgColor: 'rgb(227,60,100)',
-            icon: 'iconfont icon-person'
-          }
-        ],
-        columnsPutIn: [
-          {
-            title: '入库时间',
-            key: 'time',
-            align: 'center'
-          },
-          {
-            title: '数据路径',
-            slot: 'path',
-            align: 'center'
-          },
-          {
-            title: '数据类型',
-            key: 'type',
-            align: 'center'
-          },
-          {
-            title: '上传用户',
-            key: 'uploader',
-            align: 'center'
-          }
-        ],
-        dataPutIn: [
-          {
-            uploader: 'user1',
-            type: '矢量',
-            time: '2016-10-03'
-          },
-          {
-            uploader: 'user2',
-            type: '影像',
-            time: '2016-10-11'
-          },
-          {
-            uploader: 'user1',
-            type: '矢量',
-            time: '2016-10-03'
-          },
-          {
-            uploader: 'user2',
-            type: '影像',
-            time: '2016-10-11'
-          },
-          {
-            uploader: 'user1',
-            type: '矢量',
-            time: '2016-10-03'
-          },
-          {
-            uploader: 'user1',
-            type: '矢量',
-            time: '2016-10-03'
-          }
-        ],
-        formInline: {
-          path: '',
-          date: [
-            format(new Date(), 'yyyy-mm-dd'),
-            format(new Date(), 'yyyy-mm-dd')
-          ],
-          uploader: '',
-          type: '-1'
-        },
-        typeList: [
-          {
-            id: '-1',
-            name: '全部'
-          },
-          {
-            id: '0',
-            name: '无'
-          },
-          {
-            id: '1',
-            name: '进入'
-          },
-          {
-            id: '2',
-            name: '出去'
-          }
-        ],
-        // uploaderList: [
-        //   {
-        //     id: "-1",
-        //     name: "张三"
-        //   },
+// @ is an alias to /src
+import { format } from "date-fns";
+import RoseChart from "./components/RoseChart.vue";
+import {
+  getListPage,
+  getTypeDetail,
+  getPaths
+} from "@/api/dataManage/overview";
+let pathList = [];
+const handleRawData = data => {
+  let newData = [];
+  // console.log(data,'data')
+  for (let i = 0; i < data.length; i++) {
+    newData.push({});
+    if (data[i].children) {
+      newData[i].children = handleRawData(data[i].children);
+    }
+    newData[i].label = data[i].dataName;
+    newData[i].value = data[i].dataName;
+  }
+  return newData;
+};
 
-        //   {
-        //     id: "2",
-        //     name: "李四"
-        //   }
-        // ],
-        page: {
-          current: 1,
-          total: 0,
-          pageSize: 8
+export default {
+  name: "Home",
+  components: {
+    RoseChart
+  },
+  data() {
+    return {
+      chartData: [
+        ["现状数据", 11],
+        ["规划数据", 10],
+        ["管理数据", 20],
+        ["社会经济数据", 30]
+      ],
+      dataPath: [],
+      dataPaths: [
+        {
+          value: "现状数据",
+          label: "现状数据"
+        },
+        {
+          value: "22",
+          label: "22",
+          children: [
+            {
+              value: "gugong",
+              label: "故宫"
+            },
+            {
+              value: "tiantan",
+              label: "天坛"
+            },
+            {
+              value: "wangfujing",
+              label: "王府井"
+            }
+          ]
+        },
+        {
+          value: "jiangsu",
+          label: "江苏",
+          children: [
+            {
+              value: "nanjing",
+              label: "南京",
+              children: [
+                {
+                  value: "fuzimiao",
+                  label: "夫子庙"
+                }
+              ]
+            },
+            {
+              value: "suzhou",
+              label: "苏州",
+              children: [
+                {
+                  value: "zhuozhengyuan",
+                  label: "拙政园"
+                },
+                {
+                  value: "shizilin",
+                  label: "狮子林"
+                }
+              ]
+            }
+          ]
         }
-      }
-    },
-    computed: {
-      menuitemClasses() {
-        return ['menu-item', this.isCollapsed ? 'collapsed-menu' : '']
-      }
-    },
-    methods: {
-      handleSubmit() {},
-      handleDateChange(e) {
-        this.formInline.date = e
+      ],
+      typesTotal: [
+        {
+          name: "现状数据",
+          firstChilds: 1,
+          secondChilds: 2,
+          totalChilds: 3,
+          bgColor: "rgb(0,131,255)",
+          icon: "iconfont icon-earth"
+        },
+        {
+          name: "规划数据",
+          firstChilds: 1,
+          secondChilds: 21,
+          totalChilds: 22,
+          bgColor: "rgb(255,195,0)",
+          icon: "iconfont icon-hill"
+        },
+        {
+          name: "管理数据",
+          firstChilds: 1,
+          secondChilds: 12,
+          totalChilds: 13,
+          bgColor: "rgb(67,207,124)",
+          icon: "iconfont icon-setting"
+        },
+        {
+          name: "社会经济数据",
+          firstChilds: 12,
+          secondChilds: 12,
+          totalChilds: 24,
+          bgColor: "rgb(227,60,100)",
+          icon: "iconfont icon-person"
+        }
+      ],
+      columnsPutIn: [
+        {
+          title: "入库时间",
+          key: "time",
+          align: "center"
+        },
+        {
+          title: "数据路径",
+          slot: "path",
+          align: "center"
+        },
+        {
+          title: "数据类型",
+          key: "type",
+          align: "center"
+        },
+        {
+          title: "上传用户",
+          key: "uploader",
+          align: "center"
+        }
+      ],
+      dataPutIn: [
+        {
+          uploader: "user1",
+          type: "矢量",
+          time: "2016-10-03"
+        },
+        {
+          uploader: "user2",
+          type: "影像",
+          time: "2016-10-11"
+        },
+        {
+          uploader: "user1",
+          type: "矢量",
+          time: "2016-10-03"
+        },
+        {
+          uploader: "user2",
+          type: "影像",
+          time: "2016-10-11"
+        },
+        {
+          uploader: "user1",
+          type: "矢量",
+          time: "2016-10-03"
+        },
+        {
+          uploader: "user1",
+          type: "矢量",
+          time: "2016-10-03"
+        }
+      ],
+      formInline: {
+        path: [""],
+        date: [
+          format(new Date(), "yyyy-MM-dd"),
+          format(new Date(), "yyyy-MM-dd")
+        ],
+        uploader: "",
+        type: ""
       },
-      changePage(index) {
-        this.page.current = index
-        this.getrlsbcx2()
+      typeList: [
+        {
+          id: "0",
+          name: "矢量"
+        },
+        {
+          id: "1",
+          name: "栅格"
+        },
+        {
+          id: "2",
+          name: "表格"
+        },
+        {
+          id: "3",
+          name: "其他"
+        }
+      ],
+      page: {
+        current: 1,
+        total: 0,
+        pageSize: 8
       }
+    };
+  },
+  computed: {
+    menuitemClasses() {
+      return ["menu-item", this.isCollapsed ? "collapsed-menu" : ""];
+    },
+    chartDataTotal() {
+      return this.typesTotal.reduce((pre, now) => pre + now.totalChilds, 0);
+    }
+  },
+  created() {
+    this.getPaths();
+    this.setTypesTotalData();
+    this.getListPage();
+  },
+  methods: {
+    //设置四大类各自的数据详情
+    setTypesTotalData() {
+      this.typesTotal.forEach((item, index) => {
+        getTypeDetail({ dataName: item.name }).then(res => {
+          let firstChilds,
+            secondChilds,
+            totalChilds = 0;
+          const { data, code } = res.data;
+          if (code === 1000) {
+            item.firstChilds = data.firstCount;
+            item.secondChilds = data.secondCount;
+            item.totalChilds = data.sumCount;
+            this.$set(this.chartData[index], 1, data.sumCount);
+          }
+        });
+      });
+    },
+    //获取数据路径列表
+    getPaths() {
+      getPaths().then(res => {
+        const { data, code } = res.data;
+        if (code === 1000) {
+          let raw = data.data;
+          let result = handleRawData(raw);
+          this.dataPaths = result;
+        }
+      });
+    },
+    //获取查询列表
+    getListPage() {
+      getListPage({
+        createdBy: this.formInline.uploader,
+        dataPath: this.formInline.path.join("/"),
+        dataType: this.formInline.type,
+        endTime: this.formInline.date[1],
+        pageNum: this.page.current,
+        pageSize: this.page.pageSize,
+        startTime: this.formInline.date[0]
+      }).then(res => {
+        const { data, code, total } = res.data;
+        if (code === 1000) {
+          if (data.list.length) {
+            //查詢结果不为空
+            this.page.total = data.total;
+            //赋值dataPutIn
+            this.dataPutIn = data.list.map((item, index) => ({
+              uploader: item.createdBy,
+              type: this.typeList.find((it, id) => it.id === item.dataType)
+                .name,
+              time: item.createdTime
+            }));
+          } else {
+            // 置空
+            this.dataPutIn = [];
+          }
+        }
+      });
+    },
+    handleSubmit() {
+      this.page.current = 1;
+      this.getListPage();
+    },
+    //选择日期变化
+    handleDateChange(e) {
+      this.formInline.date = e;
+    },
+    //切换页数
+    changePage(index) {
+      this.page.current = index;
+      this.getListPage();
+    },
+    //选中路径变化
+    handlePathChange(a, b) {
+      this.formInline.path = a;
     }
   }
+};
 </script>
 <style lang="scss" scoped>
-  .card-container {
-    // &:nth-of-type(1){
-    //   height: 45%;
-    // }
-    // &:nth-of-type(2){
-    //   height: 55%;
-    // }
-    .card-title {
-      background-color: rgba(0, 0, 0, 0.1);
-      font-weight: bold;
+.card-container {
+  // &:nth-of-type(1){
+  //   height: 45%;
+  // }
+  // &:nth-of-type(2){
+  //   height: 55%;
+  // }
+  .card-title {
+    background-color: rgba(0, 0, 0, 0.1);
+    font-weight: bold;
 
-      line-height: 1.75;
-      color: rgb(81, 81, 81);
-      padding: 0 4px;
-    }
-    .card-body {
-      .card-left-item {
-        border-radius: 0.25rem;
-        margin: 1rem;
-        padding: 0.75rem;
-        color: white;
-        .card-left-item-title {
-          font-size: 1.5rem;
+    line-height: 1.75;
+    color: rgb(81, 81, 81);
+    padding: 0 4px;
+  }
+  .card-body {
+    .card-left-item {
+      border-radius: 0.25rem;
+      margin: 1rem;
+      padding: 0.75rem;
+      color: white;
+      .card-left-item-title {
+        font-size: 1.5rem;
 
-          font-weight: 500;
-        }
-        .card-left-item-total {
-          font-size: 2rem;
-          font-weight: bold;
-        }
+        font-weight: 500;
+      }
+      .card-left-item-total {
+        font-size: 2rem;
+        font-weight: bold;
       }
     }
   }
+}
 </style>
