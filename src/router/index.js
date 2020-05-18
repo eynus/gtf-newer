@@ -32,6 +32,9 @@ const routes = [
         path: '/data',
         name: 'data',
         component: () => import('../views/dataManage'),
+        meta: {
+          title: '数据管理'
+        },
         children: [
           {
             path: 'overview',
@@ -97,12 +100,13 @@ const LOGIN_PAGE_NAME = 'login';
  * @description 用户是否可跳转到该页
  */
 export const canTurnTo = (name, roles, routes) => {//roles:localStorage存的role
-  console.log('name:', name, 'roles:', roles, 'routes:', routes)
+  // console.log('name:', name, 'roles:', roles, 'routes:', routes)
   const routePermissionJudge = list => {
     return list.some(item => {
       if (item.children && item.children.length) {
         return routePermissionJudge(item.children)
       } else if (item.name === name) {
+
         return hasAccess(roles, item)
       }
     })
@@ -119,11 +123,13 @@ const turnTo = (to, role, next) => {
  * @param {*} route 路由列表
  */
 const hasAccess = (roles, route) => {
-  console.log('判断权限哦：',roles,route.meta.id)
+  console.log('判断权限哦：roles', roles, route.meta.id)
+  //有id代表是二级菜单
   if (route.meta && route.meta.id) {
     //判断route.meta.id在不在roles里面
-    roles.forEach((item,index)=>{
-      if()
+    let result = roles.some((item) => {
+      // console.log(item.childs, item.childs.indexOf(route.meta.id))
+      return item.childs.indexOf(route.meta.id) > -1//item.childs里面包含id
     })
     return true
 
