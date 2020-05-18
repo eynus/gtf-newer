@@ -1,4 +1,7 @@
 @charset "utf-8";
+html{
+    font-size: 16px;
+}
 /* 设定所有元素为边框盒 */
 *{
     box-sizing:border-box;
@@ -109,4 +112,7 @@ a{
 // 字體大小
 .fs16{
     font-size: 1rem;
+}
+.fs20{
+    font-size: 1.25rem;
 }

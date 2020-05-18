@@ -39,7 +39,7 @@
             </Row>
           </i-col>
           <i-col span="10">
-            <rose-chart style="height:260px" :data="chartData" :dataTotal="chartDataTotal"></rose-chart>
+            <rose-chart :style="{ height: `${remToPx(16.25)}px` }" :data="chartData" :dataTotal="chartDataTotal"></rose-chart>
           </i-col>
         </Row>
       </div>
@@ -349,6 +349,8 @@ export default {
     this.getPaths();
     this.setTypesTotalData();
     this.getListPage();
+  
+    
   },
   methods: {
     //设置四大类各自的数据详情
@@ -360,10 +362,10 @@ export default {
             totalChilds = 0;
           const { data, code } = res.data;
           if (code === 1000) {
-            item.firstChilds = data.firstCount;
-            item.secondChilds = data.secondCount;
-            item.totalChilds = data.sumCount;
-            this.$set(this.chartData[index], 1, data.sumCount);
+            item.firstChilds = data.firstCount || 0;
+            item.secondChilds = data.secondCount || 0;
+            item.totalChilds = data.sumCount || 0;
+            this.$set(this.chartData[index], 1, data.sumCount || 0);
           }
         });
       });
@@ -373,7 +375,7 @@ export default {
       getPaths().then(res => {
         const { data, code } = res.data;
         if (code === 1000) {
-          let raw = data.data;
+          let raw = data&&data.data || [];
           let result = handleRawData(raw);
           this.dataPaths = result;
         }

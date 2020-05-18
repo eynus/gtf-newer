@@ -2,8 +2,8 @@
   <div class="h100 w100 upper">
     <chart-rose-pie :option="option" :value="data" class="h100 w100"></chart-rose-pie>
     <div class="upper-inner text-center">
-      <h2>数据总量</h2>
-      <div class="fs16">{{dataTotal}}</div>
+      <h3>数据总量</h3>
+      <div class="fs20">{{dataTotal}}</div>
     </div>
   </div>
 </template>

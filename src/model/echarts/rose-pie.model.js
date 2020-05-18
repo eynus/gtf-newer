@@ -14,6 +14,7 @@ export class RosePieOptionModel {
   tooltip = {
     trigger: 'item',
     formatter: function (pargram) {
+     
       return `${pargram.name}:${pargram.data[1]}(${pargram.percent}%)`
     }
   }
