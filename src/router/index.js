@@ -120,10 +120,11 @@ const turnTo = (to, role, next) => {
  */
 const hasAccess = (roles, route) => {
   console.log('判断权限哦：',roles,route.meta.id)
-  
   if (route.meta && route.meta.id) {
     //判断route.meta.id在不在roles里面
-    console.log('...0000')
+    roles.forEach((item,index)=>{
+      if()
+    })
     return true
 
   } else return true
