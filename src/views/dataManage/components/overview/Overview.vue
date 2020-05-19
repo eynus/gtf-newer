@@ -39,7 +39,11 @@
             </Row>
           </i-col>
           <i-col span="10">
-            <rose-chart :style="{ height: `${remToPx(16.25)}px` }" :data="chartData" :dataTotal="chartDataTotal"></rose-chart>
+            <rose-chart
+              :style="{ height: `${remToPx(16.25)}px` }"
+              :data="chartData"
+              :dataTotal="chartDataTotal"
+            ></rose-chart>
           </i-col>
         </Row>
       </div>
@@ -93,7 +97,7 @@
             </i-col>
             <i-col :md="5" :xxl="5">
               <FormItem label="上传用户：">
-                <Input v-model.trim="formInline.uploader" placeholder="请选择" clearable />
+                <Input v-model.trim="formInline.uploader" placeholder="请输入" clearable />
               </FormItem>
             </i-col>
             <i-col :md="2">
@@ -106,7 +110,7 @@
 
         <Table border size="small" :columns="columnsPutIn" :data="dataPutIn" class="ml-lg mr-lg">
           <template slot="path" slot-scope="{row,index}">
-            <a href="#">现状数据/基础测绘/基础地理/水系/2019年昭通市水系</a>
+            <a href="#">{{row.dataPath}}</a>
           </template>
         </Table>
         <div class="text-right mr-lg mt">
@@ -125,7 +129,8 @@
 </template>
 <script>
 // @ is an alias to /src
-import { format } from "date-fns";
+import { format, subMonths } from "date-fns";
+import { remToPx } from "@/utils/common";
 import RoseChart from "./components/RoseChart.vue";
 import {
   getListPage,
@@ -258,7 +263,8 @@ export default {
         {
           title: "数据路径",
           slot: "path",
-          align: "center"
+          align: "center",
+          width: remToPx(30)
         },
         {
           title: "数据类型",
@@ -306,7 +312,7 @@ export default {
       formInline: {
         path: [""],
         date: [
-          format(new Date(), "yyyy-MM-dd"),
+          format(subMonths(new Date(), 1), "yyyy-MM-dd"),
           format(new Date(), "yyyy-MM-dd")
         ],
         uploader: "",
@@ -349,8 +355,6 @@ export default {
     this.getPaths();
     this.setTypesTotalData();
     this.getListPage();
-  
-    
   },
   methods: {
     //设置四大类各自的数据详情
@@ -375,7 +379,7 @@ export default {
       getPaths().then(res => {
         const { data, code } = res.data;
         if (code === 1000) {
-          let raw = data&&data.data || [];
+          let raw = (data && data.data) || [];
           let result = handleRawData(raw);
           this.dataPaths = result;
         }
@@ -433,12 +437,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .card-container {
-  // &:nth-of-type(1){
-  //   height: 45%;
-  // }
-  // &:nth-of-type(2){
-  //   height: 55%;
-  // }
   .card-title {
     background-color: rgba(0, 0, 0, 0.1);
     font-weight: bold;

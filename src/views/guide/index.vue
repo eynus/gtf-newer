@@ -156,13 +156,13 @@
       &-top {
         &-left {
           width: 28rem;
-          height: 10rem;
+          height: 11rem;
           color: rgba(0, 0, 0, 0.75);
           text-indent: 2em;
           padding: 1.25rem;
           font-weight: 500;
           line-height: 1.6rem;
-          border-radius: 0.35rem;
+          border-radius: 0.4rem;
           box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
         }
         &-right {

@@ -11,6 +11,8 @@ let mixin = {
             let fontSize = this.documentFontSize;
             return Math.floor(rem * fontSize.replace('px', ''));
         },
+
+        
         //设置echarts中图表format
         setLabelNormalFormat(unit, isArr) {
             return {

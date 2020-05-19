@@ -164,8 +164,6 @@ export const off = (function () {
 // rem转化为px
 export const remToPx = rem => {
   let fontSize = document.documentElement.style.fontSize
-  console.log('fontSize',fontSize,document.documentElement.style);
-  
-  // console.log('rem:',rem,'px:',Number(Math.floor(rem * fontSize.replace('px', ''))))
+  // console.log('fontSize',fontSize,document.documentElement.style);
   return Number(Math.floor(rem * fontSize.replace('px', '')))
 }
