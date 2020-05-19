@@ -56,21 +56,52 @@ const routes = [
           },
           {
             path: 'service',
-            name: 'Service',
+
             component: () => import('../views/dataManage/components/service/Service.vue'),
             meta: {
               title: '服务管理',
               id: 'page_5_3'
-            }
+            },
+            children: [
+              {
+                path: '',
+                name: 'Service',
+                component: () => import('../views/dataManage/components/service/components/ServiceManage.vue'),
+                meta: {
+                  title: '服务管理首页',
+                  id: 'page_5_3'
+                }
+              },
+              {
+                path: 'register',
+                name: 'Register',
+                component: () => import('../views/dataManage/components/service/components/ServiceRegister.vue'),
+                meta: {
+                  title: '服务注册',
+                  id: 'page_5_3'
+                }
+              }
+            ]
           },
           {
             path: 'inspection',
-            name: 'inspection',
+            // name: 'inspection',
             component: () => import('../views/dataManage/components/inspection/Inspection.vue'),
             meta: {
               title: '质检管理',
               id: 'page_5_4'
-            }
+            },
+            children:[
+              {
+                path: '',
+                name: 'MathBasic',
+                component: () => import('../views/dataManage/components/inspection/components/MathBasic.vue'),
+                meta: {
+                  title: '数学基础规范性',
+                  id: 'page_5_4'
+                }
+              }
+            ]
           },
         ]
       }

@@ -27,7 +27,6 @@
     },
     watch:{
       data(newVal,old){
-        console.log('change:',newVal,old)
       }
     },
     components: {

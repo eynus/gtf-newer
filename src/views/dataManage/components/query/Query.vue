@@ -1,8 +1,8 @@
 <template>
   <div class="h100">
     <Row style="height:100%">
-      <i-col span="4">
-        <div class="pd">
+      <i-col span="4" class="h100 scroll-y">
+        <div class="pd h100 " >
           <my-tree :gData="gData" @handleSelect="handleSelect"></my-tree>
         </div>
       </i-col>
@@ -95,7 +95,22 @@
 <script>
 import MyTree from "_c/myTree/MyTree.vue";
 let gData = [];
-
+const handleRawData = data => {
+  let newData = [];
+  for (let i = 0; i < data.length; i++) {
+    newData.push({});
+    if (data[i].children) {
+      newData[i].children = handleRawData(data[i].children);
+    }
+    if (data[i].childrens) {
+      newData[i].children = handleRawData(data[i].childrens);
+    }
+    newData[i].key = data[i].dataName;
+    newData[i].title = data[i].dataName;
+    newData[i].scopedSlots = { title: "title" };
+  }
+  return newData;
+};
 gData = [
   {
     children: [
@@ -200,7 +215,7 @@ gData = [
     scopedSlots: { title: "title" }
   }
 ];
-
+import { getCatalogue } from "@/api/dataManage/query";
 export default {
   name: "Home",
   data() {
@@ -211,9 +226,22 @@ export default {
   },
   components: { MyTree },
   computed: {},
+  created() {
+    this.getCatalogue();
+  },
   methods: {
-    handleSelect(e){
-      console.log(e)
+    getCatalogue() {
+      getCatalogue().then(res => {
+        const { data, code } = res.data;
+        if (code === 1000) {
+          let result = handleRawData(data);
+          console.log(data, result);
+          this.gData = result;
+        }
+      });
+    },
+    handleSelect(e) {
+      console.log(e);
     }
   }
 };

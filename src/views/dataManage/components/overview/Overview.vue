@@ -79,13 +79,11 @@
             </i-col>
             <i-col :md="6" :xxl="5">
               <FormItem label="数据路径：">
-                <!-- <Input v-model.trim="formInline.path" placeholder="请选择" clearable /> -->
                 <Cascader :data="dataPaths" v-model="formInline.path" @on-change="handlePathChange"></Cascader>
               </FormItem>
             </i-col>
             <i-col :md="5" :xxl="4">
               <FormItem label="数据类型：">
-                <!-- <Input v-model.trim="formInline.facename" placeholder="请选择" clearable /> -->
                 <Select v-model="formInline.type" class="scroll dropdown" style="width:8.75rem">
                   <Option v-for="item in typeList" :value="item.id" :key="item.id">
                     {{
@@ -128,7 +126,6 @@
   </div>
 </template>
 <script>
-// @ is an alias to /src
 import { format, subMonths } from "date-fns";
 import { remToPx } from "@/utils/common";
 import RoseChart from "./components/RoseChart.vue";
@@ -137,10 +134,9 @@ import {
   getTypeDetail,
   getPaths
 } from "@/api/dataManage/overview";
-let pathList = [];
+// let pathList = [];
 const handleRawData = data => {
   let newData = [];
-  // console.log(data,'data')
   for (let i = 0; i < data.length; i++) {
     newData.push({});
     if (data[i].children) {
@@ -166,60 +162,7 @@ export default {
         ["社会经济数据", 30]
       ],
       dataPath: [],
-      dataPaths: [
-        {
-          value: "现状数据",
-          label: "现状数据"
-        },
-        {
-          value: "22",
-          label: "22",
-          children: [
-            {
-              value: "gugong",
-              label: "故宫"
-            },
-            {
-              value: "tiantan",
-              label: "天坛"
-            },
-            {
-              value: "wangfujing",
-              label: "王府井"
-            }
-          ]
-        },
-        {
-          value: "jiangsu",
-          label: "江苏",
-          children: [
-            {
-              value: "nanjing",
-              label: "南京",
-              children: [
-                {
-                  value: "fuzimiao",
-                  label: "夫子庙"
-                }
-              ]
-            },
-            {
-              value: "suzhou",
-              label: "苏州",
-              children: [
-                {
-                  value: "zhuozhengyuan",
-                  label: "拙政园"
-                },
-                {
-                  value: "shizilin",
-                  label: "狮子林"
-                }
-              ]
-            }
-          ]
-        }
-      ],
+      dataPaths: [],
       typesTotal: [
         {
           name: "现状数据",
@@ -277,38 +220,7 @@ export default {
           align: "center"
         }
       ],
-      dataPutIn: [
-        {
-          uploader: "user1",
-          type: "矢量",
-          time: "2016-10-03"
-        },
-        {
-          uploader: "user2",
-          type: "影像",
-          time: "2016-10-11"
-        },
-        {
-          uploader: "user1",
-          type: "矢量",
-          time: "2016-10-03"
-        },
-        {
-          uploader: "user2",
-          type: "影像",
-          time: "2016-10-11"
-        },
-        {
-          uploader: "user1",
-          type: "矢量",
-          time: "2016-10-03"
-        },
-        {
-          uploader: "user1",
-          type: "矢量",
-          time: "2016-10-03"
-        }
-      ],
+      dataPutIn: [],
       formInline: {
         path: [""],
         date: [
@@ -339,7 +251,7 @@ export default {
       page: {
         current: 1,
         total: 0,
-        pageSize: 8
+        pageSize: 6
       }
     };
   },
@@ -406,7 +318,8 @@ export default {
               uploader: item.createdBy,
               type: this.typeList.find((it, id) => it.id === item.dataType)
                 .name,
-              time: item.createdTime
+              time: item.createdTime,
+              dataPath:item.dataPath
             }));
           } else {
             // 置空
