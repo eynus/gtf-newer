@@ -113,6 +113,7 @@
         </Table>
         <div class="text-right mr-lg mt">
           <Page
+          :size="'small'"
             :total="page.total"
             @on-change="changePage"
             show-total
@@ -315,7 +316,7 @@ export default {
             this.page.total = data.total;
             //赋值dataPutIn
             this.dataPutIn = data.list.map((item, index) => ({
-              uploader: item.createdBy,
+              uploader: item.realName,
               type: this.typeList.find((it, id) => it.id === item.dataType)
                 .name,
               time: item.createdTime,
@@ -349,6 +350,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.ivu-table{
+  min-height: 280px;
+}
 .card-container {
   .card-title {
     background-color: rgba(0, 0, 0, 0.1);

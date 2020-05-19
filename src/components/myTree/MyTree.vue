@@ -87,7 +87,6 @@ export default {
     },
     onChange(e) {
       const value = e.target.value;
-      console.log("datalist：", dataList);
       const expandedKeys = dataList
         .map(item => {
           if (item.key.indexOf(value) > -1) {

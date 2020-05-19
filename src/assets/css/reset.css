@@ -24,3 +24,13 @@
   .ivu-table-tip {
     overflow-x: hidden !important;
   }
+  .ivu-menu-item{
+      font-size: 1rem;
+  }
+  .ant-tree{
+      font-size: 1rem;
+      font-weight: bold;
+  }
+  .ant-tree li .ant-tree-node-content-wrapper{
+    color: rgba(0,0,0,0.65);
+  }

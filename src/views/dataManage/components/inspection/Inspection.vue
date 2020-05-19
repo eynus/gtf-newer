@@ -3,7 +3,7 @@
     <Row>
       <i-col span="4">
         <div class="pd">
-          <Menu active-name="1">
+          <Menu active-name="mathBasic" @on-select="onSelect">
             <MenuItem
               :name="item.key"
               v-for="(item,index) in siderMenuList"
@@ -27,25 +27,29 @@ export default {
   data() {
     return {
       siderMenuList: [
-        { name: "数学基础规范性", key: "1" },
-        { name: "属性结构规范性", key: "2" },
-        { name: "值域规范性", key: "3" },
-        { name: "图形拓扑规范性", key: "4" },
-        { name: "图形上图规范性", key: "5" },
-        { name: "属内一致性", key: "6" },
-        { name: "图属一致性", key: "7" },
-        { name: "图图关联一致性", key: "8" },
-        { name: "图图拓扑一致性", key: "9" },
-        { name: "属表一致性", key: "10" },
-        { name: "表内横向逻辑一致性", key: "11" },
-        { name: "表内纵向逻辑一致性", key: "12" },
-        { name: "表间逻辑一致性", key: "13" }
-      ],
-     
+        { name: "数学基础规范性", key: "mathBasic" },
+        { name: "属性结构规范性", key: "propStruct" },
+        { name: "值域规范性", key: "valRange" },
+        { name: "图形拓扑规范性", key: "graphTopo" },
+        { name: "图形上图规范性", key: "graphAbove" },
+        { name: "属内一致性", key: "propIn" },
+        { name: "图属一致性", key: "grapgGenus" },
+        { name: "图图关联一致性", key: "graphCorr" },
+        { name: "图图拓扑一致性", key: "graphTopoConsis" },
+        { name: "属表一致性", key: "genusTableConsis" },
+        { name: "表内横向逻辑一致性", key: "tableOrienConsis" },
+        { name: "表内纵向逻辑一致性", key: "tablePortConsis" },
+        { name: "表间逻辑一致性", key: "tableInterConsis" }
+      ]
     };
   },
   computed: {},
-  methods: {}
+  methods: {
+    onSelect(name) {
+      console.log(name);
+      this.$router.push(`/data/inspection/${name}`)
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

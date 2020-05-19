@@ -2,7 +2,7 @@
   <div class="h100">
     <Row style="height:100%">
       <i-col span="4" class="h100 scroll-y">
-        <div class="pd h100 " >
+        <div class="pd h100">
           <my-tree :gData="gData" @handleSelect="handleSelect"></my-tree>
         </div>
       </i-col>
@@ -22,38 +22,38 @@
               <div class="meta_title">内容信息</div>
               <div>
                 <span class="meta_label">数据名称：</span>
-                <span>SDE2019年影像</span>
+                <span>{{activeMetaData.dataName}}</span>
               </div>
               <div>
                 <span class="meta_label">数据类型：</span>
-                <span>SDE栅格</span>
+                <span>{{activeMetaData.typeName}}</span>
               </div>
               <div>
                 <span class="meta_label">内容描述：</span>
-                <span>2019年昭通市全域形象</span>
+                <span>-</span>
               </div>
             </div>
             <div>
               <div class="meta_title">分发信息</div>
               <div>
                 <span class="meta_label">负责单位名称：</span>
-                <span>昭通市国土资源与规划局</span>
+                <span>{{activeMetaData.proUnit}}</span>
               </div>
               <div>
                 <span class="meta_label">联系人：</span>
-                <span>xx</span>
+                <span>{{activeMetaData.realName}}</span>
               </div>
               <div>
                 <span class="meta_label">电话：</span>
-                <span>188-9999-9898</span>
+                <span>{{activeMetaData.userPhone}}</span>
               </div>
               <div>
                 <span class="meta_label">通信地址：</span>
-                <span>云南省昭通市昭阳区昭阳大道348号</span>
+                <span>-</span>
               </div>
               <div>
                 <span class="meta_label">邮政编码：</span>
-                <span>657000</span>
+                <span>-</span>
               </div>
             </div>
             <div>
@@ -79,11 +79,11 @@
               <div class="meta_title">空间参考</div>
               <div>
                 <span class="meta_label">空间参考名称：</span>
-                <span>CDCS2000_GK_CM_105E</span>
+                <span>-</span>
               </div>
               <div>
                 <span class="meta_label">投影：</span>
-                <span>Gauss_Kruger</span>
+                <span>-</span>
               </div>
             </div>
           </div>
@@ -94,7 +94,7 @@
 </template>
 <script>
 import MyTree from "_c/myTree/MyTree.vue";
-let gData = [];
+import { getCatalogue, getMetaByID } from "@/api/dataManage/query";
 const handleRawData = data => {
   let newData = [];
   for (let i = 0; i < data.length; i++) {
@@ -105,123 +105,45 @@ const handleRawData = data => {
     if (data[i].childrens) {
       newData[i].children = handleRawData(data[i].childrens);
     }
-    newData[i].key = data[i].dataName;
+    // newData[i].key = data[i].dataName;
     newData[i].title = data[i].dataName;
+    newData[i].key = data[i].pkId;
     newData[i].scopedSlots = { title: "title" };
   }
   return newData;
 };
-gData = [
-  {
-    children: [
-      {
-        key: "基础绘测",
-        scopedSlots: { title: "title" },
-        title: "基础绘测",
-        children: [
-          {
-            key: "基础地理",
-            title: "基础地理",
-            scopedSlots: { title: "title" }
-          },
-          { key: "影像图", title: "影像图", scopedSlots: { title: "title" } },
-          { key: "地形图", title: "地形图", scopedSlots: { title: "title" } }
-        ]
-      },
-      {
-        key: "地质环境",
-        scopedSlots: { title: "title" },
-        title: "地质环境",
-        children: [
-          {
-            key: "资源调查",
-            title: "资源调查",
-            scopedSlots: { title: "title" }
-          },
-          {
-            key: "城乡建设",
-            title: "城乡建设",
-            scopedSlots: { title: "title" }
-          },
-          {
-            key: "生态环境保护",
-            title: "生态环境保护",
-            scopedSlots: { title: "title" }
-          }
-        ]
-      },
-      {
-        key: "历史文化保护",
-        scopedSlots: { title: "title" },
-        title: "历史文化保护",
-        children: [
-          {
-            key: "资源感知",
-            title: "资源感知",
-            scopedSlots: { title: "title" }
-          },
-          {
-            key: "管理数据",
-            title: "管理数据",
-            scopedSlots: { title: "title" }
-          },
-          {
-            key: "社会经济数据",
-            title: "社会经济数据",
-            scopedSlots: { title: "title" }
-          }
-        ]
-      }
-    ],
-    key: "现状数据",
-    title: "现状数据",
-    scopedSlots: { title: "title" }
-  },
-  {
-    children: [
-      {
-        key: "0-1-0",
-        scopedSlots: { title: "title" },
-        title: "0-1-0",
-        children: [
-          { key: "0-1-0-0", title: "0-1-0-0", scopedSlots: { title: "title" } },
-          { key: "0-1-0-1", title: "0-1-0-1", scopedSlots: { title: "title" } },
-          { key: "0-1-0-2", title: "0-1-0-2", scopedSlots: { title: "title" } }
-        ]
-      },
-      {
-        key: "0-1-1",
-        scopedSlots: { title: "title" },
-        title: "0-1-1",
-        children: [
-          { key: "0-1-1-0", title: "0-1-1-0", scopedSlots: { title: "title" } },
-          { key: "0-1-1-1", title: "0-1-1-1", scopedSlots: { title: "title" } },
-          { key: "0-1-1-2", title: "0-1-1-2", scopedSlots: { title: "title" } }
-        ]
-      },
-      {
-        key: "0-1-2",
-        scopedSlots: { title: "title" },
-        title: "0-1-2",
-        children: [
-          { key: "0-1-2-0", title: "0-1-2-0", scopedSlots: { title: "title" } },
-          { key: "0-1-2-1", title: "0-1-2-1", scopedSlots: { title: "title" } },
-          { key: "0-1-2-2", title: "0-1-2-2", scopedSlots: { title: "title" } }
-        ]
-      }
-    ],
-    key: "规划数据",
-    title: "规划数据",
-    scopedSlots: { title: "title" }
-  }
-];
-import { getCatalogue } from "@/api/dataManage/query";
 export default {
   name: "Home",
   data() {
     return {
       activeMode: "normal",
-      gData
+      activeMetaData:{
+        dataName:'',
+        dataType:'',
+        proUnit:'',
+        realName:'',
+        userEmail:'',
+        userPhone:'',
+      },
+      gData: [],
+       typeList: [
+        {
+          typeId: "0",
+          typeName: "矢量"
+        },
+        {
+          typeId: "1",
+          typeName: "栅格"
+        },
+        {
+          typeId: "2",
+          typeName: "表格"
+        },
+        {
+          typeId: "3",
+          typeName: "其他"
+        }
+      ],
     };
   },
   components: { MyTree },
@@ -235,13 +157,24 @@ export default {
         const { data, code } = res.data;
         if (code === 1000) {
           let result = handleRawData(data);
-          console.log(data, result);
+          console.log(result,'result:');
+          
           this.gData = result;
         }
       });
     },
+    getMetaByID(id) {
+      getMetaByID({ id }).then(res => {
+        const { data, code } = res.data;
+        if (code === 1000) {
+         this.activeMetaData = Object.assign(data,this.typeList.find((item,index)=>item.typeId===data.dataType))
+        }
+      });
+    },
     handleSelect(e) {
-      console.log(e);
+      console.log(e[0]);
+      
+      this.getMetaByID(e[0])
     }
   }
 };

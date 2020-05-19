@@ -28,11 +28,11 @@
     </div>
     <div class="mt">
       <div class="service-list-item" v-for="i in 3" :key="`${i}`">
-        <Row :gutter="6" type="flex" align="center" justify="center">
+        <Row :gutter="6" type="flex"  justify="center">
           <i-col span="3">
             <div class="img-wrap"></div>
           </i-col>
-          <i-col span="15">
+          <i-col span="15" class="text-darkgrey">
             <div class="item-title">2019年昭通影像</div>
             <Row>
               <i-col span="8">

@@ -85,22 +85,130 @@ const routes = [
           },
           {
             path: 'inspection',
-            // name: 'inspection',
+            redirect: 'inspection/mathBasic',
             component: () => import('../views/dataManage/components/inspection/Inspection.vue'),
             meta: {
               title: '质检管理',
               id: 'page_5_4'
             },
-            children:[
+            children: [
               {
-                path: '',
+                path: 'mathBasic',
                 name: 'MathBasic',
                 component: () => import('../views/dataManage/components/inspection/components/MathBasic.vue'),
                 meta: {
                   title: '数学基础规范性',
                   id: 'page_5_4'
                 }
-              }
+              },
+              {
+                path: 'propStruct',
+                name: 'PropStruct',
+                component: () => import('../views/dataManage/components/inspection/components/PropStruct.vue'),
+                meta: {
+                  title: '属性结构规范性',
+                  id: 'page_5_4'
+                }
+              },
+              {
+                path: 'valRange',
+                name: 'ValRange',
+                component: () => import('../views/dataManage/components/inspection/components/ValRange.vue'),
+                meta: {
+                  title: '值域规范性',
+                  id: 'page_5_4'
+                }
+              },
+              {
+                path: 'graphTopo',
+                name: 'GraphTopo',
+                component: () => import('../views/dataManage/components/inspection/components/GraphTopo.vue'),
+                meta: {
+                  title: '图形拓扑规范性',
+                  id: 'page_5_4'
+                }
+              },
+              {
+                path: 'graphAbove',
+                name: 'GraphAbove',
+                component: () => import('../views/dataManage/components/inspection/components/GraphAbove.vue'),
+                meta: {
+                  title: '图形上图规范性',
+                  id: 'page_5_4'
+                }
+              },
+              {
+                path: 'propIn',
+                name: 'PropIn',
+                component: () => import('../views/dataManage/components/inspection/components/PropIn.vue'),
+                meta: {
+                  title: '属内一致性',
+                  id: 'page_5_4'
+                }
+              },
+              {
+                path: 'grapgGenus',
+                name: 'GrapgGenus',
+                component: () => import('../views/dataManage/components/inspection/components/GrapgGenus.vue'),
+                meta: {
+                  title: '图属一致性',
+                  id: 'page_5_4'
+                }
+              },
+              {
+                path: 'graphCorr',
+                name: 'GraphCorr',
+                component: () => import('../views/dataManage/components/inspection/components/GraphCorr.vue'),
+                meta: {
+                  title: '图图关联一致性',
+                  id: 'page_5_4'
+                }
+              },
+              {
+                path: 'graphTopoConsis',
+                name: 'GraphTopoConsis',
+                component: () => import('../views/dataManage/components/inspection/components/GraphTopoConsis.vue'),
+                meta: {
+                  title: '图图拓扑一致性',
+                  id: 'page_5_4'
+                }
+              },
+              {
+                path: 'genusTableConsis',
+                name: 'GenusTableConsis',
+                component: () => import('../views/dataManage/components/inspection/components/GenusTableConsis.vue'),
+                meta: {
+                  title: '属表一致性',
+                  id: 'page_5_4'
+                }
+              },
+              {
+                path: 'tableOrienConsis',
+                name: 'TableOrienConsis',
+                component: () => import('../views/dataManage/components/inspection/components/TableOrienConsis.vue'),
+                meta: {
+                  title: '表内横向逻辑一致性',
+                  id: 'page_5_4'
+                }
+              },
+              {
+                path: 'tablePortConsis',
+                name: 'TablePortConsis',
+                component: () => import('../views/dataManage/components/inspection/components/TablePortConsis.vue'),
+                meta: {
+                  title: '表内纵向逻辑一致性',
+                  id: 'page_5_4'
+                }
+              },
+              {
+                path: 'tableInterConsis',
+                name: 'TableInterConsis',
+                component: () => import('../views/dataManage/components/inspection/components/TableInterConsis.vue'),
+                meta: {
+                  title: '表间逻辑一致性',
+                  id: 'page_5_4'
+                }
+              },
             ]
           },
         ]

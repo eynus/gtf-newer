@@ -7,11 +7,10 @@ import './assets/iconfont/iconfont.css';
 import './style.scss';
 import 'view-design/dist/styles/iview.css';
 // iview覆盖样式
-import './assets/css/reset.css'
+
 import { Tree } from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
-// import { Button } from 'ant-design-vue';
-// Vue.use(Button);
+import './assets/css/reset.css'
 import Mixin from './mixins';
 Vue.mixin(Mixin);
 Vue.config.productionTip = false
