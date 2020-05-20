@@ -3,12 +3,12 @@
     <Row>
       <i-col span="4">
         <div class="pd">
-          <my-tree :gData="gData" @handleSelect="handleSelect"></my-tree>
+          <my-tree :gData="gData" @handleSelect="handleSelect" type="service"></my-tree>
         </div>
       </i-col>
       <i-col span="20">
         <div class="pd">
-          <router-view></router-view>
+          <router-view :selectedId="selectedId"></router-view>
         </div>
       </i-col>
     </Row>
@@ -24,10 +24,12 @@ const handleRawData = data => {
     if (data[i].children) {
       newData[i].children = handleRawData(data[i].children);
     }
-    if (data[i].childrens) {
-      newData[i].children = handleRawData(data[i].childrens);
-    }
-    newData[i].key = data[i].dataName;
+    // if (data[i].childrens) {
+    //   newData[i].children = handleRawData(data[i].childrens);
+    // }
+    newData[i].childrens = data[i].childrens;
+    newData[i].key = data[i].pkId;
+    // newData[i].key = data[i].dataName + data[i].pkId;
     newData[i].title = data[i].dataName;
     newData[i].scopedSlots = { title: "title" };
   }
@@ -38,7 +40,8 @@ export default {
   data() {
     return {
       buttonSize: "large",
-      gData: []
+      gData: [],
+      selectedId: -1
     };
   },
   created() {
@@ -57,7 +60,9 @@ export default {
       });
     },
     handleSelect(e) {
-      console.log(e);
+      //[key:'',title:'',childrens:[..]]
+      // this.selectedId = e.childrens ||[];
+      this.selectedId = e;
     }
   }
 };

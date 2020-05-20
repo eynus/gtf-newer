@@ -27,7 +27,12 @@ const generateList = data => {
   for (let i = 0; i < data.length; i++) {
     const node = data[i];
     const key = node.key;
-    dataList.push({ key, title: key });
+    // if (this.type === "service") {
+    dataList.push({ key, title: node.title, childrens: node.childrens });
+    // }else{
+    //  dataList.push({ key, title: node.title, childrens: node.childrens });
+    // }
+
     if (node.children) {
       generateList(node.children);
     }
@@ -56,7 +61,8 @@ export default {
       default: function() {
         return [];
       }
-    }
+    },
+    type: String
   },
   watch: {
     gData: {
@@ -78,8 +84,13 @@ export default {
   },
   methods: {
     onSelect(e) {
-    //   console.log(e);
-      this.$emit('handleSelect',e)
+      if (this.type === "service") {
+        // let target = dataList.find((item, index) => e[0] === item.key);
+        // this.$emit("handleSelect", target);
+        this.$emit("handleSelect", e[0]);
+      } else {
+        this.$emit("handleSelect", e);
+      }
     },
     onExpand(expandedKeys) {
       this.expandedKeys = expandedKeys;

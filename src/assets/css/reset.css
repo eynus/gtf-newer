@@ -34,3 +34,9 @@
   .ant-tree li .ant-tree-node-content-wrapper{
     color: rgba(0,0,0,0.65);
   }
+  /* formItem,label */
+  .ivu-form .ivu-form-item-label{
+    padding-right: 0;
+    padding-left: 0;
+    font-size: .875rem;
+  }

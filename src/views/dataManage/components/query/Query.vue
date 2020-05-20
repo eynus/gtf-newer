@@ -3,7 +3,7 @@
     <Row style="height:100%">
       <i-col span="4" class="h100 scroll-y">
         <div class="pd h100">
-          <my-tree :gData="gData" @handleSelect="handleSelect"></my-tree>
+          <my-tree :gData="gData" @handleSelect="handleSelect"  type="query"></my-tree>
         </div>
       </i-col>
       <i-col span="20" class="pd h100">
@@ -105,9 +105,10 @@ const handleRawData = data => {
     if (data[i].childrens) {
       newData[i].children = handleRawData(data[i].childrens);
     }
-    // newData[i].key = data[i].dataName;
+    newData[i].key = data[i].dataName;
     newData[i].title = data[i].dataName;
-    newData[i].key = data[i].pkId;
+    // pkId作为key,但是后端返回的数据pkId有重复，暂时用的是dataName作为标识
+    // newData[i].key = data[i].pkId;
     newData[i].scopedSlots = { title: "title" };
   }
   return newData;
