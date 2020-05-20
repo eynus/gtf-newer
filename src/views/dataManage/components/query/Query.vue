@@ -94,7 +94,7 @@
 </template>
 <script>
 import MyTree from "_c/myTree/MyTree.vue";
-import { getCatalogue, getMetaByID } from "@/api/dataManage/query";
+import { getCatalogue, getMetaByName } from "@/api/dataManage/query";
 const handleRawData = data => {
   let newData = [];
   for (let i = 0; i < data.length; i++) {
@@ -164,8 +164,8 @@ export default {
         }
       });
     },
-    getMetaByID(id) {
-      getMetaByID({ id }).then(res => {
+    getMetaByName(name) {
+      getMetaByName({ name }).then(res => {
         const { data, code } = res.data;
         if (code === 1000) {
          this.activeMetaData = Object.assign(data,this.typeList.find((item,index)=>item.typeId===data.dataType))
@@ -175,7 +175,7 @@ export default {
     handleSelect(e) {
       console.log(e[0]);
       
-      this.getMetaByID(e[0])
+      this.getMetaByName(e[0])
     }
   }
 };
