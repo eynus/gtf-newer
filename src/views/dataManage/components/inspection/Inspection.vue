@@ -22,6 +22,7 @@
 </template>
 <script>
 import { remToPx } from "@/utils/common";
+import { getzjML } from "@/api/dataManage/inspection";
 export default {
   name: "Home",
   data() {
@@ -44,9 +45,22 @@ export default {
     };
   },
   computed: {},
+  created(){
+    this.getzjML()
+  },
   methods: {
     onSelect(name) {
-      this.$router.push(`/data/inspection/${name}`)
+      this.$router.push({path:`/data/inspection/${name}`,query:{id:this.siderMenuList.find((item)=>item.key===name).pkId}})
+    },
+    getzjML(){
+      getzjML().then(res=>{
+        let {code,data} = res.data 
+        if(code===1000){
+          this.siderMenuList.forEach((item,index)=>{
+            item.pkId = data.find((it)=>it.rulesName===item.name).pkId
+          })
+        }
+      })
     }
   }
 };

@@ -76,6 +76,9 @@ export default {
       ]
     };
   },
+  created(){
+    console.log(this.$route.query.id,'???')
+  },
   methods: {
     showModal() {
       this.modalFlag = true;
