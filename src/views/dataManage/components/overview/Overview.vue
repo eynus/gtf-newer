@@ -107,7 +107,7 @@
         </Form>
 
         <Table border size="small" :columns="columnsPutIn" :data="dataPutIn" class="ml-lg mr-lg">
-          <template slot="path" slot-scope="{row,index}">
+          <template slot="path" slot-scope="{row}">
             <a href="#">{{row.dataPath}}</a>
           </template>
         </Table>
@@ -135,7 +135,6 @@ import {
   getTypeDetail,
   getPaths
 } from "@/api/dataManage/overview";
-// let pathList = [];
 const handleRawData = data => {
   let newData = [];
   for (let i = 0; i < data.length; i++) {

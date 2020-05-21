@@ -153,6 +153,7 @@ export default {
     this.getCatalogue();
   },
   methods: {
+    // 获取左侧目录
     getCatalogue() {
       getCatalogue().then(res => {
         const { data, code } = res.data;
@@ -163,6 +164,7 @@ export default {
         }
       });
     },
+    // 获取元数据
     getMetaByName(name) {
       getMetaByName({ name }).then(res => {
         const { data, code } = res.data;
@@ -182,7 +184,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .card-container {
-  // margin:4px;
   .card-title {
     background-color: rgba(0, 0, 0, 0.1);
     font-weight: bold;

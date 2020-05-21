@@ -130,12 +130,9 @@ export default {
           if (data.list.length) {
             //查詢结果不为空
             this.page.total = data.total;
-            //赋值dataPutIn
             this.dataPutIn = data.list.map((item, index) => ({
               ...item,
               uploader: item.realName,
-              // type: this.typeList.find((it, id) => it.id === item.dataType)
-              //   .name,
               time: item.createdTime,
               id: item.pkId,
               statusName: this.statusList.find(it => it.id === item.status).name,
