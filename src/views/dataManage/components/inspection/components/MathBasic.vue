@@ -6,7 +6,7 @@
           <Button type="success">默认启用</Button>
         </FormItem>
         <FormItem>
-          <Button type="info">添加规则</Button>
+          <Button type="info" @click="showModal">添加规则</Button>
         </FormItem>
         <FormItem>
           <Button type="warning">修改规则</Button>
@@ -21,6 +21,16 @@
         <a href="#">启用</a>
       </template>
     </Table>
+    <Modal
+      v-model="modalFlag"
+      title="Common Modal dialog box title"
+      @on-ok="ok"
+      @on-cancel="cancel"
+    >
+      <p>Content of dialog</p>
+      <p>Content of dialog</p>
+      <p>Content of dialog</p>
+    </Modal>
   </div>
 </template>
 <script>
@@ -29,6 +39,7 @@ export default {
   name: "mathbasic",
   data() {
     return {
+      modalFlag: false,
       columnsPutIn: [
         {
           title: "选中",
@@ -65,6 +76,12 @@ export default {
       ]
     };
   },
-  methods: {}
+  methods: {
+    showModal() {
+      this.modalFlag = true;
+    },
+    ok() {},
+    cancel() {}
+  }
 };
 </script>

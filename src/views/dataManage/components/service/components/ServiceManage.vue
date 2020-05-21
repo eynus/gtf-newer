@@ -159,7 +159,11 @@
         @on-select-cancel="handleCancelRow"
         @on-select-all="handleSelectRowAll"
         @on-select-all-cancel="handleCancelRowAll"
-      ></Table>
+      >
+         <template slot="status" slot-scope="{row}">
+         <div href="#"  :style="`color:${row.serviceStatus==='0'?'#2d8cf0':'#f00'}`">{{row.status}}</div>
+         </template>
+      </Table>
       <div class="text-right mr-lg mt">
         <Page
           :size="'small'"
@@ -178,7 +182,7 @@
 import { remToPx } from "@/utils/common";
 import { format, subMonths } from "date-fns";
 import {
-  getListPage,
+  getFWListPage,
   getListById,
   delFw,
   updateOver,
@@ -234,30 +238,33 @@ export default {
           title: "服务名称",
           key: "name",
           align: "center",
-          width: remToPx(12),
+          width: remToPx(10),
           tooltip: true,
           sortable: true
         },
         {
           title: "状态",
-          key: "status",
+          slot: "status",
           align: "center",
-          width: remToPx(8)
+          width: remToPx(5)
         },
         {
           title: "服务类型",
           key: "sevType",
-          align: "center"
+          align: "center",
+          width: remToPx(8)
         },
         {
           title: "专题类型",
           key: "themeType",
-          align: "center"
+          align: "center",
+          width: remToPx(8)
         },
         {
           title: "空间类型",
           key: "spaceType",
-          align: "center"
+          align: "center",
+          width: remToPx(8)
         },
         {
           title: "发布时间",
@@ -271,7 +278,7 @@ export default {
           key: "desc",
           align: "center",
           tooltip: true,
-          width: remToPx(16)
+          // width: remToPx(12)
         }
       ],
       dataPutIn: [],
@@ -288,12 +295,12 @@ export default {
       if (newVal) {
         this.getListById(newVal);
       } else {
-        this.getListPage();
+        this.getFWListPage();
       }
     }
   },
   created() {
-    this.getListPage();
+    this.getFWListPage();
   },
   computed: {},
   methods: {
@@ -324,6 +331,7 @@ export default {
           if (data.list.length) {
             this.page.total = data.total;
             this.dataPutIn = data.list.map((item, index) => ({
+              ...item,
               name: item.serviceName,
               status: this.statusList.find(it => it.id === item.serviceStatus)
                 .name,
@@ -341,7 +349,7 @@ export default {
       });
     },
     //分页查询服务列表
-    getListPage() {
+    getFWListPage() {
       let postData = {
         serviceName: this.formInline.serviceName,
         serviceStatus: this.formInline.serviceStatus,
@@ -361,12 +369,13 @@ export default {
         validity: ""
       };
 
-      getListPage(postData).then(res => {
+      getFWListPage(postData).then(res => {
         const { data, code } = res.data;
         if (code === 1000) {
           if (data.list.length) {
             this.page.total = data.total;
             this.dataPutIn = data.list.map((item, index) => ({
+              ...item,
               name: item.serviceName,
               status: this.statusList.find(it => it.id === item.serviceStatus)
                 .name,
@@ -386,15 +395,14 @@ export default {
     // 点击查询按钮
     handleSubmit() {
       this.page.current = 1;
-      this.getListPage();
+      this.getFWListPage();
     },
 
     //切换页数
     changePage(index) {
       this.page.current = index;
-      // this.getListPage();
+      // this.getFWListPage();
     },
-    // getListPage() {},
     //选择日期变化
     handleDateChange(e) {
       this.formInline.date = e;
@@ -408,7 +416,7 @@ export default {
             //修改成功，再请求一次
             this.$Message.info("启动成功");
             this.selectedRowIds = [];
-            this.getListPage();
+            this.getFWListPage();
           }
         });
       } else {
@@ -424,7 +432,7 @@ export default {
             //修改成功，再请求一次
             this.$Message.info("停止成功");
             this.selectedRowIds = [];
-            this.getListPage();
+            this.getFWListPage();
           }
         });
       } else {
@@ -440,7 +448,7 @@ export default {
             //修改成功，再请求一次
             this.$Message.info("删除成功");
             this.selectedRowIds = [];
-            this.getListPage();
+            this.getFWListPage();
           }
         });
       } else {

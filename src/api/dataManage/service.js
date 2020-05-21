@@ -1,7 +1,7 @@
 
 import request from '@/utils/request'
 // 分页查询服务记录
-export const getListPage = data => request({ url: 'data/fw/listPage', method: 'post', data })
+export const getFWListPage = data => request({ url: 'data/fw/listfwPage', method: 'post', data })
 // 分页查询模块服务记录
 export const getListById = data => request({ url: 'data/fw/listById', method: 'post', data })
 // 删除服务记录

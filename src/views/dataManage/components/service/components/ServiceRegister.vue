@@ -25,14 +25,27 @@
           </FormItem>
         </div>
         <FormItem>
-          <Button type="primary">发布</Button>
+          <Button type="primary" @click="insertServer">发布</Button>
         </FormItem>
       </div>
     </Form>
 
-    <Table border size="small" :columns="columnsPutIn" :data="dataPutIn" ref="selection">
-      <template slot="path" slot-scope="{row,index}">
+    <Table
+      border
+      size="small"
+      :columns="columnsPutIn"
+      :data="dataPutIn"
+      ref="selection"
+      @on-select="handleSelectRow"
+      @on-select-cancel="handleCancelRow"
+      @on-select-all="handleSelectRowAll"
+      @on-select-all-cancel="handleCancelRowAll"
+    >
+      <template slot="path" slot-scope="{row}">
         <a href="#">{{row.dataPath}}</a>
+      </template>
+      <template slot="status" slot-scope="{row}">
+        <div href="#"  :style="`color:${row.status==='0'?'#2d8cf0':'#FF7421'}`">{{row.statusName}}</div>
       </template>
     </Table>
     <div class="text-right mr-lg mt">
@@ -50,10 +63,16 @@
 <script>
 import { remToPx } from "@/utils/common";
 import { insertServer } from "@/api/dataManage/service";
+import { getSJListPage } from "@/api/dataManage/overview";
 export default {
   name: "Home",
   data() {
     return {
+      selectedRowIds: [],
+      statusList: [
+        { name: "已发布", id: "0" },
+        { name: "未发布", id: "1" }
+      ],
       columnsPutIn: [
         {
           title: "选中",
@@ -64,7 +83,7 @@ export default {
         },
         {
           title: "状态",
-          key: "status",
+          slot: "status",
           align: "center",
           width: remToPx(20)
         },
@@ -74,30 +93,17 @@ export default {
           align: "center"
         }
       ],
-      dataPutIn: [
-        {
-          status: "未发布",
-          dataPath: "/.//"
-        },
-        {
-          status: "未发布",
-          dataPath: "/.//"
-        },
-        {
-          status: "未发布",
-          dataPath: "/.//"
-        }
-      ],
+      dataPutIn: [],
       page: {
         current: 1,
         total: 0,
-        pageSize: 6
+        pageSize: 10
       }
     };
   },
   computed: {},
-  created(){
-    this.insertServer()
+  created() {
+    this.getSJListPage();
   },
   methods: {
     returnTo() {
@@ -106,16 +112,70 @@ export default {
     //切换页数
     changePage(index) {
       this.page.current = index;
-      this.getListPage();
+      this.getSJListPage();
     },
-    getListPage() {},
-    insertServer() {
-      insertServer().then(res => {
-        let { data, code } = res.data;
+    //获取查询列表
+    getSJListPage() {
+      getSJListPage({
+        createdBy: "", //this.formInline.uploader,
+        dataPath: "", //this.formInline.path.join("/")
+        dataType: "", //this.formInline.type,
+        endTime: "", //this.formInline.date[1],
+        pageNum: this.page.current,
+        pageSize: this.page.pageSize,
+        startTime: "" //this.formInline.date[0]
+      }).then(res => {
+        const { data, code, total } = res.data;
         if (code === 1000) {
-          console.log('data',data);
+          if (data.list.length) {
+            //查詢结果不为空
+            this.page.total = data.total;
+            //赋值dataPutIn
+            this.dataPutIn = data.list.map((item, index) => ({
+              ...item,
+              uploader: item.realName,
+              // type: this.typeList.find((it, id) => it.id === item.dataType)
+              //   .name,
+              time: item.createdTime,
+              id: item.pkId,
+              statusName: this.statusList.find(it => it.id === item.status).name
+            }));
+          } else {
+            // 置空
+            this.dataPutIn = [];
+          }
+          this.selectedRowIds = [];
         }
       });
+    },
+    insertServer() {
+      insertServer({ ids: this.selectedRowIds.join(",") }).then(res => {
+        let { data, code } = res.data;
+        if (code === 1000) {
+          this.getSJListPage();
+        }
+      });
+    },
+    // 选择当前行
+    handleSelectRow(selection, row) {
+      this.selectedRowIds.push(row.id + "");
+      console.log(row.id, this.selectedRowIds);
+    },
+    // 全选
+    handleSelectRowAll(selection) {
+      this.selectedRowIds = selection.map((item, index) => item.id);
+    },
+    // 取消选择当前行
+    handleCancelRow(selection, row) {
+      for (let i = 0; i < this.selectedRowIds.length; i++) {
+        if (this.selectedRowIds[i] === row.id + "") {
+          this.selectedRowIds.splice(i, 1);
+        }
+      }
+    },
+    // 全选取消
+    handleCancelRowAll(selection) {
+      this.selectedRowIds = [];
     }
   }
 };

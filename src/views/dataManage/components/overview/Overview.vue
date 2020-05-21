@@ -131,7 +131,7 @@ import { format, subMonths } from "date-fns";
 import { remToPx } from "@/utils/common";
 import RoseChart from "./components/RoseChart.vue";
 import {
-  getListPage,
+  getSJListPage,
   getTypeDetail,
   getPaths
 } from "@/api/dataManage/overview";
@@ -267,7 +267,7 @@ export default {
   created() {
     this.getPaths();
     this.setTypesTotalData();
-    this.getListPage();
+    this.getSJListPage();
   },
   methods: {
     //设置四大类各自的数据详情
@@ -299,8 +299,8 @@ export default {
       });
     },
     //获取查询列表
-    getListPage() {
-      getListPage({
+    getSJListPage() {
+      getSJListPage({
         createdBy: this.formInline.uploader,
         dataPath: this.formInline.path.join("/"),
         dataType: this.formInline.type,
@@ -331,7 +331,7 @@ export default {
     },
     handleSubmit() {
       this.page.current = 1;
-      this.getListPage();
+      this.getSJListPage();
     },
     //选择日期变化
     handleDateChange(e) {
@@ -340,7 +340,7 @@ export default {
     //切换页数
     changePage(index) {
       this.page.current = index;
-      this.getListPage();
+      this.getSJListPage();
     },
     //选中路径变化
     handlePathChange(a, b) {
