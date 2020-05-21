@@ -1,7 +1,7 @@
 <template>
   <div>
     <Row>
-      <i-col span="4">
+      <i-col span="4" style="overflow:hidden">
         <div class="pd">
           <Menu active-name="mathBasic" @on-select="onSelect">
             <MenuItem

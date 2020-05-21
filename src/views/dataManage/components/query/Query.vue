@@ -166,13 +166,22 @@ export default {
     },
     // 获取元数据
     getMetaByName(name) {
-      getMetaByName({ name }).then(res => {
+      getMetaByName({ dataName:name }).then(res => {
         const { data, code } = res.data;
         if (code === 1000) {
           this.activeMetaData = Object.assign(
             data,
             this.typeList.find((item, index) => item.typeId === data.dataType)
           );
+        } else {
+          this.activeMetaData = {
+            dataName: "",
+            dataType: "",
+            proUnit: "",
+            realName: "",
+            userEmail: "",
+            userPhone: ""
+          };
         }
       });
     },
