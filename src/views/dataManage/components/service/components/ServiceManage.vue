@@ -103,7 +103,7 @@
           <Button type="primary" to="/data/service/register">注册</Button>
         </FormItem>
       </Form>
-      <ButtonGroup>
+      <!-- <ButtonGroup>
         <Button type="primary">
           资源名称
           <Icon type="md-arrow-up" />
@@ -112,7 +112,7 @@
           更新日期
           <Icon type="md-arrow-down" />
         </Button>
-      </ButtonGroup>
+      </ButtonGroup>-->
       <!-- <Button type="primary" to="/data/service/register">注册服务</Button> -->
     </div>
     <div class="mt">
@@ -235,7 +235,8 @@ export default {
           key: "name",
           align: "center",
           width: remToPx(12),
-          tooltip: true
+          tooltip: true,
+          sortable: true
         },
         {
           title: "状态",
@@ -262,7 +263,8 @@ export default {
           title: "发布时间",
           key: "time",
           align: "center",
-          width: remToPx(12)
+          width: remToPx(12),
+          sortable: true
         },
         {
           title: "服务描述",
