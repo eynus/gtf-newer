@@ -295,7 +295,7 @@ export default {
       if (newVal) {
         this.getListById(newVal);
       } else {
-        this.getFWListPage();
+        this.getFWListPage(newVal);
       }
     }
   },
@@ -344,7 +344,8 @@ export default {
                 "-",
               time: format(item.releaseTime, "yyyy-MM-dd hh:mm:ss"),
               desc: item.serviceDesc,
-              id: item.pkId
+              id: item.pkId,
+             
             }));
           } else {
             this.dataPutIn = [];

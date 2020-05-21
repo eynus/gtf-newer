@@ -138,7 +138,8 @@ export default {
               //   .name,
               time: item.createdTime,
               id: item.pkId,
-              statusName: this.statusList.find(it => it.id === item.status).name
+              statusName: this.statusList.find(it => it.id === item.status).name,
+               _disabled: item.status === "0" ? true : false
             }));
           } else {
             // 置空
