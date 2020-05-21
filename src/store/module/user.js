@@ -13,7 +13,6 @@ export default {
     //保存用户信息
     setUserInfo (state, userInfo) {
       state.userInfo = userInfo
-      console.log('userInfo', userInfo);
 
       localStorage.setItem('userInfo', JSON.stringify(userInfo))
     },
@@ -25,8 +24,6 @@ export default {
     //保存用户权限
     setRole (state, role) {
       state.role = role
-      console.log(state.role, 'this is role');
-
       localStorage.setItem('role', JSON.stringify(role))
     },
     //保存token
@@ -49,11 +46,6 @@ export default {
     handleLogin ({ commit, state }, { username, password, kaptcha, publicKey, type }) {
 
       return new Promise((resolve, reject) => {
-        //开启服务之前的临时处理
-        // commit('setToken', '112233')
-        // console.log('role:', state.role)
-        // commit('setRole', state.role)
-        // resolve()
 
         //开启服务之后再解开下面这段代码
         login({ kaptcha, username, password, publicKey, type })

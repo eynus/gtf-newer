@@ -46,7 +46,6 @@ export default {
   computed: {},
   methods: {
     onSelect(name) {
-      console.log(name);
       this.$router.push(`/data/inspection/${name}`)
     }
   }

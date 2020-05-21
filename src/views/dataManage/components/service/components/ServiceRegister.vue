@@ -159,7 +159,6 @@ export default {
     // 选择当前行
     handleSelectRow(selection, row) {
       this.selectedRowIds.push(row.id + "");
-      console.log(row.id, this.selectedRowIds);
     },
     // 全选
     handleSelectRowAll(selection) {

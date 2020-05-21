@@ -175,8 +175,6 @@ export default {
       });
     },
     handleSelect(e) {
-      console.log(e[0]);
-
       this.getMetaByName(e[0]);
     }
   }

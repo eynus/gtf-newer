@@ -60,7 +60,6 @@ export default {
       });
     },
     handleSelect(e) {
-      console.log(".click", e);
       this.selectedId = e;
     }
   }

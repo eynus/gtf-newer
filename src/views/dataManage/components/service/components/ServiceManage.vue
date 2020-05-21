@@ -160,9 +160,9 @@
         @on-select-all="handleSelectRowAll"
         @on-select-all-cancel="handleCancelRowAll"
       >
-         <template slot="status" slot-scope="{row}">
-         <div href="#"  :style="`color:${row.serviceStatus==='0'?'#2d8cf0':'#f00'}`">{{row.status}}</div>
-         </template>
+        <template slot="status" slot-scope="{row}">
+          <div href="#" :style="`color:${row.serviceStatus==='0'?'#2d8cf0':'#f00'}`">{{row.status}}</div>
+        </template>
       </Table>
       <div class="text-right mr-lg mt">
         <Page
@@ -277,7 +277,7 @@ export default {
           title: "服务描述",
           key: "desc",
           align: "center",
-          tooltip: true,
+          tooltip: true
           // width: remToPx(12)
         }
       ],
@@ -337,7 +337,11 @@ export default {
                 .name,
               sevType: "-",
               themeType: "-",
-              spaceType: "-",
+              spaceType:
+                (item.dataType &&
+                  this.typeList.find(it => it.typeId === item.dataType)
+                    .typeName) ||
+                "-",
               time: format(item.releaseTime, "yyyy-MM-dd hh:mm:ss"),
               desc: item.serviceDesc,
               id: item.pkId
@@ -380,8 +384,13 @@ export default {
               status: this.statusList.find(it => it.id === item.serviceStatus)
                 .name,
               sevType: "-",
+
               themeType: "-",
-              spaceType: "-",
+              spaceType:
+                (item.dataType &&
+                  this.typeList.find(it => it.typeId === item.dataType)
+                    .typeName) ||
+                "-",
               time: format(item.releaseTime, "yyyy-MM-dd hh:mm:ss"),
               desc: item.serviceDesc,
               id: item.pkId
