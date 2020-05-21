@@ -80,13 +80,13 @@
       }
     },
     created() {
-       this.activeMenuItem = this.$route.path.replace('/data/','')
+    
+       this.activeMenuItem = this.$route.path.replace('/data/','').split('/')[0]
       //判断当前用户是否有权限显示左侧列表menu
       let dataSiderAuth = this.role.find(
         (item, index) => item.resIdentif === 'main_menu_5'
       ).childs
       //设置show
-
       dataSiderAuth.forEach((item, index) => {
         let targetIndex = this.dataManageList.findIndex(
           (data, idx) => data.id === item
