@@ -3,7 +3,7 @@
     <Row style="height:100%">
       <i-col span="4" class="h100 scroll-y">
         <div class="pd h100">
-          <my-tree :gData="gData" @handleSelect="handleSelect"  type="query"></my-tree>
+          <my-tree :gData="gData" @handleSelect="handleSelect" type="query"></my-tree>
         </div>
       </i-col>
       <i-col span="20" class="pd h100">
@@ -118,16 +118,16 @@ export default {
   data() {
     return {
       activeMode: "normal",
-      activeMetaData:{
-        dataName:'',
-        dataType:'',
-        proUnit:'',
-        realName:'',
-        userEmail:'',
-        userPhone:'',
+      activeMetaData: {
+        dataName: "",
+        dataType: "",
+        proUnit: "",
+        realName: "",
+        userEmail: "",
+        userPhone: ""
       },
       gData: [],
-       typeList: [
+      typeList: [
         {
           typeId: "0",
           typeName: "矢量"
@@ -144,7 +144,7 @@ export default {
           typeId: "3",
           typeName: "其他"
         }
-      ],
+      ]
     };
   },
   components: { MyTree },
@@ -158,8 +158,7 @@ export default {
         const { data, code } = res.data;
         if (code === 1000) {
           let result = handleRawData(data);
-          console.log(result,'result:');
-          
+
           this.gData = result;
         }
       });
@@ -168,14 +167,17 @@ export default {
       getMetaByName({ name }).then(res => {
         const { data, code } = res.data;
         if (code === 1000) {
-         this.activeMetaData = Object.assign(data,this.typeList.find((item,index)=>item.typeId===data.dataType))
+          this.activeMetaData = Object.assign(
+            data,
+            this.typeList.find((item, index) => item.typeId === data.dataType)
+          );
         }
       });
     },
     handleSelect(e) {
       console.log(e[0]);
-      
-      this.getMetaByName(e[0])
+
+      this.getMetaByName(e[0]);
     }
   }
 };

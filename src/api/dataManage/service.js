@@ -10,3 +10,6 @@ export const delFw = data => request({ url: 'data/fw/delFw', method: 'post', dat
 export const updateOver = data => request({ url: 'data/fw/updateOver', method: 'post', data })
 // 启动服务
 export const updateStart = data => request({ url: 'data/fw/updateStart', method: 'post', data })
+// 注册服务
+export const insertServer = data => request({ url: 'data/fw/insertServer', method: 'post', data })
+

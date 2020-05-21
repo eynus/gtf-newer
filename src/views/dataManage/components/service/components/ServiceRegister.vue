@@ -49,6 +49,7 @@
 </template>
 <script>
 import { remToPx } from "@/utils/common";
+import { insertServer } from "@/api/dataManage/service";
 export default {
   name: "Home",
   data() {
@@ -85,7 +86,7 @@ export default {
         {
           status: "未发布",
           dataPath: "/.//"
-        },
+        }
       ],
       page: {
         current: 1,
@@ -95,6 +96,9 @@ export default {
     };
   },
   computed: {},
+  created(){
+    this.insertServer()
+  },
   methods: {
     returnTo() {
       this.$router.push("/data/service");
@@ -104,7 +108,15 @@ export default {
       this.page.current = index;
       this.getListPage();
     },
-    getListPage() {}
+    getListPage() {},
+    insertServer() {
+      insertServer().then(res => {
+        let { data, code } = res.data;
+        if (code === 1000) {
+          console.log('data',data);
+        }
+      });
+    }
   }
 };
 </script>

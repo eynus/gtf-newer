@@ -157,43 +157,43 @@ export default {
   data() {
     return {
       chartData: [
-        ["现状数据", 11],
-        ["规划数据", 10],
-        ["管理数据", 20],
-        ["社会经济数据", 30]
+        ["现状数据", 0],
+        ["规划数据", 0],
+        ["管理数据", 0],
+        ["社会经济数据", 0]
       ],
       dataPath: [],
       dataPaths: [],
       typesTotal: [
         {
           name: "现状数据",
-          firstChilds: 1,
-          secondChilds: 2,
-          totalChilds: 3,
+          firstChilds: 0,
+          secondChilds: 0,
+          totalChilds: 0,
           bgColor: "rgb(0,131,255)",
           icon: "iconfont icon-earth"
         },
         {
           name: "规划数据",
-          firstChilds: 1,
-          secondChilds: 21,
-          totalChilds: 22,
+          firstChilds: 0,
+          secondChilds: 0,
+          totalChilds: 0,
           bgColor: "rgb(255,195,0)",
           icon: "iconfont icon-hill"
         },
         {
           name: "管理数据",
-          firstChilds: 1,
-          secondChilds: 12,
-          totalChilds: 13,
+          firstChilds: 0,
+          secondChilds: 0,
+          totalChilds: 0,
           bgColor: "rgb(67,207,124)",
           icon: "iconfont icon-setting"
         },
         {
           name: "社会经济数据",
-          firstChilds: 12,
-          secondChilds: 12,
-          totalChilds: 24,
+          firstChilds: 0,
+          secondChilds: 0,
+          totalChilds: 0,
           bgColor: "rgb(227,60,100)",
           icon: "iconfont icon-person"
         }

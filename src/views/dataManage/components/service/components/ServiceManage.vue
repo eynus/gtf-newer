@@ -31,7 +31,11 @@
         </i-col>
         <i-col :md="3" :xxl="4">
           <FormItem label="状态：" :label-width="60">
-            <Select v-model="formInline.serviceStatus" class="scroll dropdown" style="width:8.75rem">
+            <Select
+              v-model="formInline.serviceStatus"
+              class="scroll dropdown"
+              style="width:8.75rem"
+            >
               <Option v-for="item in statusList" :value="item.id" :key="item.id">
                 {{
                 item.name
@@ -53,7 +57,7 @@
         </i-col>
         <i-col :md="3" :xxl="4">
           <FormItem label="专题类型：">
-            <Select v-model="formInline.type" class="scroll dropdown"  style="width:8.75rem">
+            <Select v-model="formInline.type" class="scroll dropdown" style="width:8.75rem">
               <Option v-for="item in typeList" :value="item.typeId" :key="item.typeId">
                 {{
                 item.typeName
@@ -278,9 +282,12 @@ export default {
   },
   watch: {
     selectedId(newVal, oldVal) {
-      console.log(newVal, "new");
-      //重新請求数据
-      this.getListById(newVal);
+      //重新請求数据 不为空则代表选择了模块
+      if (newVal) {
+        this.getListById(newVal);
+      } else {
+        this.getListPage();
+      }
     }
   },
   created() {
@@ -291,14 +298,14 @@ export default {
     // 分页查询模块服务列表
     getListById(id) {
       let postData = {
-        pkId: id,
+        identification: id,
         serviceName: this.formInline.serviceName,
         serviceStatus: this.formInline.serviceStatus,
         startTime: this.formInline.date[0],
         endTime: this.formInline.date[1],
         pageNum: this.page.current,
         pageSize: this.page.pageSize,
-        identification: 0,
+        pkId: "",
         createdBy: "",
         serviceDesc: "",
         createdTime: "",

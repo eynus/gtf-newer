@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <Row>
-      <i-col span="4">
-        <div class="pd">
+  <div class="h100">
+     <Row style="height:100%">
+      <i-col span="4" class="h100 scroll-y">
+        <div class="pd h100">
           <my-tree :gData="gData" @handleSelect="handleSelect" type="service"></my-tree>
         </div>
       </i-col>
@@ -60,8 +60,7 @@ export default {
       });
     },
     handleSelect(e) {
-      //[key:'',title:'',childrens:[..]]
-      // this.selectedId = e.childrens ||[];
+      console.log(".click", e);
       this.selectedId = e;
     }
   }
