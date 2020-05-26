@@ -2,6 +2,7 @@
   <div>
     <Input style="margin-bottom: 8px" placeholder="请输入关键字进行搜索" @on-change="onChange" />
     <a-tree
+    ref="tree"
       :expanded-keys="expandedKeys"
       :auto-expand-parent="autoExpandParent"
       :tree-data="gData"
@@ -83,13 +84,18 @@ export default {
     generateList(this.gData);
   },
   methods: {
-    onSelect(e) {
-      if (this.type === "service") {
-        // let target = dataList.find((item, index) => e[0] === item.key);
-        // this.$emit("handleSelect", target);
-        this.$emit("handleSelect", e[0]);
-      } else {
-        this.$emit("handleSelect", e);
+    onSelect(e,a) {
+      // console.log(a,a.node.$refs,a.node.$refs.selectHandle)
+      // this.$set(a.node.$refs.selectHandle,'className','ant-tree-node-content-wrapper ant-tree-node-content-wrapper-close ant-tree-node-selected')
+      // this.$set(a,'selected',true)
+      // this.$set(a.selectedNodes,0,a.node.$vnode)
+      
+      if (e[0]) {
+        if (this.type === "service") {
+          this.$emit("handleSelect", e[0]);
+        } else {
+          this.$emit("handleSelect", e);
+        }
       }
     },
     onExpand(expandedKeys) {
@@ -100,7 +106,7 @@ export default {
       const value = e.target.value;
       const expandedKeys = dataList
         .map(item => {
-          if (item.key.indexOf(value) > -1) {
+          if (item.title.indexOf(value) > -1) {
             return getParentKey(item.key, this.gData);
           }
           return null;
@@ -111,7 +117,7 @@ export default {
         searchValue: value,
         autoExpandParent: true
       });
-    }
+    },
   }
 };
 </script>

@@ -11,7 +11,7 @@
       <i-input
         type="password"
         class="smzx-input-native"
-        v-model="form.password"
+        v-model.trim="form.password"
         size="large"
         placeholder="请输入密码"
       >
@@ -25,7 +25,7 @@
         <i-col span="12">
           <i-input
             class="smzx-input-native"
-            v-model="form.validateCode"
+            v-model.trim="form.validateCode"
             size="large"
             placeholder="请输入验证码"
           >

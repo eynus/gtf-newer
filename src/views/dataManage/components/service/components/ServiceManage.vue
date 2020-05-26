@@ -24,17 +24,18 @@
       width="100%"
     >
       <Row>
-        <i-col :md="5" :xxl="4">
+        <i-col :md="4" :xl="4" :xxl="4">
           <FormItem label="服务名称：">
             <Input v-model.trim="formInline.serviceName" placeholder="请输入" clearable />
           </FormItem>
         </i-col>
-        <i-col :md="3" :xxl="4">
-          <FormItem label="状态：" :label-width="60">
+        <i-col :md="4" :xl="4" :xxl="4">
+          <FormItem label="状态：" :label-width="remToPx(4)">
             <Select
+              :clearable="true"
               v-model="formInline.serviceStatus"
               class="scroll dropdown"
-              style="width:8.75rem"
+              style="width:8.5rem"
             >
               <Option v-for="item in statusList" :value="item.id" :key="item.id">
                 {{
@@ -44,9 +45,14 @@
             </Select>
           </FormItem>
         </i-col>
-        <i-col :md="3" :xxl="4">
+        <i-col :md="4" :xl="4" :xxl="4">
           <FormItem label="服务类型：">
-            <Select v-model="formInline.type" class="scroll dropdown" style="width:8.75rem">
+            <Select
+              :clearable="true"
+              v-model="formInline.type"
+              class="scroll dropdown"
+              style="width:8.5rem"
+            >
               <Option v-for="item in typeList" :value="item.typeId" :key="item.typeId">
                 {{
                 item.typeName
@@ -55,9 +61,9 @@
             </Select>
           </FormItem>
         </i-col>
-        <i-col :md="3" :xxl="4">
+        <i-col :md="4" :xl="4" :xxl="4">
           <FormItem label="专题类型：">
-            <Select v-model="formInline.type" class="scroll dropdown" style="width:8.75rem">
+            <Select v-model="formInline.type" class="scroll dropdown" style="width:8.5rem">
               <Option v-for="item in typeList" :value="item.typeId" :key="item.typeId">
                 {{
                 item.typeName
@@ -66,7 +72,7 @@
             </Select>
           </FormItem>
         </i-col>
-        <i-col :md="8" :xxl="6">
+        <i-col :md="8" :xl="6" :xxl="6">
           <FormItem label="发布时间：">
             <DatePicker
               type="daterange"
@@ -74,82 +80,25 @@
               @on-change="handleDateChange"
               placeholder="请选择起止日期"
               :clearable="false"
-              class="smzx-normal-datepick smzx-date-range"
+              style="width:16.5rem"
             ></DatePicker>
           </FormItem>
         </i-col>
-        <i-col :md="2">
+        <i-col span="2">
           <FormItem :label-width="remToPx(2)">
             <Button type="primary" class="smzx-search-btn" @click="handleSubmit">查询</Button>
           </FormItem>
         </i-col>
       </Row>
     </Form>
-    <div class="flex flex-sb">
-      <Form inline>
-        <FormItem>
-          <Button type="primary">浏览</Button>
-        </FormItem>
-        <FormItem>
-          <Button type="primary" @click="handleStart">启动</Button>
-        </FormItem>
-        <FormItem>
-          <Button type="primary" @click="handleStop">停止</Button>
-        </FormItem>
-        <FormItem>
-          <Button type="primary" @click="handleDelete">删除</Button>
-        </FormItem>
-        <FormItem>
-          <Button type="primary" to="/data/service/register">注册</Button>
-        </FormItem>
-      </Form>
-      <!-- <ButtonGroup>
-        <Button type="primary">
-          资源名称
-          <Icon type="md-arrow-up" />
-        </Button>
-        <Button type="primary">
-          更新日期
-          <Icon type="md-arrow-down" />
-        </Button>
-      </ButtonGroup>-->
-      <!-- <Button type="primary" to="/data/service/register">注册服务</Button> -->
-    </div>
+    <Button type="primary" class="btn-margin">浏览</Button>
+    <Button type="primary" @click="handleStart" class="btn-margin">启动</Button>
+    <Button type="primary" @click="handleStop" class="btn-margin">停止</Button>
+    <Button type="primary" @click="handleDelete" class="btn-margin">删除</Button>
+    <Button type="primary" to="/data/service/register" class="btn-margin">注册</Button>
     <div class="mt">
-      <!-- <div class="service-list-item" v-for="i in 3" :key="`${i}`">
-        <Row :gutter="6" type="flex" justify="center">
-          <i-col span="3">
-            <div class="img-wrap"></div>
-          </i-col>
-          <i-col span="15" class="text-darkgrey">
-            <div class="item-title">2019年昭通影像</div>
-            <Row>
-              <i-col span="8">
-                <span class="item-label">专题类型：</span>
-                <span class="item-value">遥感测绘</span>
-              </i-col>
-              <i-col span="8">
-                <span class="item-label">专题类型：</span>
-                <span class="item-value">遥感测绘</span>
-              </i-col>
-              <i-col span="8">
-                <span class="item-label">专题类型：</span>
-                <span class="item-value">遥感测绘</span>
-              </i-col>
-              <i-col span="8">
-                <span class="item-label">专题类型：</span>
-                <span class="item-value">遥感测绘</span>
-              </i-col>
-            </Row>
-          </i-col>
-          <i-col span="6">
-            <Button type="primary" shape="circle">启动</Button>
-            <Button type="primary" shape="circle" class="ml">停止</Button>
-            <Button type="primary" shape="circle" class="ml">删除</Button>
-          </i-col>
-        </Row>
-      </div>-->
       <Table
+        :loading="tableLoading"
         border
         size="small"
         :columns="columnsPutIn"
@@ -176,11 +125,13 @@
         ></Page>
       </div>
     </div>
+    <my-delete :show="delModalFlag" @ok="confirmDel" @cancel="delModalFlag=false"></my-delete>
   </div>
 </template>
 <script>
 import { remToPx } from "@/utils/common";
 import { format, subMonths } from "date-fns";
+import MyDelete from "_c/delete";
 import {
   getFWListPage,
   getListById,
@@ -191,10 +142,17 @@ import {
 export default {
   name: "serviceManage",
   props: {
-    selectedId: Number
+    selectedId: String
+  },
+  computed: {
+    selectedId() {
+      return selectedId;
+    }
   },
   data() {
     return {
+      tableLoading: false,
+      delModalFlag: false,
       statusList: [
         { name: "正常", id: "0" },
         { name: "停止", id: "1" }
@@ -232,13 +190,13 @@ export default {
           type: "selection",
           key: "time",
           align: "center",
-          width: remToPx(4)
+          width: remToPx(5)
         },
         {
           title: "服务名称",
           key: "name",
           align: "center",
-          width: remToPx(10),
+          width: remToPx(18),
           tooltip: true,
           sortable: true
         },
@@ -246,7 +204,7 @@ export default {
           title: "状态",
           slot: "status",
           align: "center",
-          width: remToPx(5)
+          width: remToPx(6)
         },
         {
           title: "服务类型",
@@ -270,7 +228,7 @@ export default {
           title: "发布时间",
           key: "time",
           align: "center",
-          width: remToPx(12),
+          width: remToPx(14),
           sortable: true
         },
         {
@@ -286,16 +244,17 @@ export default {
         current: 1,
         total: 0,
         pageSize: 10
-      }
+      },
+      unstartedArr: [],
+      startedArr: []
     };
   },
   watch: {
     selectedId(newVal, oldVal) {
       //重新請求数据 不为空则代表选择了模块
       if (newVal) {
+        this.page.current = 1;
         this.getListById(newVal);
-      } else {
-        this.getFWListPage(newVal);
       }
     }
   },
@@ -303,13 +262,16 @@ export default {
     this.getFWListPage();
   },
   computed: {},
+  components: { MyDelete },
   methods: {
     // 分页查询模块服务列表
     getListById(id) {
       let postData = {
         identification: id,
         serviceName: this.formInline.serviceName,
-        serviceStatus: this.formInline.serviceStatus,
+        serviceStatus: this.formInline.serviceStatus
+          ? this.formInline.serviceStatus
+          : "",
         startTime: this.formInline.date[0],
         endTime: this.formInline.date[1],
         pageNum: this.page.current,
@@ -327,26 +289,68 @@ export default {
 
       getListById(postData).then(res => {
         const { data, code } = res.data;
+        this.dataPutIn = [];
+        this.unstartedArr = [];
+        this.startedArr = [];
+        this.tableLoading = false;
         if (code === 1000) {
+          this.page.total = data.total;
           if (data.list.length) {
-            this.page.total = data.total;
-            this.dataPutIn = data.list.map((item, index) => ({
-              ...item,
-              name: item.serviceName,
-              status: this.statusList.find(it => it.id === item.serviceStatus)
-                .name,
-              sevType: "-",
-              themeType: "-",
-              spaceType:
-                (item.dataType &&
-                  this.typeList.find(it => it.typeId === item.dataType)
-                    .typeName) ||
-                "-",
-              time: format(item.releaseTime, "yyyy-MM-dd hh:mm:ss"),
-              desc: item.serviceDesc,
-              id: item.pkId,
-             
-            }));
+            if (Array.isArray(data.list[0])) {
+              data.list.forEach(it => {
+                it.forEach(it2 => {
+                  this.dataPutIn.push({
+                    ...it2,
+                    name: it2.serviceName,
+                    status: this.statusList.find(
+                      it => it.id === it2.serviceStatus
+                    ).name,
+                    sevType: "-",
+
+                    themeType: "-",
+                    spaceType:
+                      (it2.dataType &&
+                        this.typeList.find(it => it.typeId === it2.dataType)
+                          .typeName) ||
+                      "-",
+                    time: format(it2.releaseTime, "yyyy-MM-dd hh:mm:ss"),
+                    desc: it2.serviceDesc,
+                    id: it2.pkId
+                  });
+                  if (it2.serviceStatus === "0") {
+                    this.startedArr.push(it2.pkId + "");
+                  } else {
+                    this.unstartedArr.push(it2.pkId + "");
+                  }
+                });
+              });
+            } else {
+              data.list.forEach(it2 => {
+                this.dataPutIn.push({
+                  ...it2,
+                  name: it2.serviceName,
+                  status: this.statusList.find(
+                    it => it.id === it2.serviceStatus
+                  ).name,
+                  sevType: "-",
+
+                  themeType: "-",
+                  spaceType:
+                    (it2.dataType &&
+                      this.typeList.find(it => it.typeId === it2.dataType)
+                        .typeName) ||
+                    "-",
+                  time: format(it2.releaseTime, "yyyy-MM-dd hh:mm:ss"),
+                  desc: it2.serviceDesc,
+                  id: it2.pkId
+                });
+                if (it2.serviceStatus === "0") {
+                  this.startedArr.push(it2.pkId + "");
+                } else {
+                  this.unstartedArr.push(it2.pkId + "");
+                }
+              });
+            }
           } else {
             this.dataPutIn = [];
           }
@@ -355,9 +359,12 @@ export default {
     },
     //分页查询服务列表
     getFWListPage() {
+      this.tableLoading = true;
       let postData = {
         serviceName: this.formInline.serviceName,
-        serviceStatus: this.formInline.serviceStatus,
+        serviceStatus: this.formInline.serviceStatus
+          ? this.formInline.serviceStatus
+          : "",
         startTime: this.formInline.date[0],
         endTime: this.formInline.date[1],
         pageNum: this.page.current,
@@ -376,26 +383,37 @@ export default {
 
       getFWListPage(postData).then(res => {
         const { data, code } = res.data;
+        this.dataPutIn = [];
+        this.unstartedArr = [];
+        this.startedArr = [];
+        this.tableLoading = false;
         if (code === 1000) {
+          this.page.total = data.total;
           if (data.list.length) {
-            this.page.total = data.total;
-            this.dataPutIn = data.list.map((item, index) => ({
-              ...item,
-              name: item.serviceName,
-              status: this.statusList.find(it => it.id === item.serviceStatus)
-                .name,
-              sevType: "-",
+            data.list.forEach((item, index) => {
+              this.dataPutIn.push({
+                ...item,
+                name: item.serviceName,
+                status: this.statusList.find(it => it.id === item.serviceStatus)
+                  .name,
+                sevType: "-",
 
-              themeType: "-",
-              spaceType:
-                (item.dataType &&
-                  this.typeList.find(it => it.typeId === item.dataType)
-                    .typeName) ||
-                "-",
-              time: format(item.releaseTime, "yyyy-MM-dd hh:mm:ss"),
-              desc: item.serviceDesc,
-              id: item.pkId
-            }));
+                themeType: "-",
+                spaceType:
+                  (item.dataType &&
+                    this.typeList.find(it => it.typeId === item.dataType)
+                      .typeName) ||
+                  "-",
+                time: format(item.releaseTime, "yyyy-MM-dd hh:mm:ss"),
+                desc: item.serviceDesc,
+                id: item.pkId
+              });
+              if (item.serviceStatus === "0") {
+                this.startedArr.push(item.pkId + "");
+              } else {
+                this.unstartedArr.push(item.pkId + "");
+              }
+            });
           } else {
             this.dataPutIn = [];
           }
@@ -404,6 +422,8 @@ export default {
     },
     // 点击查询按钮
     handleSubmit() {
+      console.log(this.formInline.serviceStatus, "???");
+
       this.page.current = 1;
       this.getFWListPage();
     },
@@ -411,7 +431,11 @@ export default {
     //切换页数
     changePage(index) {
       this.page.current = index;
-      // this.getFWListPage();
+      if (this.selectedId) {
+        this.getListById(this.selectedId);
+      } else {
+        this.getFWListPage();
+      }
     },
     //选择日期变化
     handleDateChange(e) {
@@ -420,15 +444,20 @@ export default {
     // 点击启动按钮
     handleStart() {
       if (this.selectedRowIds.length) {
-        updateStart({ checkbox: this.selectedRowIds.join(",") }).then(res => {
-          const { data, code } = res.data;
-          if (code === 1000) {
-            //修改成功，再请求一次
-            this.$Message.info("启动成功");
-            this.selectedRowIds = [];
-            this.getFWListPage();
-          }
-        });
+        // 不包含已启动的选项
+        if (_.intersection(this.selectedRowIds, this.startedArr).length) {
+          this.$Message.info("您选择的服务中包含已启动项！");
+        } else {
+          updateStart({ checkbox: this.selectedRowIds.join(",") }).then(res => {
+            const { data, code } = res.data;
+            if (code === 1000) {
+              //修改成功，再请求一次
+              this.$Message.info("启动成功");
+              this.selectedRowIds = [];
+              this.getFWListPage();
+            }
+          });
+        }
       } else {
         this.$Message.info("请选择服务");
       }
@@ -436,35 +465,43 @@ export default {
     // 点击停止按钮
     handleStop() {
       if (this.selectedRowIds.length) {
-        updateOver({ checkbox: this.selectedRowIds.join(",") }).then(res => {
-          const { data, code } = res.data;
-          if (code === 1000) {
-            //修改成功，再请求一次
-            this.$Message.info("停止成功");
-            this.selectedRowIds = [];
-            this.getFWListPage();
-          }
-        });
+        if (_.intersection(this.selectedRowIds, this.unstartedArr).length) {
+          this.$Message.info("您选择的服务中包含已停止项！");
+        } else {
+          updateOver({ checkbox: this.selectedRowIds.join(",") }).then(res => {
+            const { data, code } = res.data;
+            if (code === 1000) {
+              this.$Message.info("停止成功");
+              this.selectedRowIds = [];
+              this.getFWListPage();
+            }
+          });
+        }
       } else {
         this.$Message.info("请选择服务");
       }
+    },
+    // 确认删除
+    confirmDel() {
+      delFw({ ids: this.selectedRowIds.join(",") }).then(res => {
+        const { data, code } = res.data;
+        if (code === 1000) {
+          this.delModalFlag = false;
+          this.$Message.info("删除成功");
+          this.selectedRowIds = [];
+          this.getFWListPage();
+        }
+      });
     },
     // 点击删除按钮
     handleDelete() {
       if (this.selectedRowIds.length) {
-        delFw({ ids: this.selectedRowIds.join(",") }).then(res => {
-          const { data, code } = res.data;
-          if (code === 1000) {
-            //修改成功，再请求一次
-            this.$Message.info("删除成功");
-            this.selectedRowIds = [];
-            this.getFWListPage();
-          }
-        });
+        this.delModalFlag = true;
       } else {
         this.$Message.info("请选择服务");
       }
     },
+    // 选择某一行
     handleSelectRow(selection, row) {
       this.selectedRowIds.push(row.id + "");
     },
@@ -485,6 +522,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.btn-margin {
+  margin-left: 1rem;
+}
 .img-wrap {
   width: 5rem;
   height: 5rem;

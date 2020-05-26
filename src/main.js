@@ -7,7 +7,7 @@ import './assets/iconfont/iconfont.css';
 import './style.scss';
 import 'view-design/dist/styles/iview.css';
 // iview覆盖样式
-
+import * as _ from 'lodash'
 import { Tree } from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import './assets/css/reset.css'

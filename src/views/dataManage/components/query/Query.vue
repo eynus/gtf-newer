@@ -30,7 +30,7 @@
               </div>
               <div>
                 <span class="meta_label">内容描述：</span>
-                <span>-</span>
+                <span>{{activeMetaData.contentDoc}}</span>
               </div>
             </div>
             <div>
@@ -49,41 +49,41 @@
               </div>
               <div>
                 <span class="meta_label">通信地址：</span>
-                <span>-</span>
+                <span>{{activeMetaData.address}}</span>
               </div>
               <div>
                 <span class="meta_label">邮政编码：</span>
-                <span>-</span>
+                <span>{{activeMetaData.postCode}}</span>
               </div>
             </div>
             <div>
               <div class="meta_title">范围信息</div>
               <div>
                 <span class="meta_label">上：</span>
-                <span></span>
+                <span>{{activeMetaData.scopeUp}}</span>
               </div>
               <div>
                 <span class="meta_label">左：</span>
-                <span></span>
+                <span>{{activeMetaData.scopeLeft}}</span>
               </div>
               <div>
                 <span class="meta_label">右：</span>
-                <span></span>
+                <span>{{activeMetaData.scopeRight}}</span>
               </div>
               <div>
                 <span class="meta_label">下：</span>
-                <span></span>
+                <span>{{activeMetaData.scopeDown}}</span>
               </div>
             </div>
             <div>
               <div class="meta_title">空间参考</div>
               <div>
                 <span class="meta_label">空间参考名称：</span>
-                <span>-</span>
+                <span>{{activeMetaData.spaceName}}</span>
               </div>
               <div>
                 <span class="meta_label">投影：</span>
-                <span>-</span>
+                <span>{{activeMetaData.projection}}</span>
               </div>
             </div>
           </div>
@@ -144,13 +144,22 @@ export default {
           typeId: "3",
           typeName: "其他"
         }
-      ]
+      ],
+      timer1: null
     };
   },
   components: { MyTree },
   computed: {},
   created() {
     this.getCatalogue();
+  },
+  mounted() {
+    this.timer1 = setInterval(() => {
+      this.getCatalogue();
+    }, 1000*60*10);
+  },
+  beforeDestroy() {
+    clearInterval(this.timer1);
   },
   methods: {
     // 获取左侧目录
@@ -166,7 +175,7 @@ export default {
     },
     // 获取元数据
     getMetaByName(name) {
-      getMetaByName({ dataName:name }).then(res => {
+      getMetaByName({ dataName: name }).then(res => {
         const { data, code } = res.data;
         if (code === 1000) {
           this.activeMetaData = Object.assign(

@@ -1,7 +1,6 @@
 <template>
-  <div>tableP
+  <div>
     <div class="mt">
-      属性结构
       <Form inline>
         <FormItem>
           <Button type="success">默认启用</Button>

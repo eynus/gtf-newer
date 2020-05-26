@@ -28,7 +28,7 @@ const handleRawData = data => {
     //   newData[i].children = handleRawData(data[i].childrens);
     // }
     newData[i].childrens = data[i].childrens;
-    newData[i].key = data[i].pkId;
+    newData[i].key = data[i].identification+'';
     // newData[i].key = data[i].dataName + data[i].pkId;
     newData[i].title = data[i].dataName;
     newData[i].scopedSlots = { title: "title" };
@@ -41,7 +41,7 @@ export default {
     return {
       buttonSize: "large",
       gData: [],
-      selectedId: -1
+      selectedId: ''
     };
   },
   created() {

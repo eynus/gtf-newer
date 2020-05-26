@@ -18,10 +18,17 @@
       <div class="flex flex-sb">
         <div>
           <FormItem prop="name">
-            <Input style placeholder="请输入服务名称关键字" />
+            <Input
+              :clearable="true"
+              v-model.trim="serviceName"
+              placeholder="请输入数据名称关键字"
+              style="width:20rem"
+            />
           </FormItem>
           <FormItem>
-            <Button type="primary">查询</Button>
+            <Input style="display:none" />
+            <!-- 解决单个input 回车自动刷新的问题 -->
+            <Button type="primary" @click="handleSubmit">查询</Button>
           </FormItem>
         </div>
         <FormItem>
@@ -31,6 +38,7 @@
     </Form>
 
     <Table
+      :loading="tableLoading"
       border
       size="small"
       :columns="columnsPutIn"
@@ -45,7 +53,7 @@
         <a href="#">{{row.dataPath}}</a>
       </template>
       <template slot="status" slot-scope="{row}">
-        <div href="#"  :style="`color:${row.status==='0'?'#2d8cf0':'#FF7421'}`">{{row.statusName}}</div>
+        <div href="#" :style="`color:${row.status==='0'?'#2d8cf0':'#FF7421'}`">{{row.statusName}}</div>
       </template>
     </Table>
     <div class="text-right mr-lg mt">
@@ -68,6 +76,8 @@ export default {
   name: "Home",
   data() {
     return {
+      serviceName: "",
+      tableLoading: false,
       selectedRowIds: [],
       statusList: [
         { name: "已发布", id: "0" },
@@ -109,6 +119,10 @@ export default {
     returnTo() {
       this.$router.push("/data/service");
     },
+    handleSubmit() {
+      this.page.current = 1;
+      this.getSJListPage();
+    },
     //切换页数
     changePage(index) {
       this.page.current = index;
@@ -116,27 +130,32 @@ export default {
     },
     //获取查询列表
     getSJListPage() {
+      this.tableLoading = true;
       getSJListPage({
+        pageSize: this.page.pageSize,
+        pageNum: this.page.current,
+        serviceName: this.serviceName,
         createdBy: "", //this.formInline.uploader,
         dataPath: "", //this.formInline.path.join("/")
         dataType: "", //this.formInline.type,
         endTime: "", //this.formInline.date[1],
-        pageNum: this.page.current,
-        pageSize: this.page.pageSize,
         startTime: "" //this.formInline.date[0]
       }).then(res => {
         const { data, code, total } = res.data;
         if (code === 1000) {
+          this.tableLoading = false;
           if (data.list.length) {
             //查詢结果不为空
             this.page.total = data.total;
             this.dataPutIn = data.list.map((item, index) => ({
               ...item,
+              dataPath: item.dataPath + "/" + item.dataName,
               uploader: item.realName,
               time: item.createdTime,
               id: item.pkId,
-              statusName: this.statusList.find(it => it.id === item.status).name,
-               _disabled: item.status === "0" ? true : false
+              statusName: this.statusList.find(it => it.id === item.status)
+                .name,
+              _disabled: item.status === "0" ? true : false
             }));
           } else {
             // 置空
@@ -147,12 +166,16 @@ export default {
       });
     },
     insertServer() {
-      insertServer({ ids: this.selectedRowIds.join(",") }).then(res => {
-        let { data, code } = res.data;
-        if (code === 1000) {
-          this.getSJListPage();
-        }
-      });
+      if (this.selectedRowIds.length) {
+        insertServer({ ids: this.selectedRowIds.join(",") }).then(res => {
+          let { data, code } = res.data;
+          if (code === 1000) {
+            this.getSJListPage();
+          }
+        });
+      } else {
+        this.$Message.info("请选择数据");
+      }
     },
     // 选择当前行
     handleSelectRow(selection, row) {
