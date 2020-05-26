@@ -5,7 +5,7 @@ import Cookies from 'js-cookie'
 
 // create an axios instance
 const service = axios.create({
-  baseURL:'lsp/api/', // api 的 base_url
+  // baseURL:'lsp/api/', // api 的 base_url
   // baseURL:config.baseUrl.dev + 'lsp/api/', // api 的 base_url
   timeout: 500000 // request timeout
 })
