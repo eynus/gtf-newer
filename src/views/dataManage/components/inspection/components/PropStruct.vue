@@ -89,9 +89,14 @@
               ></Table>
             </div>
             <div class="right-box">
-              <Form :model="modalKeyFormItem" :label-width="remToPx(7.5)" inline>
+              <Form
+                :model="modalKeyFormItem"
+                ref="modalKeyFormItem"
+                :label-width="remToPx(7.5)"
+                inline
+              >
                 <FormItem label="字段名称：">
-                  <Input v-model.trim="modalKeyFormItem.keyName"/>
+                  <Input v-model.trim="modalKeyFormItem.keyName" />
                 </FormItem>
                 <FormItem label="字段类型：">
                   <Select v-model="modalKeyFormItem.keyType" style="width:10.25rem">
@@ -376,17 +381,21 @@ export default {
     },
     // 添加字段-提交
     handleKeySubmit() {
-      this.handleEnableBtn();
-      this.$Message.info("添加成功！");
-      this.positionLeft = 0;
-      this.modalForm.dataPropDefine.push({
-        name: this.modalKeyFormItem.keyName,
-        code: this.modalKeyFormItem.keyCode,
-        type: this.modalKeyFormItem.keyType,
-        length: this.modalKeyFormItem.keyLength,
-        digit: this.modalKeyFormItem.keyDigit
+      this.$refs.modalKeyFormItem.validate(valid => {
+        if (valid) {
+          this.handleEnableBtn();
+          this.$Message.info("添加成功！");
+          this.positionLeft = 0;
+          this.modalForm.dataPropDefine.push({
+            name: this.modalKeyFormItem.keyName,
+            code: this.modalKeyFormItem.keyCode,
+            type: this.modalKeyFormItem.keyType,
+            length: this.modalKeyFormItem.keyLength,
+            digit: this.modalKeyFormItem.keyDigit
+          });
+          this.clearFormItem();
+        }
       });
-      this.clearFormItem();
     },
     // 添加/修改字段-取消
     handleKeyQuit() {
