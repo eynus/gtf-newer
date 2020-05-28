@@ -1,11 +1,12 @@
 <template>
   <div class="home h100">
     <Layout style="height:100%;">
-      <Sider class="h100" width="110" :style="{background: '#fff'}">
+      <Sider class="h100" :width="`${remToPx(5.25)}`" :style="{background: '#fff'}">
         <Menu
           :active-name="activeMenuItem"
           theme="light"
-          width="auto"
+          :width="`100%`"
+          style="height:100%"
           :class="menuitemClasses"
           @on-select="changeRoute"
         >
@@ -13,18 +14,18 @@
             <MenuItem :name="item.key" class="menu-item mb" :key="`dml_${index}`" v-if="item.show">
               <Icon
                 :custom="item.icon"
-                size="22"
+                size="24"
                 :color="activeMenuItem===`${item.key}`?'#2d8cf0':'#8391B8'"
               />
               <div>{{item.name}}</div>
             </MenuItem>
           </template>
         </Menu>
-        <div slot="trigger"></div>
+        <!-- <div slot="trigger"></div> -->
       </Sider>
       <Layout class="h100">
-        <div :style="{ height: `calc(100% - 42px)` }" class="pd">
-          <div class="scroll-y h100 card-style">
+        <div :style="{ height: `calc(100% - ${remToPx(2.8)}px)` }" style="box-sizing: border-box;"  class="pd">
+          <div class="h100 card-style">
             <router-view />
           </div>
         </div>
@@ -128,12 +129,16 @@
     border-radius: 4px;
   }
   .menu-item {
+    & + .menu-item {
+      margin-top: 1.5rem;
+    }
     text-align: center;
     color: #8391b8;
     padding: 10px 0;
-    font-weight: 600;
+    // font-weight: 600;
     div {
       margin-top: 6px;
+      
     }
   }
 </style>

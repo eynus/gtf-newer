@@ -17,6 +17,9 @@
     background-color: rgb(229,229,229);
     font-size: .875rem;
 }
+.ivu-table-small td{
+    height: 2.5rem;
+}
 .ivu-table-overflowX {
     overflow-x: hidden !important;
   }
@@ -24,9 +27,11 @@
   .ivu-table-tip {
     overflow-x: hidden !important;
   }
+  /* menu */
   .ivu-menu-item{
-      font-size:16px;
+      font-size:1rem;
   }
+  /* tree */
   .ant-tree{
       font-size: 1rem;
       font-weight: bold;
@@ -44,5 +49,5 @@
       margin-right: .625rem;
   }
   .ivu-form-item{
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
   }

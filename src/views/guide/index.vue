@@ -46,166 +46,169 @@
 </template>
 
 <script>
-  // @ is an alias to /src
-  import MyFooter from '@/components/MyFooter'
-  import { mapGetters } from 'vuex'
-  export default {
-    name: 'Home',
-    components: { MyFooter },
-    data() {
-      return {
-        guideList: [
-          {
-            name: '一张图可视化',
-            color: '#E63A3D',
-            show: false,
-            to: 'data/overview'
-          },
-          { name: '实施监督管理', color: '#F76110', show: false, to: 'data' },
-          { name: '模型指标配置管理', color: '#F0B800', show: false, to: 'data' },
-          {
-            name: '数据管理',
-            color: '#00C6FF',
-            show: false,
-            to: 'data/overview'
-          },
-          { name: '运维管理', color: '#0083FF', show: false, to: 'data' }
-        ]
+// @ is an alias to /src
+import MyFooter from "@/components/MyFooter";
+import { mapGetters } from "vuex";
+export default {
+  name: "Home",
+  components: { MyFooter },
+  data() {
+    return {
+      guideList: [
+        {
+          name: "一张图可视化",
+          color: "#E63A3D",
+          show: false,
+          to: "data/overview"
+        },
+        { name: "实施监督管理", color: "#F76110", show: false, to: "data" },
+        { name: "模型指标配置管理", color: "#F0B800", show: false, to: "data" },
+        {
+          name: "数据管理",
+          color: "#00C6FF",
+          show: false,
+          to: "data/overview"
+        },
+        { name: "运维管理", color: "#0083FF", show: false, to: "data" }
+      ]
+    };
+  },
+  computed: {
+    ...mapGetters(["role"])
+  },
+  created() {
+    // 请求图片
+    this.guideList = this.guideList.map((item, index) => ({
+      ...item,
+      bg: require(`../../assets/img/guide/beijing-${index + 1}.png`),
+      icon: require(`../../assets/img/guide/icon-${index + 1}.png`)
+    }));
+    // 根据用户权限判断模块的显示
+    this.role.forEach((item, index) => {
+      switch (item.resIdentif) {
+        case "main_menu_1":
+          this.$set(this.guideList[0], "show", true);
+
+          break;
+        case "main_menu_2":
+          this.$set(this.guideList[1], "show", true);
+
+          break;
+        case "main_menu_3":
+          this.$set(this.guideList[2], "show", true);
+          break;
+        case "main_menu_4":
+          this.$set(this.guideList[4], "show", true);
+          break;
+        case "main_menu_5":
+          this.$set(this.guideList[3], "show", true);
+          break;
+
+        default:
+          break;
       }
-    },
-    computed: {
-      ...mapGetters(['role'])
-    },
-    created() {
-    
-      // 请求图片
-      this.guideList = this.guideList.map((item, index) => ({
-        ...item,
-        bg: require(`../../assets/img/guide/beijing-${index + 1}.png`),
-        icon: require(`../../assets/img/guide/icon-${index + 1}.png`)
-      }))
-      // 根据用户权限判断模块的显示
-      this.role.forEach((item, index) => {
-        switch (item.resIdentif) {
-          case 'main_menu_1':
-            this.$set(this.guideList[0], 'show', true)
+    });
+  },
 
-            break
-          case 'main_menu_2':
-            this.$set(this.guideList[1], 'show', true)
-
-            break
-          case 'main_menu_3':
-            this.$set(this.guideList[2], 'show', true)
-            break
-          case 'main_menu_4':
-            this.$set(this.guideList[4], 'show', true)
-            break
-          case 'main_menu_5':
-            this.$set(this.guideList[3], 'show', true)
-            break
-
-          default:
-            break
-        }
-      })
-      
-    },
-
-    watch: {},
-    methods: {
-      changeRoute(show, path) {
-        if (show) {
-          this.$router.push('/' + path)
-        } else {
-          this.$Message.error({
-            content: '暂无权限',
-            duration: 3
-          })
-        }
+  watch: {},
+  methods: {
+    changeRoute(show, path) {
+      if (show) {
+        this.$router.push("/" + path);
+      } else {
+        this.$Message.error({
+          content: "暂无权限",
+          duration: 3
+        });
       }
     }
   }
+};
 </script>
 <style lang="scss" scoped>
-  .guide-bg {
-    background-image: url('../../assets/img/guide/guide_bg.png');
+.guide-bg {
+  background-image: url("../../assets/img/guide/guide_bg.png");
 
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 100% 100%;
+}
+.guide {
+  min-height: 100vh;
+  h1 {
+    padding: 1rem;
+    color: #0083ff;
   }
-  .guide {
-    min-height: 100vh;
-    h1 {
-      padding: 1rem;
-      color: #0083ff;
-    }
-    &-body {
-      height: 86vh;
+  &-body {
+    height: 86vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: space-between;
+    &-top,
+    &-bottom {
       display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      align-items: space-between;
-      &-top,
-      &-bottom {
+      justify-content: space-between;
+      align-items: center;
+    }
+    &-top {
+      &-left {
+        width: 28rem;
+        height: 11rem;
+        color: rgba(0, 0, 0, 0.75);
+        text-indent: 2em;
+        padding: 1.25rem;
+        font-weight: 500;
+        line-height: 1.6rem;
+        border-radius: 0.4rem;
+        box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
+      }
+      &-right {
+        width: 30%;
+        height: 10rem;
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+    &-bottom {
+      &-item {
+        &:hover {
+          transform: scale(1.2);
+        }
+        transform: scale(1);
+        transition: all 0.2s linear;
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
+        justify-content: center;
         align-items: center;
-      }
-      &-top {
-        &-left {
-          width: 28rem;
-          height: 11rem;
-          color: rgba(0, 0, 0, 0.75);
-          text-indent: 2em;
-          padding: 1.25rem;
-          font-weight: 500;
-          line-height: 1.6rem;
-          border-radius: 0.4rem;
-          box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
-        }
-        &-right {
-          width: 30%;
-          height: 10rem;
-          background-color: rgba(0, 0, 0, 0.1);
-        }
-      }
-      &-bottom {
-        &-item {
+        cursor: pointer;
+        font-size: 1.2rem;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: 100% 100%;
+        width: 14%;
+
+        padding-top: 4rem;
+        padding-bottom: 2rem;
+        color: rgba(0, 0, 0, 0.6);
+        font-weight: 700;
+
+        &-icon {
+          width: 56%;
+          height: 120px;
           display: flex;
-          flex-direction: column;
-          justify-content: center;
           align-items: center;
-          cursor: pointer;
-          font-size: 1.2rem;
-          background-repeat: no-repeat;
-          background-position: center center;
-          background-size: 100% 100%;
-          width: 14%;
+          justify-content: center;
+          text-align: center;
 
-          padding-top: 4rem;
-          padding-bottom: 2rem;
-          color: rgba(0, 0, 0, 0.6);
-          font-weight: 700;
-
-          &-icon {
-            width: 56%;
-            height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-
-            margin-bottom: 1rem;
-            padding: 1rem;
-            img {
-              width: 80%;
-            }
+          margin-bottom: 1rem;
+          padding: 1rem;
+          img {
+            width: 80%;
           }
         }
       }
     }
   }
+}
 </style>
 

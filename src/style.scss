@@ -73,30 +73,36 @@ a{
     align-items: center;
 }
 //   margin
+.mg{
+    margin: 0.625rem;
+}
 .ml{
-    margin-left: 10px;
+    margin-left: .625rem;
 }
 .mr{
-    margin-right: 10px;
+    margin-right: .625rem;
 }
 .ml-lg{
-    margin-left: 20px;
+    margin-left: 1.25rem;
 }
 .mr-lg{
-    margin-right: 20px;
+    margin-right: 1.25rem;
 }
 .mt{
-    margin-top: 10px;
+    margin-top: .625rem;
+}
+.mt-lg{
+    margin-top: 1.25rem;
 }
 .mb{
-    margin-bottom: 10px;
+    margin-bottom: .625rem;
 }
 //padding
 .pd{
-    padding: 10px;
+    padding: .625rem;
 }
 .pd-lg{
-    padding: 20px;
+    padding: 1.25rem;
 }
 // position
 .position-r{
@@ -122,6 +128,9 @@ a{
 .fs20{
     font-size: 1.25rem;
 }
+.fs30{
+    font-size:1.875rem;
+}
 // module-head
 .module-head {
     background-color: rgba(0, 0, 0, 0.1);
@@ -129,7 +138,7 @@ a{
     font-size: 1rem;
     line-height: 1.75;
     color: rgb(81, 81, 81);
-    padding: 0 4px;
+    padding: 0 .25rem;
   }
 //   文字颜色
 .text-blue{

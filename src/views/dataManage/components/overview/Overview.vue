@@ -5,20 +5,20 @@
         <Icon custom="iconfont  icon-type" size="16" color="#2d8cf0" />
         <span class="ml">分类汇总</span>
       </div>
-      <div class="card-body pd-lg">
+      <div class="card-body pd">
         <Row>
           <i-col span="14">
             <Row type="flex" :gutter="12">
               <i-col span="12" order="1" v-for="(item,index) in typesTotal" :key="`type_${index}`">
                 <div class="card-left-item" :style="`backgroundColor:${item.bgColor}`">
-                  <div class="card-left-item-title">
-                    <Icon :custom="`${item.icon}`" size="30" color="#fff" />
-                    <span class="ml">{{item.name}}</span>
-                  </div>
                   <div>
                     <Row type="flex" align="bottom">
                       <i-col span="18">
-                        <Row type="flex">
+                        <div class="card-left-item-title">
+                          <Icon :custom="`${item.icon}`" size="30" color="#fff" />
+                          <span class="ml">{{item.name}}</span>
+                        </div>
+                        <Row type="flex" class="mt">
                           <i-col span="12">
                             <span class="fs16">{{item.firstChilds}}个一级子类</span>
                           </i-col>
@@ -113,7 +113,6 @@
         </Table>
         <div class="text-right mr-lg mt">
           <Page
-          :size="'small'"
             :total="page.total"
             @on-change="changePage"
             show-total
@@ -310,16 +309,14 @@ export default {
       }).then(res => {
         const { data, code, total } = res.data;
         if (code === 1000) {
+          this.page.total = data.total;
           if (data.list.length) {
-            //查詢结果不为空
-            this.page.total = data.total;
-            //赋值dataPutIn
             this.dataPutIn = data.list.map((item, index) => ({
               uploader: item.realName,
               type: this.typeList.find((it, id) => it.id === item.dataType)
                 .name,
               time: item.createdTime,
-              dataPath:item.dataPath
+              dataPath: item.dataPath
             }));
           } else {
             // 置空
@@ -349,7 +346,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.ivu-table{
+.ivu-table {
   min-height: 280px;
 }
 .card-container {
@@ -370,10 +367,10 @@ export default {
       .card-left-item-title {
         font-size: 1.5rem;
 
-        font-weight: 500;
+        font-weight: 600;
       }
       .card-left-item-total {
-        font-size: 2.75rem;
+        font-size: 3rem;
         font-weight: bold;
       }
     }

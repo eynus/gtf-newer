@@ -30,10 +30,8 @@ module.exports = {
         port: '8080',                          
         proxy: {
             '/*': {
-                // target: 'http://192.168.6.14:9995/', //本地
-                target: 'http://192.168.6.14:9992/', //本地
-                // target: 'http://192.168.6.17:9995/', //本地
-                // target: 'http://120.24.69.160:8080/', //外网
+                // target: 'http://192.168.6.13:9995/', //登录
+                target: 'http://192.168.6.13:9992/', //数据管理
                 ws: false,
                 changeOrigin: true
             }

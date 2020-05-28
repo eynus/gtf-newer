@@ -115,7 +115,6 @@
       </Table>
       <div class="text-right mr-lg mt">
         <Page
-          :size="'small'"
           :total="page.total"
           @on-change="changePage"
           show-total
@@ -422,8 +421,6 @@ export default {
     },
     // 点击查询按钮
     handleSubmit() {
-      console.log(this.formInline.serviceStatus, "???");
-
       this.page.current = 1;
       this.getFWListPage();
     },
@@ -444,6 +441,8 @@ export default {
     // 点击启动按钮
     handleStart() {
       if (this.selectedRowIds.length) {
+        console.log(this.selectedRowIds, this.startedArr,_.intersection(this.selectedRowIds, this.startedArr).length);
+        
         // 不包含已启动的选项
         if (_.intersection(this.selectedRowIds, this.startedArr).length) {
           this.$Message.info("您选择的服务中包含已启动项！");
@@ -506,7 +505,7 @@ export default {
       this.selectedRowIds.push(row.id + "");
     },
     handleSelectRowAll(selection) {
-      this.selectedRowIds = selection.map((item, index) => item.id);
+      this.selectedRowIds = selection.map((item, index) => item.id+'');
     },
     handleCancelRow(selection, row) {
       for (let i = 0; i < this.selectedRowIds.length; i++) {

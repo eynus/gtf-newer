@@ -24,7 +24,9 @@ export default {
   // bottom: 0;
   width: 100%;
   background-color: transparent;
+  font-size: .875rem;
+  line-height: 1.325rem;
   text-align: center;
-  height: 42px;
+  height: 2.65rem;
 }
 </style>

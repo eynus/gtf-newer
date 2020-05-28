@@ -3,7 +3,7 @@
     <chart-rose-pie :option="option" :value="data" class="h100 w100"></chart-rose-pie>
     <div class="upper-inner text-center">
       <h3>数据总量</h3>
-      <div class="fs20">{{dataTotal}}</div>
+      <div class="fs30">{{dataTotal}}</div>
     </div>
   </div>
 </template>

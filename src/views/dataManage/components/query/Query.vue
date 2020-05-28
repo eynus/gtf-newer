@@ -13,7 +13,7 @@
             <Radio label="meta">元数据信息</Radio>
           </RadioGroup>
         </div>
-        <div class="bordered w100 h100 mt img-container" :style="{ height: `calc(100% - 42px)` }">
+        <div class="bordered w100 h100 mt img-container" :style="{ height: `calc(100% - ${remToPx(2.65)}px)` }">
           <div v-if="activeMode==='normal'">
             <img class="img" src="../../../../assets/img/dataManage/query/map.png" alt />
           </div>

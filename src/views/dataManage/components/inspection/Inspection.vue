@@ -3,7 +3,7 @@
     <Row>
       <i-col span="4" style="overflow:hidden">
         <div class="pd">
-          <Menu active-name="mathBasic" @on-select="onSelect">
+          <Menu :active-name="activeName" @on-select="onSelect">
             <MenuItem
               :name="item.key"
               v-for="(item,index) in siderMenuList"
@@ -27,6 +27,7 @@ export default {
   name: "Home",
   data() {
     return {
+      activeName:'mathBasic',
       siderMenuList: [
         { name: "数学基础规范性", key: "mathBasic" },
         { name: "属性结构规范性", key: "propStruct" },
@@ -46,6 +47,9 @@ export default {
   },
   computed: {},
   created(){
+    let pathArr = this.$route.path.split('/')
+    this.activeName = pathArr[pathArr.length-1]//this.$route.query.id
+    
     this.getzjML()
   },
   methods: {

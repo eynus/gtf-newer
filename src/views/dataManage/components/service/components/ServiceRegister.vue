@@ -170,6 +170,7 @@ export default {
         insertServer({ ids: this.selectedRowIds.join(",") }).then(res => {
           let { data, code } = res.data;
           if (code === 1000) {
+            this.$Message.info("发布成功！");
             this.getSJListPage();
           }
         });
