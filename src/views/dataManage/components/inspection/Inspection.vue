@@ -1,7 +1,7 @@
 <template>
   <div>
     <Row>
-      <i-col span="4" style="overflow:hidden">
+      <i-col span="4" style="overflow:hidden" class="scroll">
         <div class="pd">
           <Menu :active-name="activeName" @on-select="onSelect">
             <MenuItem
