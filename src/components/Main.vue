@@ -29,7 +29,7 @@ export default {
   },
    computed: {
     userName(){
-      return this.$store.state.user.userInfo.userName
+      return this.$store.state.user.userInfo&&this.$store.state.user.userInfo.userName||''
     }
    },
    methods:{

@@ -111,6 +111,7 @@
                 v-model="item.selectedValFirst"
                 style="width:8rem"
                 @on-change="handleValRangeFirstChange"
+                :disabled="!item.activated"
               >
                 <Option
                   :value="item1.domainName"
@@ -118,14 +119,25 @@
                   :key="`vrf_${index1}`"
                 >{{item1.domainName}}</Option>
               </Select>
-              <Select v-model="item.selectedValSecond" style="width:6rem" class="ml">
+              <Select
+                v-model="item.selectedValSecond"
+                @on-change="handleValRangeSecondChange"
+                style="width:6rem"
+                class="ml"
+                :disabled="!item.activated"
+              >
                 <Option
                   :value="item2.code"
-                  v-for="(item2,index2) in valRangeSecondArr"
+                  v-for="(item2,index2) in item.valRangeSecondArr"
                   :key="`vfs_${index2}`"
                 >{{item2.codeDes}}</Option>
               </Select>
-              <Select v-model="item.selectedValRelation" style="width:6rem" class="ml">
+              <Select
+                v-model="item.selectedValRelation"
+                style="width:6rem"
+                class="ml"
+                :disabled="!item.activated"
+              >
                 <Option
                   :value="item3.code"
                   v-for="(item3,index3) in valRangeRelationArr"
@@ -134,8 +146,26 @@
               </Select>
             </div>
             <div>
-              <Icon :size="remToPx(1.25)" type="md-create" />
-              <Icon :size="remToPx(1.25)" type="md-trash" class="ml mr cursor-pointer" @click="handleAskDeleteDefine(item.id)"/>
+              <Icon
+                :size="remToPx(1.25)"
+                class="cursor-pointer"
+                type="md-checkmark-circle"
+                v-if="item.activated"
+                @click="handleSaveRuleDefine(item.id)"
+              />
+              <Icon
+                :size="remToPx(1.25)"
+                class="cursor-pointer"
+                type="md-create"
+                v-else
+                @click="handleEditRuleDefine(item.id)"
+              />
+              <Icon
+                :size="remToPx(1.25)"
+                type="md-trash"
+                class="ml mr cursor-pointer"
+                @click="handleAskDeleteDefine(item.id)"
+              />
             </div>
           </div>
         </div>
@@ -175,14 +205,11 @@ export default {
   components: { MyDelete },
   data() {
     return {
-      activeRowId:0,
+      activeRuleItemId: 0,
       valRangeRelationArr: [
         { codeDes: "并且", code: "1" },
         { codeDes: "或者", code: "0" }
       ],
-      // selectedValFirst: "1",
-      // selectedValSecond: "1",
-      // selectedValRelation: "1",
       valRangeFirstArr: [],
       valRangeSecondArr: [],
       valRangeRuleCodeList: [],
@@ -198,26 +225,18 @@ export default {
 
       selectedKeyRowIds: [],
       ruleDefineDataDemo: {
-        selectedValFirst: "1",
-        selectedValSecond: "1",
-        selectedValRelation: "1"
+        selectedValFirst: "",
+        selectedValSecond: "",
+        selectedValRelation: "",
+        activated: true
       },
       modalForm: {
+        rulesFitObj: "",
         path: [""],
-        ruleDesc: "ceshi",
-        ruleDefineData: [
-          {
-            id: 1,
-            selectedValFirst: "1",
-            selectedValSecond: "1",
-            selectedValRelation: "1"
-          }
-        ],
-        // updateKeyBtnDisabled: false,
-        // addKeyBtnDisabled: false,
-        // deleteKeyBtnDisabled: false,
+        ruleDesc: "",
+        ruleDescArr: [],
+        ruleDefineData: [],
         pathChildNodeId: "",
-
         dataPropDefine: []
       },
       modalKeyFormItem: {
@@ -260,31 +279,115 @@ export default {
     this.getValRangeRuleCodeList();
   },
   methods: {
+    // 添加规则
+    handleAddRule() {
+      this.clearFormItem();
+
+      this.isRuleUpdate = false;
+      this.modalFlag = true;
+    },
+    // 重新生成arr和规则描述
+    handleRefreshRuleDesc() {
+      console.log(this.modalForm.ruleDefineData, this.activeRuleItemId);
+
+      // 拼接字符串
+      this.$set(this.modalForm, "ruleDescArr", []);
+      this.modalForm.ruleDefineData.forEach((item, index) => {
+        if (index > 0) {
+          this.modalForm.ruleDescArr.push(
+            item.selectedValRelation === "1" ? "并且" : "或者"
+          );
+        }
+
+        let target = this.valRangeRuleCodeList.find(
+          i => i.domainName === item.selectedValFirst
+        ).children;
+        let desc = target.find(it => it.code === item.selectedValSecond)
+          .codeDes;
+
+        this.modalForm.ruleDescArr.push(item.selectedValFirst + desc);
+      });
+      this.$set(
+        this.modalForm,
+        "ruleDesc",
+        this.modalForm.ruleDescArr.join("")
+      );
+      // }
+    },
+    // 编辑规则定义
+    handleEditRuleDefine(id) {
+      this.modalForm.ruleDefineData = this.modalForm.ruleDefineData.map(
+        item => ({
+          ...item,
+          activated: item.id !== id ? false : true
+        })
+      );
+      this.activeRuleItemId = id;
+    },
+    // 保存规则定义
+    handleSaveRuleDefine(id) {
+      let targetIdx = this.modalForm.ruleDefineData.findIndex(
+        item => item.id === id
+      );
+      this.$set(this.modalForm.ruleDefineData[targetIdx], "activated", false);
+
+      this.activeRuleItemId = id;
+      this.handleRefreshRuleDesc();
+    },
     // 点击删除icon
-    handleAskDeleteDefine(id){
-      this.activeRowId = id
-      this.delModalKeyFlag=true
+    handleAskDeleteDefine(id) {
+      this.activeRuleItemId = id;
+      this.delModalKeyFlag = true;
     },
     // 新建规则
     handleModalAddRule() {
+      this.activeRuleItemId = this.modalForm.ruleDefineData.length + 1;
       this.modalForm.ruleDefineData.push(
         Object.assign({
           id: this.modalForm.ruleDefineData.length + 1,
-          ...this.ruleDefineDataDemo
+          ...this.ruleDefineDataDemo,
+          //第二个optionList
+          valRangeSecondArr:
+            this.valRangeRuleCodeList.length &&
+            this.valRangeRuleCodeList[0].children,
+          activated: false
         })
       );
+      this.handleRefreshRuleDesc();
     },
     // 查询
     handleQuery() {
       this.page.current = 1;
       this.getZJListPageById();
     },
+    handleValRangeSecondChange(e, b) {},
     // 二级联动
     handleValRangeFirstChange(e, b) {
-      this.valRangeSecondArr = this.valRangeRuleCodeList.find(
-        item => item.domainName === this.selectedValFirst
+      // 找到改的哪一行：id
+      let targetIdx = this.modalForm.ruleDefineData.findIndex(
+        item => item.id === this.activeRuleItemId
+      );
+      let temp = this.valRangeRuleCodeList.find(
+        item =>
+          item.domainName ===
+          this.modalForm.ruleDefineData[targetIdx].selectedValFirst //相应选择项
       ).children;
-      this.selectedValSecond = this.valRangeSecondArr[0].code;
+      // console.log(
+      //   this.modalForm.ruleDefineData[targetIdx].selectedValFirst,
+      //   this.modalForm.ruleDefineData[targetIdx].selectedValSecond
+      // );
+
+      this.$set(
+        this.modalForm.ruleDefineData[targetIdx],
+        "valRangeSecondArr",
+        temp
+      );
+      this.$set(
+        this.modalForm.ruleDefineData[targetIdx],
+        "selectedValSecond",
+        temp[0].code
+      ); //第二项默认项
+      // console.log(this.modalForm, temp);
     },
     // 获取属性域代码表
     getValRangeRuleCodeList() {
@@ -292,7 +395,9 @@ export default {
         const { data, code } = res.data;
         if (code === 1000) {
           this.valRangeRuleCodeList = data;
+          //第一个optionList是公用的
           this.valRangeFirstArr = this.valRangeRuleCodeList;
+          //第二个optionList
           this.valRangeSecondArr =
             this.valRangeRuleCodeList.length &&
             this.valRangeRuleCodeList[0].children;
@@ -303,11 +408,6 @@ export default {
             selectedValSecond: this.valRangeSecondArr[0].code,
             selectedValRelation: "1"
           };
-
-          this.$set(this.modalForm, "ruleDefineData", [{
-            id: 1,
-            ...this.ruleDefineDataDemo
-          }]);
         }
       });
     },
@@ -322,14 +422,10 @@ export default {
             item => String(item.pkId) === this.selectedRowIds[0]
           );
           this.$set(this.modalForm, "pathChildNodeId", this.activeRow.id);
-          let rdIdentify = JSON.parse(this.activeRow.rdIdentify);
-          this.$set(
-            this.modalForm,
-            "dataPropDefine",
-            rdIdentify.dataPropDefine
-          );
-          this.$set(this.modalForm, "path", rdIdentify.path);
-          
+          this.modalForm = {
+            ...this.modalForm,
+            ...this.activeRow.rdIdentify
+          };
         } else {
           this.$Message.info("修改操作只针对单个规则！请重新选择。");
         }
@@ -344,18 +440,7 @@ export default {
       this.positionLeft = -pxNumber;
       this.handleDisableBtn();
     },
-    // // modal-置灰按钮
-    // handleDisableBtn() {
-    //   this.$set(this.modalForm, "updateKeyBtnDisabled", true);
-    //   this.$set(this.modalForm, "addKeyBtnDisabled", true);
-    //   this.$set(this.modalForm, "deleteKeyBtnDisabled", true);
-    // },
-    // // modal-高亮按钮
-    // handleEnableBtn() {
-    //   this.$set(this.modalForm, "updateKeyBtnDisabled", false);
-    //   this.$set(this.modalForm, "addKeyBtnDisabled", false);
-    //   this.$set(this.modalForm, "deleteKeyBtnDisabled", false);
-    // },
+
     // 修改字段
     handleUpdateKey() {
       if (this.selectedKeyRowIds.length) {
@@ -389,24 +474,24 @@ export default {
       }
     },
 
-    // 清空路径和所有字段
-    clearPathAndKeys() {
-      this.$set(this.modalForm, "dataPropDefine", []);
-      this.$set(this.modalForm, "path", []);
-    },
+   
     // 清空规则
     clearFormItem() {
-      this.modalKeyFormItem = {
-        keyName: "",
-        keyType: "",
-        keyCode: "",
-        keyLength: "",
-        keyDigit: ""
+      this.$set(this.modalForm, "path", []);
+      this.modalForm = {
+        rulesFitObj: "",
+        path: [""],
+        ruleDesc: "",
+        ruleDescArr: [],
+        ruleDefineData: [],
+        pathChildNodeId: "",
+        dataPropDefine: []
       };
     },
     //选中路径变化
     handlePathChange(a, b) {
       this.modalForm.path = a;
+      this.modalForm.rulesFitObj = b[b.length - 1].label;
       this.modalForm.pathChildNodeId = b[b.length - 1].pkId;
     },
     //获取数据路径列表
@@ -421,58 +506,14 @@ export default {
       });
     },
 
-    // 添加字段-提交
-    handleKeySubmit() {
-      this.$refs.modalKeyFormItem.validate(valid => {
-        if (valid) {
-          this.handleEnableBtn();
-          if (this.isKeyFormUpdate) {
-            this.$Message.info("修改成功！");
-          } else {
-            this.$Message.info("添加成功！");
-          }
-          this.positionLeft = 0;
-          if (this.isKeyFormUpdate) {
-            // 更新
-            let targetIdx = this.modalForm.dataPropDefine.findIndex(
-              item => item.id === this.modalKeyFormItem.id
-            );
-            this.$set(this.modalForm.dataPropDefine, targetIdx, {
-              id: this.modalKeyFormItem.id,
-              name: this.modalKeyFormItem.keyName,
-              code: this.modalKeyFormItem.keyCode,
-              type: this.modalKeyFormItem.keyType,
-              length: this.modalKeyFormItem.keyLength,
-              digit: this.modalKeyFormItem.keyDigit
-            });
-          } else {
-            // 新增-插入
-            this.modalForm.dataPropDefine.push({
-              id: this.modalForm.dataPropDefine.length + 1,
-              name: this.modalKeyFormItem.keyName,
-              code: this.modalKeyFormItem.keyCode,
-              type: this.modalKeyFormItem.keyType,
-              length: this.modalKeyFormItem.keyLength,
-              digit: this.modalKeyFormItem.keyDigit
-            });
-          }
-          this.clearFormItem();
-          // this.modalFlag = false;
-        }
-      });
-    },
-    // 添加/修改字段-取消
-    handleKeyQuit() {
-      this.positionLeft = 0;
-      this.handleEnableBtn();
-    },
     // 确认删除字段
     confirmDelKey() {
       this.modalForm.ruleDefineData = this.modalForm.ruleDefineData.filter(
-        item => this.activeRowId!==item.id
+        item => this.activeRuleItemId !== item.id
       );
-     
+
       this.$Message.info("删除成功！");
+      this.handleRefreshRuleDesc();
       // 删除规则
       this.delModalKeyFlag = false;
     },
@@ -482,6 +523,8 @@ export default {
 
     // modal框确定按钮
     ok() {
+      console.log(this.activeRow.id, this.modalForm.pathChildNodeId);
+
       if (!this.modalForm.path[0]) {
         this.$Message.info("请选择规则适用对象");
         return;
@@ -490,10 +533,13 @@ export default {
         return;
       } else {
         let newData = {
-          dataPropDefine: this.modalForm.ruleDefineData,
+          ruleDefineData: this.modalForm.ruleDefineData,
           path: this.modalForm.path,
-          ruleDesc:this.modalForm.ruleDesc
+          ruleDesc: this.modalForm.ruleDesc,
+          rulesFitObj: this.modalForm.rulesFitObj
         };
+        console.log(this.modalForm.pathChildNodeId, "?");
+
         // 请求addRules接口
         let postData = {
           createdBy: this.activeRow.createdBy,
@@ -504,7 +550,7 @@ export default {
           rdIdentify: JSON.stringify(newData),
           rulesCode: this.activeRow.rulesCode,
           rulesMlId: this.$route.query.id,
-          rulesName: this.activeRow.rulesName,
+          rulesName: this.modalForm.ruleDesc,
           unCheck: this.activeRow.unCheck,
           unRead: this.activeRow.unRead,
           unUpdate: this.activeRow.unUpdate,
@@ -512,6 +558,8 @@ export default {
           updatedTime: this.activeRow.updatedTime,
           validity: this.activeRow.validity
         };
+        console.log(this.modalForm.rulesFitObj);
+
         if (this.isRuleUpdate) {
           updateRules(postData).then(res => {
             const { data, code } = res.data;
@@ -524,7 +572,6 @@ export default {
           });
           this.modalFlag = false;
           this.clearFormItem();
-          this.clearPathAndKeys();
         } else {
           addRules(postData).then(res => {
             const { data, code } = res.data;
@@ -537,7 +584,6 @@ export default {
           });
           this.modalFlag = false;
           this.clearFormItem();
-          this.clearPathAndKeys();
         }
       }
     },
@@ -545,7 +591,6 @@ export default {
     cancel() {
       this.modalFlag = false;
       this.clearFormItem();
-      this.clearPathAndKeys();
     }
   }
 };

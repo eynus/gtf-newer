@@ -52,7 +52,6 @@ const InspectionMixins = {
         },
         // 删除确认
         confirmDel() {
-            // console.log(this.selectedRowIds);
             // 删除规则
             this.delModalFlag = false;
             deleteRules({ ids: this.selectedRowIds.join(',') }).then(res => {
@@ -110,11 +109,10 @@ const InspectionMixins = {
                         }
 
                         if (this.$route.query.id == 3) {
-                            newData.rdIdentify = item.rdIdentify || { 'rulesFitObj': '' }
-                            newData.rulesFitObj = item.rdIdentify && item.rdIdentify.rulesFitObj || '-'
+                            newData.rdIdentify = JSON.parse(item.rdIdentify) || { 'rulesFitObj': '' }
+                            newData.rulesFitObj = newData.rdIdentify.rulesFitObj || '-'
                         }
                         this.tableData.push(newData);
-
                         if (item.unCheck === "0") {
                             this.startedArr.push(item.pkId + "");
                         } else {
