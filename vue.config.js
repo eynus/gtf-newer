@@ -31,7 +31,7 @@ module.exports = {
         proxy: {
             '/*': {
                 // target: 'http://192.168.6.19:9995/', //登录
-                target: 'http://192.168.6.19:9992/', //数据管理
+                target: 'http://192.168.6.19:8081/', //数据管理
                 ws: false,
                 changeOrigin: true
             }

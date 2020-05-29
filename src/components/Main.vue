@@ -2,15 +2,26 @@
   <div id="app">
     <Layout>
       <Header id="head" class="flex flex-sb">
-      <div>  昭通市国土空间基础信息平台
-        <span>
-          <i>「</i>
-          {{moduleName}}
-          <i>」</i>
-        </span></div>
+        <div>
+          昭通市国土空间基础信息平台
+          <span>
+            <i>「</i>
+            {{moduleName}}
+            <i>」</i>
+          </span>
+        </div>
         <div class="user-info" title="返回主页" @click="returnHome">
           <Icon type="md-person" />
-          {{userName}}
+
+          <Dropdown placement="bottom-start">
+            <a href="javascript:void(0)">
+              {{userName}}
+              <Icon type="ios-arrow-down"></Icon>
+            </a>
+            <DropdownMenu slot="list">
+              <DropdownItem >退出</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </div>
       </Header>
       <Content id="content">
@@ -27,18 +38,21 @@ export default {
       moduleName: "数据管理"
     };
   },
-   computed: {
-    userName(){
-      return this.$store.state.user.userInfo&&this.$store.state.user.userInfo.userName||''
+  computed: {
+    userName() {
+      return (
+        (this.$store.state.user.userInfo &&
+          this.$store.state.user.userInfo.userName) ||
+        ""
+      );
     }
-   },
-   methods:{
-     returnHome(){
-       this.$router.push('/home')
-     }
-   },
-   created(){
-   }
+  },
+  methods: {
+    returnHome() {
+      this.$router.push("/home");
+    }
+  },
+  created() {}
 };
 </script>
 <style lang="scss" scoped>
@@ -53,7 +67,7 @@ export default {
 #head {
   height: 6vh;
   line-height: 6vh;
-  font-size:1.75rem;
+  font-size: 1.75rem;
   font-weight: bold;
   color: rgba(255, 255, 255, 0.9);
   padding-left: 10px;
@@ -68,12 +82,15 @@ export default {
       font-style: normal;
     }
   }
-  .user-info{
+  .user-info {
     margin-right: 1rem;
     color: #fff;
     font-weight: normal;
     cursor: pointer;
     font-size: 1.25rem;
+    a {
+      color: #fff;
+    }
   }
 }
 #content {

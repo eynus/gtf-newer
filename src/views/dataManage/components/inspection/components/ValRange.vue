@@ -18,11 +18,11 @@
         </Form>
       </div>
       <div>
-        <Form :label-width="remToPx(6.25)" inline>
-          <FormItem label="规则使用对象：">
-            <Input v-model="queryRulesFitObj" />
+        <Form :label-width="200" inline>
+          <FormItem label="规则适用对象：">
+            <Input v-model="queryRulesFitObj" clearable/>
           </FormItem>
-          <FormItem>
+          <FormItem :label-width="remToPx(2)">
             <Button type="primary" @click="handleQuery">查询</Button>
           </FormItem>
         </Form>
@@ -257,7 +257,8 @@ export default {
         {
           title: "规则适用对象",
           key: "rulesFitObj",
-          align: "center"
+          align: "center",
+          width: remToPx(18)
         },
         {
           title: "规则描述",
