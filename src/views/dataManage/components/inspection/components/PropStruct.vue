@@ -255,20 +255,7 @@ export default {
           //   length: 18,
           //   digit: ""
           // },
-          // {
-          //   name: "要素代码",
-          //   code: "YSDM",
-          //   type: "Char",
-          //   length: 10,
-          //   digit: ""
-          // },
-          // {
-          //   name: "行政区代码",
-          //   code: "XZQDM",
-          //   type: "Char",
-          //   length: 12,
-          //   digit: ""
-          // }
+       
         ]
       },
       modalKeyFormItem: {
@@ -323,11 +310,7 @@ export default {
             rdIdentify.dataPropDefine
           );
           this.$set(this.modalForm, "path", rdIdentify.path);
-          // this.$set(
-          //   this.modalForm,
-          //   "pathChildNodeId",
-          //   rdIdentify.pathChildNodeId
-          // );
+        
         } else {
           this.$Message.info("修改操作只针对单个规则！请重新选择。");
         }
@@ -510,6 +493,7 @@ export default {
           dataPropDefine: this.modalForm.dataPropDefine,
           path: this.modalForm.path
         };
+        let rulesNameConcat = `${this.modalForm.path[this.modalForm.path.length-1]}属性结构符合要求，包括数量、名称、类型、长度、小数位数均符合要求`
         // 请求addRules接口
         let postData ={
           createdBy: this.activeRow.createdBy,
@@ -520,7 +504,7 @@ export default {
           rdIdentify: JSON.stringify(newData),
           rulesCode: this.activeRow.rulesCode,
           rulesMlId: this.$route.query.id,
-          rulesName: this.activeRow.rulesName,
+          rulesName: rulesNameConcat,//自己拼接
           unCheck: this.activeRow.unCheck,
           unRead: this.activeRow.unRead,
           unUpdate: this.activeRow.unUpdate,
