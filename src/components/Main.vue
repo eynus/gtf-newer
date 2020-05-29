@@ -10,8 +10,8 @@
             <i>」</i>
           </span>
         </div>
-        <div class="user-info" title="返回主页" @click="returnHome">
-          <Icon type="md-person" />
+        <div class="user-info">
+          <Icon type="md-person"  class="mr" />
 
           <Dropdown placement="bottom-start">
             <a href="javascript:void(0)">
@@ -19,7 +19,8 @@
               <Icon type="ios-arrow-down"></Icon>
             </a>
             <DropdownMenu slot="list">
-              <DropdownItem >退出</DropdownItem>
+              <DropdownItem class="text-center fs16 pd"  @click.native="returnHome">返回主页</DropdownItem>
+              <DropdownItem class="text-center fs16 pd"  @click.native="quit">退出</DropdownItem>
             </DropdownMenu>
           </Dropdown>
         </div>
@@ -31,6 +32,7 @@
   </div>
 </template>
 <script>
+import {  removeToken } from '@/utils/auth'
 export default {
   name: "mainpage",
   data() {
@@ -50,6 +52,10 @@ export default {
   methods: {
     returnHome() {
       this.$router.push("/home");
+    },
+    quit() {
+      removeToken()
+      this.$router.push("/login");
     }
   },
   created() {}
