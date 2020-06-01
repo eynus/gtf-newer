@@ -4,13 +4,14 @@ import router from './router'
 import store from './store'
 import ViewUI from 'view-design';
 import './assets/iconfont/iconfont.css';
-import './style.scss';
+import './assets/css/style.scss';
+import './assets/css/variable.scss';
 import 'view-design/dist/styles/iview.css';
 // iview覆盖样式
 import * as _ from 'lodash'
 import { Tree } from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
-import './assets/css/reset.css'
+import './assets/css/reset.scss'
 import Mixin from './mixins';
 Vue.mixin(Mixin);
 Vue.config.productionTip = false

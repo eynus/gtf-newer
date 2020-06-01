@@ -20,13 +20,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 .myfooter {
-  // position: absolute;
-  // bottom: 0;
+  padding: 0.15rem;
   width: 100%;
   background-color: transparent;
   font-size: .875rem;
-  line-height: 1.325rem;
+  line-height: 1.35rem;
   text-align: center;
-  height: 2.65rem;
+  height: 3rem;
+  box-sizing: border-box;
 }
 </style>

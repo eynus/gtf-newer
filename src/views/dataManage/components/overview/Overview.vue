@@ -1,56 +1,67 @@
 <template>
   <div class="h100">
-    <div class="card-container">
+    <div class="card-container card-container1">
       <div class="card-title">
-        <Icon custom="iconfont  icon-type" size="16" color="#2d8cf0" />
+        <Icon custom="iconfont  icon-fenleihuizong" size="16" color="#fff" />
         <span class="ml">分类汇总</span>
       </div>
       <div class="card-body pd">
-        <Row>
-          <i-col span="14">
-            <Row type="flex" :gutter="12">
-              <i-col span="12" order="1" v-for="(item,index) in typesTotal" :key="`type_${index}`">
-                <div class="card-left-item" :style="`backgroundColor:${item.bgColor}`">
-                  <div>
-                    <Row type="flex" align="bottom">
-                      <i-col span="18">
-                        <div class="card-left-item-title">
-                          <Icon :custom="`${item.icon}`" size="30" color="#fff" />
-                          <span class="ml">{{item.name}}</span>
-                        </div>
-                        <Row type="flex" class="mt">
-                          <i-col span="12">
-                            <span class="fs16">{{item.firstChilds}}个一级子类</span>
-                          </i-col>
-                          <i-col span="12">
-                            <span>{{item.secondChilds}}个二级子类</span>
-                          </i-col>
-                        </Row>
-                      </i-col>
-                      <i-col span="6">
-                        <div>
-                          <span class="card-left-item-total">{{item.totalChilds}}</span> 个
-                        </div>
-                      </i-col>
-                    </Row>
+        <Row style="height:100%">
+       
+          <i-col span="14" class="h100">
+            <div class="h100 w100 flex flex-center">
+              <!-- <Row type="flex" :gutter="12"> -->
+                <div
+              class="flex flex-center"
+                >
+                  <div class="card-left-item" :style="`backgroundColor:${item.bgColor}`"   
+                  v-for="(item,index) in typesTotal"
+                  :key="`type_${index}`">
+                    <div>
+                      <Row type="flex" align="bottom">
+                        <i-col span="18">
+                          <div class="card-left-item-title">
+                            <Icon :custom="`${item.icon}`" size="30" color="#fff" />
+                            <span class="ml">{{item.name}}</span>
+                          </div>
+                          <Row type="flex" class="mt">
+                            <i-col span="12">
+                              <span class="fs16">{{item.firstChilds}}个一级子类</span>
+                            </i-col>
+                            <i-col span="12">
+                              <span>{{item.secondChilds}}个二级子类</span>
+                            </i-col>
+                          </Row>
+                        </i-col>
+                        <i-col span="6">
+                          <div>
+                            <span class="card-left-item-total">{{item.totalChilds}}</span> 个
+                          </div>
+                        </i-col>
+                      </Row>
+                    </div>
                   </div>
                 </div>
-              </i-col>
-            </Row>
+              <!-- </Row> -->
+            </div>
           </i-col>
-          <i-col span="10">
-            <rose-chart
-              :style="{ height: `${remToPx(16.25)}px` }"
-              :data="chartData"
-              :dataTotal="chartDataTotal"
-            ></rose-chart>
+             <i-col span="10" class="h100">
+            <div class="h100 w100 flex flex-center">
+              <div :style="{ height: `${remToPx(15)}px` ,width:`100%`}">
+                <rose-chart
+                  :style="{ height: `${remToPx(15)}px` }"
+                  :data="chartData"
+                  :dataTotal="chartDataTotal"
+                ></rose-chart>
+              </div>
+            </div>
           </i-col>
         </Row>
       </div>
     </div>
-    <div class="card-container">
+    <div class="card-container mt-lg card-container2">
       <div class="card-title">
-        <Icon custom="iconfont  icon-input" size="16" color="#2d8cf0" />
+        <Icon custom="iconfont  icon-rukulishi" size="16" color="#fff" />
         <span class="ml">入库历史</span>
       </div>
       <div class="card-body">
@@ -61,54 +72,60 @@
           style="margin-top:.75rem"
           class="search-box smzx-search-box"
           label-position="right"
-          :label-width="90"
+          :label-width="remToPx(6.5)"
           width="100%"
         >
-          <Row>
-            <i-col :md="6" :xxl="5">
-              <FormItem label="入库时间：">
-                <DatePicker
-                  type="daterange"
-                  :value="formInline.date"
-                  @on-change="handleDateChange"
-                  placeholder="请选择起止日期"
-                  :clearable="false"
-                  class="smzx-normal-datepick smzx-date-range"
-                ></DatePicker>
-              </FormItem>
-            </i-col>
-            <i-col :md="6" :xxl="5">
-              <FormItem label="数据路径：">
-                <Cascader :data="dataPaths" v-model="formInline.path" @on-change="handlePathChange"></Cascader>
-              </FormItem>
-            </i-col>
-            <i-col :md="5" :xxl="4">
-              <FormItem label="数据类型：">
-                <Select v-model="formInline.type" class="scroll dropdown" style="width:8.75rem">
-                  <Option v-for="item in typeList" :value="item.id" :key="item.id">
-                    {{
-                    item.name
-                    }}
-                  </Option>
-                </Select>
-              </FormItem>
-            </i-col>
-            <i-col :md="5" :xxl="5">
-              <FormItem label="上传用户：">
-                <Input v-model.trim="formInline.uploader" placeholder="请输入" clearable />
-              </FormItem>
-            </i-col>
-            <i-col :md="2">
-              <FormItem :label-width="remToPx(2)">
-                <Button type="primary" class="smzx-search-btn" @click="handleSubmit">查询</Button>
-              </FormItem>
-            </i-col>
-          </Row>
+          <!-- <Row> -->
+          <!-- <i-col :md="6" :xxl="5"> -->
+          <FormItem label="入库时间：">
+            <DatePicker
+              type="daterange"
+              :value="formInline.date"
+              @on-change="handleDateChange"
+              placeholder="请选择起止日期"
+              :clearable="false"
+              class="smzx-normal-datepick smzx-date-range"
+            ></DatePicker>
+          </FormItem>
+          <!-- </i-col> -->
+          <!-- <i-col :md="6" :xxl="5"> -->
+          <FormItem label="数据路径：">
+            <Cascader :data="dataPaths" v-model="formInline.path" @on-change="handlePathChange"></Cascader>
+          </FormItem>
+          <!-- </i-col> -->
+          <!-- <i-col :md="5" :xxl="4"> -->
+          <FormItem label="数据类型：">
+            <Select v-model="formInline.type" class="scroll dropdown" style="width:8.75rem">
+              <Option v-for="item in typeList" :value="item.id" :key="item.id">
+                {{
+                item.name
+                }}
+              </Option>
+            </Select>
+          </FormItem>
+          <!-- </i-col> -->
+          <!-- <i-col :md="5" :xxl="5"> -->
+          <FormItem label="上传用户：">
+            <Input v-model.trim="formInline.uploader" placeholder="请输入" clearable />
+          </FormItem>
+          <!-- </i-col> -->
+          <!-- <i-col :md="2"> -->
+          <FormItem :label-width="remToPx(2)">
+            <Button type="primary" class="smzx-search-btn" @click="handleSubmit">查询</Button>
+          </FormItem>
+          <!-- </i-col> -->
+          <!-- </Row> -->
         </Form>
 
-        <Table border size="small" :columns="columnsPutIn" :data="dataPutIn" class="ml-lg mr-lg">
+        <Table
+          border
+          size="small"
+          :columns="columnsPutIn"
+          :data="dataPutIn"
+          class="ml-lg mr-lg tb-min-height"
+        >
           <template slot="path" slot-scope="{row}">
-            <a href="#">{{row.dataPath}}</a>
+            <div>{{row.dataPath}}</div>
           </template>
         </Table>
         <div class="text-right mr-lg mt">
@@ -250,7 +267,7 @@ export default {
       page: {
         current: 1,
         total: 0,
-        pageSize: 6
+        pageSize: 4
       }
     };
   },
@@ -299,6 +316,7 @@ export default {
     //获取查询列表
     getSJListPage() {
       getSJListPage({
+        identification: "",
         createdBy: this.formInline.uploader,
         dataPath: this.formInline.path.join("/"),
         dataType: this.formInline.type,
@@ -346,28 +364,50 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-
+::v-deep .ivu-col.ivu-col-span-12.ivu-col-order-1 {
+  padding: 0.5rem;
+}
 .ivu-table {
   min-height: 280px;
 }
 .card-container {
+  background-color: #fff;
+  &1 {
+    height: calc(100% - 26rem);
+    .card-body {
+      height: calc(100% - 2rem);
+    }
+  }
+  &2 {
+    min-height: 24rem;
+  }
+  padding: 1rem;
   .card-title {
-    background-color: rgba(0, 0, 0, 0.1);
-    font-weight: bold;
-
+    text-align: center;
+    margin-left: -1rem;
+    background-color: $menu-active;
+    width: 8rem;
+    // font-weight: bold;
+    font-size: 1.125rem;
     line-height: 1.75;
-    color: rgb(81, 81, 81);
+    color: #fff;
     padding: 0 4px;
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
   }
   .card-body {
     .card-left-item {
+   margin:1rem;
+   height: 12.5rem;
+   width: 15rem;
       border-radius: 0.25rem;
-      margin: 1rem;
-      padding: 0.75rem;
+padding: 1rem;
+      // padding: 0.75rem 1.5rem;
+    
       color: white;
       .card-left-item-title {
         font-size: 1.5rem;
-
+        margin-bottom: 1rem;
         font-weight: 600;
       }
       .card-left-item-total {
@@ -376,5 +416,8 @@ export default {
       }
     }
   }
+}
+.tb-min-height {
+  min-height: 198px;
 }
 </style>

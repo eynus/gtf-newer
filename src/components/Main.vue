@@ -62,12 +62,11 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "../style.scss";
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  color: $text-normal;
   height: 100vh;
 }
 #head {
@@ -81,6 +80,9 @@ export default {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
+  h1{
+    margin-bottom: 0;
+  }
   span {
     font-size: 1.5rem;
     i {
@@ -101,5 +103,8 @@ export default {
 }
 #content {
   height: 94vh;
+}
+::v-deep .ivu-layout-header{
+  padding: 0;
 }
 </style>

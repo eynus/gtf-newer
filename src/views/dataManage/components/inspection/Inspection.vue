@@ -1,7 +1,7 @@
 <template>
   <div>
     <Row>
-      <i-col span="4" style="overflow:hidden" class="scroll">
+      <i-col span="4" style="overflow:hidden" class="scroll bg-white">
         <div class="pd">
           <Menu :active-name="activeName" @on-select="onSelect">
             <MenuItem
@@ -12,8 +12,8 @@
           </Menu>
         </div>
       </i-col>
-      <i-col span="20">
-        <div class="pd">
+      <i-col span="20 bg-white h100">
+        <div class="pd h100">
           <router-view></router-view>
         </div>
       </i-col>

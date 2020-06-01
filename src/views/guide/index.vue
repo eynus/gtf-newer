@@ -1,12 +1,13 @@
 <template>
   <div class="home h100 guide guide-bg h100 w100">
     <h1>昭通市国土空间基础信息平台</h1>
-    <Row>
+    <Row class="h100"   :style="{ height: `calc(100% - ${remToPx(8)}px)` }">
       <i-col span="2">
         <div style="color:transparent">1</div>
       </i-col>
-      <i-col span="21">
-        <div class="guide-body">
+      <i-col span="21" class="h100">
+        <div class="guide-body h100" 
+        >
           <div class="guide-body-top">
             <div
               class="guide-body-top-left"
@@ -136,11 +137,15 @@ export default {
 .guide {
   min-height: 100vh;
   h1 {
-    padding: 1rem;
+    padding-left:1rem;
     color: #0083ff;
+    line-height: 5rem;
+    height:5rem;
+    font-size: 2rem;
+    margin-bottom: 0;
   }
   &-body {
-    height: 86vh;
+   
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -172,7 +177,7 @@ export default {
     &-bottom {
       &-item {
         &:hover {
-          transform: scale(1.2);
+          transform: scale(1.15);
         }
         transform: scale(1);
         transition: all 0.2s linear;

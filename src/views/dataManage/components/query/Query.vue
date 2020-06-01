@@ -1,12 +1,12 @@
 <template>
   <div class="h100">
     <Row style="height:100%">
-      <i-col span="4" class="h100 scroll-y">
+      <i-col span="4" class="h100 scroll-y bg-white">
         <div class="pd h100">
           <my-tree :gData="gData" @handleSelect="handleSelect" type="query"></my-tree>
         </div>
       </i-col>
-      <i-col span="20" class="pd h100">
+      <i-col span="20" class="pd h100 bg-white">
         <div class="text-right">
           <RadioGroup v-model="activeMode" type="button">
             <Radio label="normal">数据查看</Radio>
