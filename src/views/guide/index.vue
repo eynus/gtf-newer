@@ -69,7 +69,7 @@ export default {
           show: false,
           to: "data/overview"
         },
-        { name: "运维管理", color: "#0083FF", show: false, to: "data" }
+        { name: "运维管理", color: "#0083FF", show: false, to: "system" }
       ]
     };
   },

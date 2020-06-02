@@ -167,3 +167,16 @@ export const remToPx = rem => {
   // console.log('fontSize',fontSize,document.documentElement.style);
   return Number(Math.floor(rem * fontSize.replace('px', '')))
 }
+
+// 去除对象的空属性
+export const nullStr = (obj) => {
+  for (let key in obj) {
+    if (obj[key] === '' || obj[key] === null) {
+      delete obj[key]
+    }
+    if (typeof obj[key] === 'object') {
+      obj[key] = nullStr(obj[key])
+    }
+  }
+  return obj
+}
