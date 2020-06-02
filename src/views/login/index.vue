@@ -9,7 +9,12 @@
         <div class="card-inner">
           <h2>用户登录</h2>
           <div class="form-con">
-            <Form ref="loginForm" :model="form" :rules="rules" @keydown.enter.native="handleSubmit">
+            <Form
+              ref="loginForm"
+              :rules="ruleFormValidate"
+              :model="form"
+              @keydown.enter.native="handleSubmit"
+            >
               <FormItem prop="userName">
                 <i-input
                   v-model="form.userName"
@@ -68,12 +73,51 @@
     <div class="position-a-b-c">
       <my-footer color="rgb(200,200,200)"></my-footer>
     </div>
+    <Modal
+      v-model="modalFlag"
+      class-name="vertical-center-modal"
+      title="请先设置新密码"
+      :width="remToPx(40)"
+    >
+      <div slot="footer">
+        <Button @click="cancel">取消</Button>
+        <Button type="primary" @click="ok">确定</Button>
+      </div>
+      <Form
+        class="pd-lg"
+        ref="formModalValidate"
+        :model="formModalValidate"
+        :rules="ruleModalValidate"
+        :label-width="100"
+      >
+        <FormItem label="新密码：" prop="password">
+          <Input
+            v-model="formModalValidate.password"
+            type="password"
+            clearable
+            placeholder="请输入新密码"
+          />
+        </FormItem>
+
+        <FormItem label="确认密码：" prop="password2">
+          <Input
+            v-model="formModalValidate.password2"
+            type="password"
+            clearable
+            placeholder="请确认新密码"
+          />
+        </FormItem>
+        <FormItem>
+          <div class="text-blue">注意：密码不能少于八位，至少包含一位字母和一位数字</div>
+        </FormItem>
+      </Form>
+    </Modal>
   </div>
 </template>
 
 <script>
 import MyFooter from "@/components/MyFooter";
-import { getPublicKey } from "@/api/user/user";
+import { getPublicKey, updateUserPwd } from "@/api/user/user";
 import { JSEncrypt } from "jsencrypt";
 import config from "@/config";
 import { mapActions } from "vuex";
@@ -81,11 +125,71 @@ import { baseUrl_user } from "@/api/set";
 export default {
   components: { MyFooter },
   data() {
+    const validatePassword = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("新密码不能为空"));
+      } else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value)) {
+        return callback(new Error("密码不能少于八位，至少包含一位字母和一位数字"));
+      }
+      callback();
+    };
+    const validatePassCheck = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("确认密码不能为空"));
+      } else if (value !== this.formModalValidate.password) {
+        callback(new Error("两次密码输入不一致"));
+      } else {
+        callback();
+      }
+    };
     return {
+      formModalValidate: {
+        password: "",
+        password2: ""
+      },
+      ruleModalValidate: {
+        password: [
+          {
+            validator: validatePassword,
+
+            trigger: "blur"
+          }
+        ],
+        password2: [
+          {
+            validator: validatePassCheck,
+            trigger: "blur"
+          }
+        ]
+      },
+      modalFlag: false,
       form: {
         userName: "",
         password: "",
         validateCode: ""
+      },
+      ruleFormValidate: {
+        userName: [
+          {
+            required: true,
+            message: "用户名不能为空",
+            trigger: "blur"
+          }
+        ],
+        password: [
+          {
+            required: true,
+            message: "密码不能为空",
+            trigger: "blur"
+          }
+        ],
+        validateCode: [
+          {
+            required: true,
+            message: "验证码不能为空",
+            trigger: "blur"
+          }
+        ]
       },
       validateCodeSrc: "",
       publicKey: "",
@@ -95,17 +199,36 @@ export default {
   created() {
     this.getPublicKey();
   },
-  computed: {
-    rules() {
-      return {
-        userName: this.userNameRules,
-        password: this.passwordRules,
-        validateCode: this.codeRules
-      };
-    }
-  },
+  computed: {},
   methods: {
     ...mapActions(["handleLogin"]),
+    // modal框确定按钮
+    ok() {
+      this.$refs.formModalValidate.validate(valid => {
+        console.log("!!!", valid);
+
+        if (valid) {
+          updateUserPwd({
+            password: this.formModalValidate.password,
+            userName: this.form.userName
+          }).then(res => {
+            const { code, data, message } = res.data;
+            if (code === 1000) {
+              this.modalFlag = false;
+              this.$Message.info("修改成功！请重新登录");
+               this.$refs["loginForm"].resetFields();
+            } else {
+              this.$Message.info(message);
+            }
+          });
+        }
+      });
+    },
+    // modal取消按钮
+    cancel() {
+      this.modalFlag = false;
+      this.$refs["formModalValidate"].resetFields();
+    },
     //加密密码
     encryptedData(data) {
       // 设置公钥
@@ -145,12 +268,14 @@ export default {
             type: 0,
             publicKey: this.publicKey
           })
-            .then(() => {
-              // this.$Message.info({
-              //   content: res,
-              //   duration: 5
-              // });
-              this.$router.push({ path: `/home` });
+            .then(res => {
+              console.log(res);
+
+              if (res === "init") {
+                this.modalFlag = true;
+              } else {
+                this.$router.push({ path: `/home` });
+              }
             })
             .catch(err => {
               console.log("err:", err);
@@ -178,7 +303,7 @@ export default {
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-10%, -380%);
+    transform: translate(-2%, -350%);
     z-index: 1001;
 
     h1 {
@@ -193,7 +318,7 @@ export default {
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(15%, -40%);
+    transform: translate(28%, -48%);
     width: 400px;
     z-index: 1001;
     h2 {
@@ -262,6 +387,15 @@ export default {
   img {
     width: 100%;
     height: 100%;
+  }
+}
+.vertical-center-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .ivu-modal {
+    top: 0;
   }
 }
 </style>

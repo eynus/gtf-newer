@@ -20,55 +20,39 @@
                   <div class="flex flex-sa h100 w100">
                     <div
                       class="card-left-item-inner-left flex flex-center"
-                      :style="`backgroundColor:${item.bgColor}`"
+                      :style="{backgroundColor:`${item.bgColor}`, boxShadow: `0 0 6px ${item.bgColor}`}"
+                     
                     >
                       <Icon :custom="`${item.icon}`" :size="remToPx(3)" color="#fff" />
                     </div>
-                    <div  class="card-left-item-inner-right">
+                    <div class="card-left-item-inner-right">
                       <div class="block-up">
-                       <span class="title">{{item.name}}</span>
-                       <span class="value"     :style="`color:${item.bgColor}`">{{item.totalChilds}}</span> <span :style="`color:${item.bgColor}`">个</span>
+                        <span class="title">{{item.name}}</span>
+                        <span class="value" :style="`color:${item.bgColor}`">{{item.totalChilds}}</span>
+                        <span :style="`color:${item.bgColor}`">个</span>
                       </div>
                       <div class="block-bottom">
-                        <span  class="mr-lg">{{item.firstChilds}}个一级子类</span><span> {{item.secondChilds}}个二级子类</span></div>
+                        <span class="mr-lg">{{item.firstChilds}}个一级子类</span>
+                        <span>{{item.secondChilds}}个二级子类</span>
+                      </div>
                     </div>
                   </div>
-                  <!-- <Row type="flex" align="bottom">
-                    <i-col span="18">
-                      <div class="card-left-item-title">
-                        <Icon :custom="`${item.icon}`" size="30" color="#fff" />
-                        <span class="ml">{{item.name}}</span>
-                      </div>
-                      <Row type="flex" class="mt" >
-                        <i-col span="12">
-                          <span class="fs16">{{item.firstChilds}}个一级子类</span>
-                        </i-col>
-                        <i-col span="12">
-                          <span>{{item.secondChilds}}个二级子类</span>
-                        </i-col>
-                      </Row>
-                    </i-col>
-                    <i-col span="6">
-                      <div>
-                        <span class="card-left-item-total">{{item.totalChilds}}</span> 个
-                      </div>
-                    </i-col>
-                  </Row>-->
                 </div>
               </div>
             </div>
-            <!-- </Row> -->
-            <!-- </div> -->
           </i-col>
           <i-col span="9" class="h100">
-            <div class="h100 w100 flex flex-center card-right">
-              <div :style="{ height: `${remToPx(15)}px` ,width:`100%`}">
-                <rose-chart
-                  :style="{ height: `${remToPx(15)}px` }"
-                  :data="chartData"
-                  :dataTotal="chartDataTotal"
-                ></rose-chart>
-              </div>
+            <div class="h100 w100 position-r card-right">
+              <!-- <div :style="{ height: `${remToPx(15)}px` ,width:`100%`}"> -->
+              <!-- <div :style="{ height: `${remToPx(15)}px` ,width:`100%`}">1</div> -->
+              <rose-chart
+             
+                class="position-a-c h100"
+                :data="chartData"
+                :dataTotal="chartDataTotal"
+              ></rose-chart>
+
+              <!-- </div> -->
             </div>
           </i-col>
         </Row>
@@ -398,7 +382,7 @@ export default {
 }
 .card-container {
   background-color: #fff;
-
+ 
   &1 {
     padding-top: 0;
     background-color: transparent;
@@ -428,28 +412,28 @@ export default {
             padding: 0 4rem;
             width: calc(100% - 1rem);
             height: calc(100% - 0.5rem);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
             &-left {
               height: 62%;
               width: 22%;
               border-radius: 6px;
 
-              box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
               
             }
-            &-right{
-              .block-up{
-                .title{
+            &-right {
+              .block-up {
+                .title {
                   display: inline-block;
                   color: #000;
                   font-size: 1.5rem;
                   margin-right: 2rem;
                   min-width: 8.5rem;
                 }
-                .value{
+                .value {
                   font-size: 1.5rem;
                 }
               }
-              .block-bottom{
+              .block-bottom {
                 margin-top: 1rem;
               }
             }
@@ -458,11 +442,13 @@ export default {
       }
       .card-right {
         background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
       }
     }
   }
   &2 {
     min-height: 24rem;
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   }
   padding: 1rem;
   .card-title {

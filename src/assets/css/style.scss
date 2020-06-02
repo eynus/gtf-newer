@@ -145,6 +145,12 @@ a{
     left: 50%;
     transform: translateX(-50%);
 }
+.position-a-c{
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    transform: translate(-50% -50%);
+}
 .position-a{
     position: absolute;
 }
@@ -177,6 +183,12 @@ a{
 }
 .text-darkgrey{
     color: rgba(0,0,0,0.75);
+}
+.text-normal{
+    color: #999db2;
+}
+.text-blue{
+    color: #3c8fff;
 }
 // 鼠标hover显示手指
 .cursor-pointer{
