@@ -55,7 +55,6 @@
                     </i-input>
                   </i-col>
                   <i-col span="12">
-                    <!-- <Button @click="handleSubmit" type="primary" size="large" long class="let-spc">登录</Button> -->
                     <div class="validate-code" @click="getPublicKey">
                       <img :src="validateCodeSrc" alt class="w100" />
                     </div>
