@@ -88,8 +88,15 @@ a{
 .flex-nowrap{
     flex-wrap: nowrap;
 }
+.flex-wrap{
+    flex-wrap: wrap;
+}
 .flex-sb {
     justify-content: space-between;
+    align-items: center;
+  }
+.flex-sa {
+    justify-content: space-around;
     align-items: center;
   }
 .flex-center{

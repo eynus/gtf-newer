@@ -5,48 +5,63 @@
         <Icon custom="iconfont  icon-fenleihuizong" size="16" color="#fff" />
         <span class="ml">分类汇总</span>
       </div>
-      <div class="card-body pd">
+      <div class="card-body">
         <Row style="height:100%">
-       
-          <i-col span="14" class="h100">
-            <div class="h100 w100 flex flex-center">
+          <i-col span="15" class="h100">
+            <div class="h100 w100 card-left flex flex-center flex-wrap">
               <!-- <Row type="flex" :gutter="12"> -->
-                <div
-              class="flex flex-center"
-                >
-                  <div class="card-left-item" :style="`backgroundColor:${item.bgColor}`"   
-                  v-for="(item,index) in typesTotal"
-                  :key="`type_${index}`">
-                    <div>
-                      <Row type="flex" align="bottom">
-                        <i-col span="18">
-                          <div class="card-left-item-title">
-                            <Icon :custom="`${item.icon}`" size="30" color="#fff" />
-                            <span class="ml">{{item.name}}</span>
-                          </div>
-                          <Row type="flex" class="mt">
-                            <i-col span="12">
-                              <span class="fs16">{{item.firstChilds}}个一级子类</span>
-                            </i-col>
-                            <i-col span="12">
-                              <span>{{item.secondChilds}}个二级子类</span>
-                            </i-col>
-                          </Row>
-                        </i-col>
-                        <i-col span="6">
-                          <div>
-                            <span class="card-left-item-total">{{item.totalChilds}}</span> 个
-                          </div>
-                        </i-col>
-                      </Row>
+              <!-- <div class=""> -->
+              <div
+                class="card-left-item w100 h100"
+                v-for="(item,index) in typesTotal"
+                :key="`type_${index}`"
+              >
+                <div class="card-left-item-inner h100 w100">
+                  <div class="flex flex-sa h100 w100">
+                    <div
+                      class="card-left-item-inner-left flex flex-center"
+                      :style="`backgroundColor:${item.bgColor}`"
+                    >
+                      <Icon :custom="`${item.icon}`" :size="remToPx(3)" color="#fff" />
+                    </div>
+                    <div  class="card-left-item-inner-right">
+                      <div class="block-up">
+                       <span class="title">{{item.name}}</span>
+                       <span class="value"     :style="`color:${item.bgColor}`">{{item.totalChilds}}</span> <span :style="`color:${item.bgColor}`">个</span>
+                      </div>
+                      <div class="block-bottom">
+                        <span  class="mr-lg">{{item.firstChilds}}个一级子类</span><span> {{item.secondChilds}}个二级子类</span></div>
                     </div>
                   </div>
+                  <!-- <Row type="flex" align="bottom">
+                    <i-col span="18">
+                      <div class="card-left-item-title">
+                        <Icon :custom="`${item.icon}`" size="30" color="#fff" />
+                        <span class="ml">{{item.name}}</span>
+                      </div>
+                      <Row type="flex" class="mt" >
+                        <i-col span="12">
+                          <span class="fs16">{{item.firstChilds}}个一级子类</span>
+                        </i-col>
+                        <i-col span="12">
+                          <span>{{item.secondChilds}}个二级子类</span>
+                        </i-col>
+                      </Row>
+                    </i-col>
+                    <i-col span="6">
+                      <div>
+                        <span class="card-left-item-total">{{item.totalChilds}}</span> 个
+                      </div>
+                    </i-col>
+                  </Row>-->
                 </div>
-              <!-- </Row> -->
+              </div>
             </div>
+            <!-- </Row> -->
+            <!-- </div> -->
           </i-col>
-             <i-col span="10" class="h100">
-            <div class="h100 w100 flex flex-center">
+          <i-col span="9" class="h100">
+            <div class="h100 w100 flex flex-center card-right">
               <div :style="{ height: `${remToPx(15)}px` ,width:`100%`}">
                 <rose-chart
                   :style="{ height: `${remToPx(15)}px` }"
@@ -146,6 +161,7 @@
 import { format, subMonths } from "date-fns";
 import { remToPx } from "@/utils/common";
 import RoseChart from "./components/RoseChart.vue";
+import { getCatalogue } from "@/api/dataManage/query";
 import {
   getSJListPage,
   getTypeDetail,
@@ -185,7 +201,7 @@ export default {
           firstChilds: 0,
           secondChilds: 0,
           totalChilds: 0,
-          bgColor: "rgb(0,131,255)",
+          bgColor: "#0b89fe",
           icon: "iconfont icon-earth"
         },
         {
@@ -193,7 +209,7 @@ export default {
           firstChilds: 0,
           secondChilds: 0,
           totalChilds: 0,
-          bgColor: "rgb(255,195,0)",
+          bgColor: "#fe8e0b",
           icon: "iconfont icon-hill"
         },
         {
@@ -201,7 +217,7 @@ export default {
           firstChilds: 0,
           secondChilds: 0,
           totalChilds: 0,
-          bgColor: "rgb(67,207,124)",
+          bgColor: "#7c63ea",
           icon: "iconfont icon-setting"
         },
         {
@@ -209,7 +225,7 @@ export default {
           firstChilds: 0,
           secondChilds: 0,
           totalChilds: 0,
-          bgColor: "rgb(227,60,100)",
+          bgColor: "#08c28b",
           icon: "iconfont icon-person"
         }
       ],
@@ -283,6 +299,7 @@ export default {
     this.getPaths();
     this.setTypesTotalData();
     this.getSJListPage();
+    this.getCatalogue(); //先请求一次，为查询浏览做准备
   },
   methods: {
     //设置四大类各自的数据详情
@@ -317,6 +334,7 @@ export default {
     getSJListPage() {
       getSJListPage({
         identification: "",
+        fidentification: [],
         createdBy: this.formInline.uploader,
         dataPath: this.formInline.path.join("/"),
         dataType: this.formInline.type,
@@ -359,6 +377,14 @@ export default {
     //选中路径变化
     handlePathChange(a, b) {
       this.formInline.path = a;
+    },
+    // 获取左侧目录
+    getCatalogue() {
+      getCatalogue().then(res => {
+        const { data, code } = res.data;
+        if (code === 1000) {
+        }
+      });
     }
   }
 };
@@ -372,10 +398,67 @@ export default {
 }
 .card-container {
   background-color: #fff;
+
   &1 {
+    padding-top: 0;
+    background-color: transparent;
     height: calc(100% - 26rem);
     .card-body {
+      margin-top: 1rem;
+      margin-left: -1rem;
+      margin-right: -1rem;
       height: calc(100% - 2rem);
+
+      .card-left {
+        .card-left-item:nth-of-type(1) .card-left-item-inner,
+        .card-left-item:nth-of-type(2) .card-left-item-inner {
+          margin-bottom: 0.5rem;
+        }
+        .card-left-item:nth-of-type(3) .card-left-item-inner,
+        .card-left-item:nth-of-type(4) .card-left-item-inner {
+          margin-top: 0.5rem;
+        }
+        .card-left-item {
+          width: 50%;
+          height: 50%;
+          &-inner {
+            background-color: #fff;
+            color: $text-normal;
+            margin-right: 1rem;
+            padding: 0 4rem;
+            width: calc(100% - 1rem);
+            height: calc(100% - 0.5rem);
+            &-left {
+              height: 62%;
+              width: 22%;
+              border-radius: 6px;
+
+              box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+              
+            }
+            &-right{
+              .block-up{
+                .title{
+                  display: inline-block;
+                  color: #000;
+                  font-size: 1.5rem;
+                  margin-right: 2rem;
+                  min-width: 8.5rem;
+                }
+                .value{
+                  font-size: 1.5rem;
+                }
+              }
+              .block-bottom{
+                margin-top: 1rem;
+              }
+            }
+          }
+        }
+      }
+      .card-right {
+        background-color: #fff;
+      }
     }
   }
   &2 {
@@ -385,36 +468,18 @@ export default {
   .card-title {
     text-align: center;
     margin-left: -1rem;
-    background-color: $menu-active;
+    background-color: $cardtitle-bg;
     width: 8rem;
     // font-weight: bold;
-    font-size: 1.125rem;
+    font-size: 1rem;
     line-height: 1.75;
     color: #fff;
     padding: 0 4px;
     border-top-right-radius: 0.25rem;
     border-bottom-right-radius: 0.25rem;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
   }
   .card-body {
-    .card-left-item {
-   margin:1rem;
-   height: 12.5rem;
-   width: 15rem;
-      border-radius: 0.25rem;
-padding: 1rem;
-      // padding: 0.75rem 1.5rem;
-    
-      color: white;
-      .card-left-item-title {
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
-        font-weight: 600;
-      }
-      .card-left-item-total {
-        font-size: 3rem;
-        font-weight: bold;
-      }
-    }
   }
 }
 .tb-min-height {

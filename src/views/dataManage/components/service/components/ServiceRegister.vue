@@ -74,6 +74,9 @@ import { insertServer } from "@/api/dataManage/service";
 import { getSJListPage } from "@/api/dataManage/overview";
 export default {
   name: "Home",
+  props: {
+    selectedId: String
+  },
   data() {
     return {
       serviceName: "",
@@ -111,6 +114,15 @@ export default {
       }
     };
   },
+  watch: {
+    selectedId(newVal, oldVal) {
+      //重新請求数据 不为空则代表选择了模块
+      if (newVal) {
+        this.page.current = 1;
+        this.getSJListPage();
+      }
+    }
+  },
   computed: {},
   created() {
     this.getSJListPage();
@@ -132,9 +144,11 @@ export default {
     getSJListPage() {
       this.tableLoading = true;
       getSJListPage({
+           fidentification:[0],
         pageSize: this.page.pageSize,
         pageNum: this.page.current,
         serviceName: this.serviceName,
+        identification: this.selectedId,
         createdBy: "", //this.formInline.uploader,
         dataPath: "", //this.formInline.path.join("/")
         dataType: "", //this.formInline.type,

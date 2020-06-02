@@ -21,6 +21,9 @@
 .ivu-table-small td{
     /* height: 2.5rem; */
 }
+.ivu-table-small{
+    font-size: 0.875rem;
+}
 .ivu-table-overflowX {
     overflow-x: hidden !important;
   }
@@ -29,6 +32,9 @@
     overflow-x: hidden !important;
   }
   /* menu */
+  .ivu-menu{
+      color: $text-title;
+  }
   .ivu-menu-item{
       /* font-size:1rem; */
   }
@@ -86,4 +92,11 @@
 .ivu-page-item-jump-next, .ivu-page-item-jump-prev, .ivu-page-next, .ivu-page-prev{
     color: $text-normal;
 
+}
+.ant-tree{
+    color: $text-title;
+}
+.ant-tree li .ant-tree-node-content-wrapper{
+    color: $text-title;
+    font-weight: normal;
 }
