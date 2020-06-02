@@ -113,33 +113,27 @@ export default {
           resolve();
           return;
         }
-      getLeavesById({ identification: treeNode.dataRef.key }).then(res => {
-        const { code, data } = res.data;
-        if (code === 1000) {
-          if (data.length) {
-            treeNode.dataRef.children = data.map(item => ({
-              title: item.dataName,
-              key: item.dataName,
-              isLeaf:true
-            }));
-          } else {
+        getLeavesById({ identification: treeNode.dataRef.key }).then(res => {
+          const { code, data } = res.data;
+          if (code === 1000) {
+            if (data.length) {
+              treeNode.dataRef.children = data.map(item => ({
+                title: item.dataName,
+                key: item.dataName,
+                isLeaf: true
+              }));
+            } else {
+            }
+            this.gData = [...this.gData];
+            resolve();
           }
-           this.gData = [...this.gData];
-          resolve()
-        }
-      });
-      
+        });
       });
     },
-  
+
     onSelect(e, a) {
       if (e[0]) {
-        if (this.type === "service") {
-          this.$emit("handleSelect", e[0]);
-        } else {
-          this.$emit("handleSelect", e);
-          getLeavesById(e[0]);
-        }
+        this.$emit("handleSelect", e);
       }
     },
     onExpand(expandedKeys) {

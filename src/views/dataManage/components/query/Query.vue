@@ -137,25 +137,13 @@ export default {
   
   },
   mounted() {
-    // this.timer1 = setInterval(() => {
-    //   this.getCatalogue();/
-    // }, 1000*60*10);
+  
   },
   beforeDestroy() {
     clearInterval(this.timer1);
   },
   methods: {
-    // // 获取左侧目录
-    // getCatalogue() {
-    //   getCatalogue().then(res => {
-    //     const { data, code } = res.data;
-    //     if (code === 1000) {
-    //       let result = handleRawData(data);
-
-    //       this.gData = result;
-    //     }
-    //   });
-    // },
+  
     // 获取元数据
     getMetaByName(name) {
       getMetaByName({ dataName: name }).then(res => {
@@ -178,7 +166,11 @@ export default {
       });
     },
     handleSelect(e) {
-      this.getMetaByName(e[0]);
+      if(this.activeMode==='meta'){
+        this.getMetaByName(e[0]);
+      }else{
+        // 加载地理信息
+      }
     }
   }
 };
