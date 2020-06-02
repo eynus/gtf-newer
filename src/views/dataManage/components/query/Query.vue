@@ -3,7 +3,7 @@
     <Row style="height:100%">
       <i-col span="4" class="h100 scroll-y bg-white">
         <div class="pd h100">
-          <my-tree :gData="gData" @handleSelect="handleSelect" type="query"></my-tree>
+          <my-tree @handleSelect="handleSelect" type="query"></my-tree>
         </div>
       </i-col>
       <i-col span="20" class="pd h100 bg-white">
@@ -93,26 +93,9 @@
   </div>
 </template>
 <script>
-import MyTree from "_c/myTree/MyTree.vue";
+import MyTree from "./components/QueryTree";
 import { getCatalogue, getMetaByName } from "@/api/dataManage/query";
-const handleRawData = data => {
-  let newData = [];
-  for (let i = 0; i < data.length; i++) {
-    newData.push({});
-    if (data[i].children) {
-      newData[i].children = handleRawData(data[i].children);
-    }
-    if (data[i].childrens) {
-      newData[i].children = handleRawData(data[i].childrens);
-    }
-    newData[i].key = data[i].dataName;
-    newData[i].title = data[i].dataName;
-    // pkId作为key,但是后端返回的数据pkId有重复，暂时用的是dataName作为标识
-    // newData[i].key = data[i].pkId;
-    newData[i].scopedSlots = { title: "title" };
-  }
-  return newData;
-};
+
 export default {
   name: "Home",
   data() {
@@ -151,28 +134,28 @@ export default {
   components: { MyTree },
   computed: {},
   created() {
-    this.getCatalogue();
+  
   },
   mounted() {
-    this.timer1 = setInterval(() => {
-      this.getCatalogue();
-    }, 1000*60*10);
+    // this.timer1 = setInterval(() => {
+    //   this.getCatalogue();/
+    // }, 1000*60*10);
   },
   beforeDestroy() {
     clearInterval(this.timer1);
   },
   methods: {
-    // 获取左侧目录
-    getCatalogue() {
-      getCatalogue().then(res => {
-        const { data, code } = res.data;
-        if (code === 1000) {
-          let result = handleRawData(data);
+    // // 获取左侧目录
+    // getCatalogue() {
+    //   getCatalogue().then(res => {
+    //     const { data, code } = res.data;
+    //     if (code === 1000) {
+    //       let result = handleRawData(data);
 
-          this.gData = result;
-        }
-      });
-    },
+    //       this.gData = result;
+    //     }
+    //   });
+    // },
     // 获取元数据
     getMetaByName(name) {
       getMetaByName({ dataName: name }).then(res => {

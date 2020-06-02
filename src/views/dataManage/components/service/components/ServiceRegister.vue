@@ -144,7 +144,7 @@ export default {
     getSJListPage() {
       this.tableLoading = true;
       getSJListPage({
-           fidentification:[0],
+           fidentification:[],
         pageSize: this.page.pageSize,
         pageNum: this.page.current,
         serviceName: this.serviceName,

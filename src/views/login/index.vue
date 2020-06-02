@@ -150,7 +150,6 @@ export default {
         password: [
           {
             validator: validatePassword,
-
             trigger: "blur"
           }
         ],

@@ -8,6 +8,7 @@
       :tree-data="gData"
       @expand="onExpand"
       @select="onSelect"
+      :load-data="onLoadData"
     >
       <template slot="title" slot-scope="{ title }">
         <span v-if="title.indexOf(searchValue) > -1">
@@ -23,16 +24,18 @@
   </div>
 </template>
 <script>
-
+import { getLeavesById } from "@/api/dataManage/query";
+import { getCatalogue, getMetaByName } from "@/api/dataManage/query";
 const dataList = [];
 const generateList = data => {
   for (let i = 0; i < data.length; i++) {
     const node = data[i];
     const key = node.key;
+    // if (this.type === "service") {
     dataList.push({
       key,
       title: node.title,
-      childrens: node.childrens 
+      childrens: node.childrens
     });
 
     if (node.children) {
@@ -55,17 +58,25 @@ const getParentKey = (key, tree) => {
   }
   return parentKey;
 };
+const handleRawData = data => {
+  let newData = [];
+  for (let i = 0; i < data.length; i++) {
+    newData.push({});
+    if (data[i].children) {
+      newData[i].children = handleRawData(data[i].children);
+    }
+    if (data[i].childrens) {
+      newData[i].children = handleRawData(data[i].childrens);
+    }
+    newData[i].key = data[i].dataName;
+    newData[i].title = data[i].dataName;
+    newData[i].isLeaf = false;
+    newData[i].scopedSlots = { title: "title" };
+  }
+  return newData;
+};
 export default {
   name: "mytree",
-  props: {
-    gData: {
-      type: Array,
-      default: function() {
-        return [];
-      }
-    },
-    type: String
-  },
   watch: {
     gData: {
       handler(newVal, oldVal) {
@@ -78,15 +89,48 @@ export default {
       expandedKeys: [],
       searchValue: "",
       autoExpandParent: true,
-      inputVal: ""
+      inputVal: "",
+      gData: []
     };
   },
   created() {
-    generateList(this.gData);
-    
+    this.getCatalogue();
   },
   methods: {
-    
+    // 获取左侧目录
+    getCatalogue() {
+      getCatalogue().then(res => {
+        const { data, code } = res.data;
+        if (code === 1000) {
+          this.gData = handleRawData(data);
+          generateList(this.gData);
+        }
+      });
+    },
+    onLoadData(treeNode) {
+      return new Promise(resolve => {
+        if (treeNode.dataRef.children) {
+          resolve();
+          return;
+        }
+      getLeavesById({ identification: treeNode.dataRef.key }).then(res => {
+        const { code, data } = res.data;
+        if (code === 1000) {
+          if (data.length) {
+            treeNode.dataRef.children = data.map(item => ({
+              title: item.dataName,
+              key: item.dataName,
+              isLeaf:true
+            }));
+          } else {
+          }
+           this.gData = [...this.gData];
+          resolve()
+        }
+      });
+      
+      });
+    },
   
     onSelect(e, a) {
       if (e[0]) {
@@ -94,6 +138,7 @@ export default {
           this.$emit("handleSelect", e[0]);
         } else {
           this.$emit("handleSelect", e);
+          getLeavesById(e[0]);
         }
       }
     },
