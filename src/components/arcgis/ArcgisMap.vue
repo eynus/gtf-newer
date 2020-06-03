@@ -16,7 +16,6 @@ import boundaryMarker from '../../assets/projectApproval_images/position.png'
 loadCss(config.esriCss)
 /**
  * 快速生成一个地图
- * @author 杨珊珊
 * */
 export default {
   name: 'ArcgisMap',
@@ -355,8 +354,6 @@ export default {
     },
     /**
      * @Description: 绘制线函数
-     * @author 张淼
-     * @date 2019/5/5
      */
     async drawLine (action) {
       // 监听绘制过程的函数
@@ -395,8 +392,6 @@ export default {
     },
     /**
      * @Description: 绘制多边形
-     * @author 张淼
-     * @date 2019/5/6
      */
     async drawPolygon (action) {
       // 定义绘制事件
