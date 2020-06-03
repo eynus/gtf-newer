@@ -524,4 +524,6 @@ export default {
 .btn-margin {
   margin-left: 1rem;
 }
+
+
 </style>

@@ -212,6 +212,72 @@ const routes = [
             ]
           },
         ]
+      },
+      {
+        path: '/pic',
+        // name: 'pic',
+        component: () => import('../views/picVisualization'),
+        meta: {
+          title: '一张图',
+          id: 'page_1_1'
+        },
+        children: [
+          {
+            path: '',
+            name: 'pic',
+            component: () => import('../views/picVisualization/components/firstview/index.vue'),
+            meta: {
+              title: '一张图首页',
+              // id: 'page_1_1'
+            }
+          },
+          {
+            path: 'situation',
+            name: 'situation',
+            component: () => import('../views/picVisualization/components/situation/Situation.vue'),
+            meta: {
+              title: '现状一张图',
+              id: 'page_1_1'
+            }
+          },
+          {
+            path: 'plan',
+            name: 'plan',
+            component: () => import('../views/picVisualization/components/plan/Plan.vue'),
+            meta: {
+              title: '规划一张图',
+              id: 'page_1_2'
+            }
+          },
+          {
+            path: 'approve',
+
+            component: () => import('../views/picVisualization/components/approve/Approve.vue'),
+            meta: {
+              title: '审批一张图',
+              id: 'page_1_3'
+            },
+            children: []
+          },
+          {
+            path: 'supervision',
+            component: () => import('../views/picVisualization/components/supervision/Supervision.vue'),
+            meta: {
+              title: '监管一张图',
+              id: 'page_1_4'
+            },
+            children: []
+          },
+          {
+            path: 'warning',
+            component: () => import('../views/picVisualization/components/warning/Warning.vue'),
+            meta: {
+              title: '预警一张图',
+              id: 'page_1_4'
+            },
+            children: []
+          },
+        ]
       }
     ]
   },
@@ -254,6 +320,8 @@ export const canTurnTo = (name, roles, routes) => {//roles:localStorage存的rol
 }
 // 设置路由权限
 const turnTo = (to, role, next) => {
+  // console.log(to.name, role, routes);
+  
   if (canTurnTo(to.name, role, routes)) next();// 有权限，可访问
   else next({ replace: true, name: 'error_401' });// 无权限，重定向到401页面
 };
@@ -265,6 +333,8 @@ const hasAccess = (roles, route) => {
   //有id代表是二级菜单
   if (route.meta && route.meta.id) {
     //判断route.meta.id在不在roles里面
+    // console.log(roles,'roles');
+    
     let result = roles.some((item) => {
       return item.childs.indexOf(route.meta.id) > -1//item.childs里面包含id
     })

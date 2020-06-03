@@ -60,7 +60,7 @@ export default {
           name: "一张图可视化",
           color: "#E63A3D",
           show: false,
-          to: "data/overview"
+          to: "pic/plan"
         },
         { name: "实施监督管理", color: "#F76110", show: false, to: "data" },
         { name: "模型指标配置管理", color: "#F0B800", show: false, to: "data" },
@@ -84,6 +84,7 @@ export default {
       bg: require(`../../assets/img/guide/beijing-${index + 1}.png`),
       icon: require(`../../assets/img/guide/icon-${index + 1}.png`)
     }));
+    
     // 根据用户权限判断模块的显示
     this.role.forEach((item, index) => {
       switch (item.resIdentif) {

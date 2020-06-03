@@ -128,7 +128,9 @@ export default {
       if (!value) {
         return callback(new Error("新密码不能为空"));
       } else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value)) {
-        return callback(new Error("密码不能少于八位，至少包含一位字母和一位数字"));
+        return callback(
+          new Error("密码不能少于八位，至少包含一位字母和一位数字")
+        );
       }
       callback();
     };
@@ -203,22 +205,24 @@ export default {
     // modal框确定按钮
     ok() {
       this.$refs.formModalValidate.validate(valid => {
-        console.log("!!!", valid);
-
         if (valid) {
           updateUserPwd({
             password: this.formModalValidate.password,
             userName: this.form.userName
-          }).then(res => {
-            const { code, data, message } = res.data;
-            if (code === 1000) {
-              this.modalFlag = false;
-              this.$Message.info("修改成功！请重新登录");
-               this.$refs["loginForm"].resetFields();
-            } else {
-              this.$Message.info(message);
-            }
-          });
+          })
+            .then(res => {
+              const { code, data, message } = res.data;
+              if (code === 1000) {
+                this.modalFlag = false;
+                this.$Message.info("修改成功！请重新登录");
+                this.$refs["loginForm"].resetFields();
+              } else {
+                this.$Message.info(message);
+              }
+            })
+            .catch(res => {
+              this.$Message.info(res);
+            });
         }
       });
     },
@@ -276,7 +280,9 @@ export default {
               }
             })
             .catch(err => {
-              console.log("err:", err);
+              // if(err==='验证码错误！'){
+                this.getPublicKey()
+              // }
               this.$Message.error({
                 content: err,
                 duration: 5

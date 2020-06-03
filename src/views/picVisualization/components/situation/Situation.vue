@@ -464,7 +464,6 @@ export default {
     border-top-right-radius: 0.25rem;
     border-bottom-right-radius: 0.25rem;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
-   
   }
   .card-body {
   }

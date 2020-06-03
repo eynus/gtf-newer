@@ -1,17 +1,6 @@
 <template>
-  <div class="h100">
-     <Row style="height:100%">
-      <i-col span="4" class="h100 zt-scroll-y bg-white">
-        <div class="pd h100">
-          <my-tree :gData="gData" @handleSelect="handleSelect" type="service"></my-tree>
-        </div>
-      </i-col>
-      <i-col span="20 bg-white h100">
-        <div class="pd">
-          <router-view :selectedId="selectedId"></router-view>
-        </div>
-      </i-col>
-    </Row>
+  <div class="h100 bg-white">
+     1111
   </div>
 </template>
 <script>

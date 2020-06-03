@@ -14,8 +14,8 @@
           </RadioGroup>
         </div>
         <div class="bordered w100 h100 mt img-container" :style="{ height: `calc(100% - ${remToPx(2.65)}px)` }">
-          <div v-if="activeMode==='normal'" class="h100">
-            <my-map></my-map>
+          <div v-if="activeMode==='normal'">
+         111
           </div>
           <div v-else-if="activeMode==='meta'" class="pd meta_info zt-scroll-y h100">
             <div>
@@ -94,7 +94,6 @@
 </template>
 <script>
 import MyTree from "./components/QueryTree";
-import MyMap from "./components/MyMap";
 import { getCatalogue, getMetaByName } from "@/api/dataManage/query";
 
 export default {
@@ -132,7 +131,7 @@ export default {
       timer1: null
     };
   },
-  components: { MyTree,MyMap },
+  components: { MyTree },
   computed: {},
   created() {
   
