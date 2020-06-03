@@ -60,7 +60,7 @@ export default {
           name: "一张图可视化",
           color: "#E63A3D",
           show: false,
-          to: "pic/plan"
+          to: "pic"
         },
         { name: "实施监督管理", color: "#F76110", show: false, to: "data" },
         { name: "模型指标配置管理", color: "#F0B800", show: false, to: "data" },

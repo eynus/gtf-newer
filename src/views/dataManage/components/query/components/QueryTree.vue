@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Input style="margin-bottom: 8px" placeholder="请输入关键字进行搜索" @on-change="onChange" />
+    <Input style="margin-bottom: 8px" placeholder="请输入目录关键字进行搜索" @on-change="onChange" />
     <a-tree
       ref="tree"
       :expanded-keys="expandedKeys"

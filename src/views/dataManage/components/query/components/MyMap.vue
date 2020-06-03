@@ -33,7 +33,6 @@ export default {
   methods: {
     //初始化地图
     async createMap() {
-      console.log("createMap");
       // 加载arcgis地图的依赖
       let MapView = await arcgisPackage.MapView;
       let Map = await arcgisPackage.Map;
