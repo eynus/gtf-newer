@@ -67,13 +67,13 @@ export default {
               commit('setToken', data.token)
               resolve()
             } else if(code === 1013) {
-              resolve('init')
+              resolve('init')//需要重置密码
             }else {
-              reject(message)
+              reject([message,'user'])
             }
           })
           .catch(err => {
-            reject(err)
+            reject([err,'server'])
           })
       })
     },

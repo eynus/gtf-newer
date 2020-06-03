@@ -62,7 +62,11 @@
                 </Row>
               </FormItem>
               <FormItem>
-                <Button @click="handleSubmit" type="primary" size="large" long class="let-spc">登录</Button>
+                <div class="error-msg text-center">
+                  <span>1</span>
+                  {{errorMsg}}
+                </div>
+                <Button @click="handleSubmit" type="primary" size="large" long class="let-spc">{{!loginLoading?'登录':'正在登录...'}}</Button>
               </FormItem>
             </Form>
           </div>
@@ -144,6 +148,8 @@ export default {
       }
     };
     return {
+      loginLoading:false,
+      errorMsg: " ",
       formModalValidate: {
         password: "",
         password2: ""
@@ -222,6 +228,7 @@ export default {
             })
             .catch(res => {
               this.$Message.info(res);
+              this.errorMsg = res;
             });
         }
       });
@@ -256,6 +263,7 @@ export default {
     },
     // 验证通过后进行登录请求
     handleSubmit() {
+       this.loginLoading = true
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           let jm_username = this.encryptedData(this.form.userName);
@@ -271,22 +279,27 @@ export default {
             publicKey: this.publicKey
           })
             .then(res => {
-              console.log(res);
-
+                this.loginLoading = false
+              this.errorMsg = "";
               if (res === "init") {
                 this.modalFlag = true;
               } else {
                 this.$router.push({ path: `/home` });
               }
             })
-            .catch(err => {
-              // if(err==='验证码错误！'){
-                this.getPublicKey()
-              // }
-              this.$Message.error({
-                content: err,
-                duration: 5
-              });
+            .catch((err) => {
+               this.loginLoading = false
+              
+              if (err[1] === "user") {
+                // 用户输入错误
+                this.errorMsg = err[0];
+              } else if (err[1] === "server") {
+                this.$Message.error({
+                  content: err[0],
+                  duration: 5
+                });
+              }
+              this.getPublicKey();
             });
         }
       });
@@ -295,6 +308,16 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.error-msg {
+margin-top: -1rem;
+  height: 2rem;
+  line-height: 2rem;
+  width: 100%;
+  color: red;
+  span {
+    color: transparent;
+  }
+}
 .login {
   width: 100%;
   height: 100%;
