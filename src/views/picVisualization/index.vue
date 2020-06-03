@@ -53,35 +53,35 @@ export default {
           name: "现状一张图",
           key: "situation",
           show: false,
-          icon: "iconfont  icon-overview",
+          icon: "iconfont  icon-xianzhuangyizhangtu",
           id: "page_1_1"
         },
         {
           name: "规划一张图",
           key: "plan",
           show: false,
-          icon: "iconfont  icon-file",
+          icon: "iconfont  icon-guihuayizhangtu",
           id: "page_1_2"
         },
         {
           name: "审批一张图",
           key: "approve",
           show: false,
-          icon: "iconfont  icon-jiangbei",
+          icon: "iconfont  icon-shenpi",
           id: "page_1_3"
         },
         {
           name: "监管一张图",
           key: "supervision",
           show: false,
-          icon: "iconfont  icon-setting",
+          icon: "iconfont  icon-jianguanyizhangtu",
           id: "page_1_4"
         },
         {
           name: "预警一张图",
           key: "warning",
           show: false,
-          icon: "iconfont  icon-setting",
+          icon: "iconfont  icon-yujing",
           id: "page_1_5"
         }
       ]
@@ -89,8 +89,6 @@ export default {
   },
   created() {
     this.activeMenuItem = this.$route.path.replace("/pic/", "").split("/")[0];
-    console.log(this.activeMenuItem,'?');
-    
     //判断当前用户是否有权限显示左侧列表menu
     let dataSiderAuth = this.role.find(
       (item, index) => item.resIdentif === "main_menu_1"

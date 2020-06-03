@@ -22,6 +22,7 @@
             </a>
             <DropdownMenu slot="list">
               <DropdownItem class="text-center fs16 pd" @click.native="returnHome">返回主页</DropdownItem>
+              <DropdownItem class="text-center fs16 pd" >修改密码</DropdownItem>
               <DropdownItem class="text-center fs16 pd" @click.native="quit">退出</DropdownItem>
             </DropdownMenu>
           </Dropdown>

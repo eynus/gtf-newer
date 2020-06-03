@@ -524,8 +524,6 @@ export default {
 
     // modal框确定按钮
     ok() {
-      console.log(this.activeRow.id, this.modalForm.pathChildNodeId);
-
       if (!this.modalForm.path[0]) {
         this.$Message.info("请选择规则适用对象");
         return;
@@ -539,7 +537,6 @@ export default {
           ruleDesc: this.modalForm.ruleDesc,
           rulesFitObj: this.modalForm.rulesFitObj
         };
-        console.log(this.modalForm.pathChildNodeId, "?");
 
         // 请求addRules接口
         let postData = {
@@ -559,7 +556,6 @@ export default {
           updatedTime: this.activeRow.updatedTime,
           validity: this.activeRow.validity
         };
-        console.log(this.modalForm.rulesFitObj);
 
         if (this.isRuleUpdate) {
           updateRules(postData).then(res => {

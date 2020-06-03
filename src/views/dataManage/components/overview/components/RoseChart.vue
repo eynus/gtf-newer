@@ -41,7 +41,6 @@ export default {
     this.$nextTick(()=>{
       
       this.height=this.chartssize(this.$refs.rosewrap)
-      console.log(this.height);
       
     })
     
