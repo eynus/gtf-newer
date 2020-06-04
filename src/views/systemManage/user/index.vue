@@ -13,42 +13,44 @@
               inline
               style="margin-top:.75rem"
               class="search-box smzx-search-box"
-              label-position="right"
+              label-position="left"
               :label-width="remToPx(6.25)"
               width="100%"
           >
             <Row>
-                <i-col :md="4" :xl="4" :xxl="4">
+                <i-col :md="4" :xl="4" :xxl="4" class="form-col">
                   <FormItem label="用户名：">
                     <Input v-model.trim="formInline.userName" placeholder="请输入用户名" clearable />
                   </FormItem>
                 </i-col>
-                <i-col :md="4" :xl="4" :xxl="4">
+                <i-col :md="4" :xl="4" :xxl="4" class="form-col">
                   <FormItem label="角色名：">
                     <Input v-model.trim="formInline.roleName" placeholder="请输入角色名" clearable />
                   </FormItem>
                 </i-col>
-                <i-col :md="4" :xl="4" :xxl="4">
+                <i-col :md="4" :xl="4" :xxl="4" class="form-col">
                   <FormItem label="真实姓名：">
                     <Input v-model.trim="formInline.realName" placeholder="请输入真实姓名" clearable />
                   </FormItem>
                 </i-col>
-                <i-col :md="4" :xl="4" :xxl="4">
+                <i-col :md="4" :xl="4" :xxl="4" class="form-col">
                   <FormItem label="电话号码：">
                     <Input v-model.trim="formInline.userPhone" placeholder="请输入电话号码" clearable />
                   </FormItem>
                 </i-col>
-                <i-col :md="4" :xl="4" :xxl="4">
-                  <FormItem label="邮箱：">
-                    <Input v-model.trim="formInline.userEmail" placeholder="请输入邮箱" clearable />
-                  </FormItem>
-                </i-col>
-                <i-col span="2">
-                  <FormItem :label-width="remToPx(2)">
+                <i-col span="2" style="float: right;">
+                  <FormItem :label-width="remToPx(2)" >
                     <Button type="primary" class="smzx-search-btn" @click="onSearch">查询</Button>
                   </FormItem>
                 </i-col>
               </Row>
+            <Row>
+              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
+                <FormItem label="邮箱：">
+                  <Input v-model.trim="formInline.userEmail" placeholder="请输入邮箱" clearable />
+                </FormItem>
+              </i-col>
+            </Row>
           </Form>
           <Button type="primary" @click="insert" class="btn-margin">新建</Button>
           <Button type="primary" @click="edit" class="btn-margin">修改</Button>
@@ -295,23 +297,9 @@
 </script>
 <style lang="scss" scoped>
   .btn-margin {
-    margin-left: 1rem;
+    margin-right: 1rem;
   }
-  .img-wrap {
-    width: 5rem;
-    height: 5rem;
-    background: url("../../../assets/img/dataManage/query/map.png");
-  }
-  .service-list-item {
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    .item-title {
-      font-weight: 700;
-      font-size: 1.125rem;
-    }
-    .item-label {
-      display: inline-block;
-      width: 6rem;
-    }
+  .form-col {
+    margin-right: 30px;
   }
 </style>

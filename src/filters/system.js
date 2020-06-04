@@ -43,3 +43,19 @@ export const logOpt = {
     return result.length ? result[0].label : ''
   }
 }
+// 备份类型
+export const dbback = {
+  value: [
+    {
+      label: '全部备份',
+      value: 0
+    }, {
+      label: '局部备份',
+      value: 1
+    }
+  ],
+  handler: function (val) {
+    let result = this.value.filter(item => item.value === val)
+    return result.length ? result[0].label : ''
+  }
+}

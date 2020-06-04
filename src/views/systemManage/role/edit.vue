@@ -22,8 +22,8 @@
         </Row>
       </Form>
       <div class="drawer-footer">
-        <Button style="margin-right: 8px" @click="resetForm">重置</Button>
-        <Button type="primary" @click="onSubmit">提交</Button>
+        <Button style="margin-right: 8px" type="primary" @click="onSubmit">提交</Button>
+        <Button @click="resetForm">重置</Button>
       </div>
     </Drawer>
   </div>
@@ -55,6 +55,9 @@
         rules: {
           roleName: [
             { required: true, message: '请填写角色名称！', trigger: 'blur' }
+          ],
+          roleRemarks: [
+            { required: true, message: '请填写角色备注！', trigger: 'blur' }
           ],
         }
       }

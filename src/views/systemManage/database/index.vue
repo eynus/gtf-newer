@@ -3,42 +3,40 @@
     <Row style="height:100%">
       <i-col>
         <div class="pd">
-          <div class="module-head">
-            <Icon custom="iconfont  icon-type" size="16" color="#2d8cf0" />
-            <span class="ml">服务检索</span>
-          </div>
-          <Form
-              ref="formInline"
-              :model="formInline"
-              inline
-              style="margin-top:.75rem"
-              class="search-box smzx-search-box"
-              label-position="left"
-              :label-width="remToPx(6.25)"
-              width="100%"
-          >
-            <Row>
-              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
-                <FormItem label="角色名：">
-                  <Input v-model.trim="formInline.roleName" placeholder="请输入角色名" clearable />
-                </FormItem>
-              </i-col>
-              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
-                <FormItem label="备注：">
-                  <Input v-model.trim="formInline.roleRemarks" placeholder="请输入备注" clearable />
-                </FormItem>
-              </i-col>
-              <i-col span="2" style="float: right;">
-                <FormItem :label-width="remToPx(2)">
-                  <Button type="primary" class="smzx-search-btn" @click="onSearch">查询</Button>
-                </FormItem>
-              </i-col>
-            </Row>
-          </Form>
-          <Button type="primary" @click="insert" class="btn-margin">新建</Button>
-          <Button type="primary" @click="edit" class="btn-margin">修改</Button>
-          <Button type="primary" @click="del" class="btn-margin">删除</Button>
-          <Button type="primary" @click="allot" class="btn-margin">权限分配</Button>
+<!--          <div class="module-head">-->
+<!--            <Icon custom="iconfont  icon-type" size="16" color="#2d8cf0" />-->
+<!--            <span class="ml">服务检索</span>-->
+<!--          </div>-->
+<!--          <Form-->
+<!--              ref="formInline"-->
+<!--              :model="formInline"-->
+<!--              inline-->
+<!--              style="margin-top:.75rem"-->
+<!--              class="search-box smzx-search-box"-->
+<!--              label-position="right"-->
+<!--              :label-width="remToPx(6.25)"-->
+<!--              width="100%"-->
+<!--          >-->
+<!--            <Row>-->
+<!--              <i-col :md="4" :xl="4" :xxl="4">-->
+<!--                <FormItem label="备份文件名称 ：">-->
+<!--                  <Input v-model.trim="formInline.backupName" placeholder="请输入角色名" clearable />-->
+<!--                </FormItem>-->
+<!--              </i-col>-->
+<!--              <i-col :md="4" :xl="4" :xxl="4">-->
+<!--                <FormItem label="备份说明：">-->
+<!--                  <Input v-model.trim="formInline.backupExplain" placeholder="请输入备注" clearable />-->
+<!--                </FormItem>-->
+<!--              </i-col>-->
+<!--              <i-col span="2">-->
+<!--                <FormItem :label-width="remToPx(2)">-->
+<!--                  <Button type="primary" class="smzx-search-btn" @click="onSearch">查询</Button>-->
+<!--                </FormItem>-->
+<!--              </i-col>-->
+<!--            </Row>-->
+<!--          </Form>-->
+          <Button type="primary" @click="insert" class="btn-margin">新建备份</Button>
+          <Button type="primary" @click="recover" class="btn-margin">恢复备份</Button>
           <div class="mt">
             <Table
                 :loading="tableLoading"
@@ -53,9 +51,6 @@
                 @on-select-all="handleSelectRowAll"
                 @on-select-all-cancel="handleCancelRowAll"
             >
-              <template slot="status" slot-scope="{row}">
-                <div href="#" :style="`color:${row.serviceStatus==='0'?'#2d8cf0':'#f00'}`">{{row.status}}</div>
-              </template>
             </Table>
             <div class="text-right mr-lg mt">
               <Page
@@ -68,31 +63,30 @@
               ></Page>
             </div>
           </div>
-          <my-delete :show="delModalFlag" @ok="confirmDel" @cancel="delModalFlag=false"></my-delete>
+<!--          <my-delete :show="delModalFlag" @ok="confirmDel" @cancel="delModalFlag=false"></my-delete>-->
         </div>
       </i-col>
     </Row>
-    <!--    角色编辑-->
-    <uedit ref="uedit" :roles="roles" @close="getList"></uedit>
-    <!--    角色编辑-->
-    <!-- 权限分配 -->
-    <allot ref="allot" @close="getList"></allot>
-    <!-- 权限分配 -->
+    <!--    新建备份-->
+    <edit ref="edit" :roles="roles" @close="getList"></edit>
+    <!--    新建备份-->
+    <!--    恢复备份-->
+    <recover ref="recover" @close="getList"></recover>
+    <!--    恢复备份-->
   </div>
 </template>
 <script>
   import { remToPx } from "@/utils/common";
-  import { roleList, roleDel } from "@/api/systemManage/user";
+  import { dbList } from "@/api/systemManage/user";
   import edit from './edit'
-  import allot from './allot'
-  import MyDelete from '../../../components/delete'
+  import recover from './recover'
+  import { dbback } from '../../../filters/system'
   import { nullStr } from '../../../utils/common'
   export default {
-    name: 'role',
+    name: 'database',
     components: {
-      uedit: edit,
-      allot,
-      MyDelete
+      edit,
+      recover
     },
     data() {
       return {
@@ -114,34 +108,47 @@
             align: 'center'
           },
           {
-            title: "角色名",
-            key: "roleName",
+            title: "备份文件名称",
+            key: "backupName",
             align: "center",
             width: remToPx(18),
             tooltip: true,
             sortable: true
           },
           {
-            title: "备注",
-            key: "roleRemarks",
+            title: "备份说明 ",
+            key: "backupExplain",
             align: "center",
+            width: remToPx(18),
             tooltip: true,
             sortable: true
           },
           {
-            title: "创建时间",
-            key: "createDate",
+            title: "备份表名 ",
+            key: "backupTableNames",
             align: "center",
+            width: remToPx(18),
             tooltip: true,
             sortable: true
           },
           {
-            title: "更新时间",
-            key: "updateDate",
+            title: "备份类型 ",
+            key: "backupIsWhole",
+            align: "center",
+            width: remToPx(18),
+            tooltip: true,
+            sortable: true,
+            render: (h, params) => {
+              return h('div', dbback.handler(params.row.backupIsWhole))
+            }
+          },
+          {
+            title: "备份时间 ",
+            key: "backupTime",
             align: "center",
             tooltip: true,
             sortable: true
-          }
+          },
         ],
         datas: [],
         roles: [],
@@ -150,10 +157,7 @@
           total: 0,
           pageSize: 10
         },
-        formInline: {
-          roleName: "",
-          roleRemarks: "",
-        }
+        formInline: {}
       };
     },
     mounted() {
@@ -162,49 +166,21 @@
     methods: {
       init() {
         this.getList()
-        this.getRole()
       },
       onSearch() {
         this.formInline = nullStr(this.formInline)
         this.getList()
       },
       insert() {
-        this.$refs.uedit.insert(this.selections)
+        this.$refs.edit.insert()
       },
-      edit() {
-        let msg = this.msg('修改')
+      recover() {
+        let msg = this.msg('恢复')
         if (msg) {
           this.$Message.warning(msg)
         } else {
-          this.$refs.uedit.edit(this.selections)
+          this.$refs.recover.open(this.selections)
         }
-      },
-      del() {
-        let msg = this.msg('删除')
-        if (msg) {
-          this.$Message.warning(msg)
-        } else {
-          this.delModalFlag = true
-        }
-      },
-      allot() {
-        let msg = this.msg('操作')
-        if (msg) {
-          this.$Message.warning(msg)
-        } else {
-          this.$refs.allot.open(this.selections)
-        }
-      },
-      confirmDel() {
-        roleDel({pkId: this.selections[0].pkId}).then(res => {
-          if (res.data.code === 1000) {
-            this.$Message.success('删除成功！')
-            this.getList()
-          } else {
-            this.$Message.error('删除失败！')
-          }
-          this.delModalFlag = false
-        })
       },
       msg(tip = '操作') {
         let msg = null
@@ -229,16 +205,12 @@
         this.tableLoading = true
         let { current, pageSize } = this.page
         let param = {
-          pageNum: current,
-          pageSize: pageSize,
-          queryTerms: {
-            ...this.formInline
-          }
+          ...this.formInline
         }
-        roleList(param).then(res => {
+        dbList(param).then(res => {
           let { data, code } = res.data
           if (code === 1000) {
-            this.datas = data.records
+            this.datas = data
             this.page.total = data.total
           }
           this.tableLoading = false

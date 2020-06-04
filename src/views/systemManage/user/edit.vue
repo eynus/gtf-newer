@@ -47,8 +47,8 @@
         </Row>
       </Form>
       <div class="drawer-footer">
-        <Button style="margin-right: 8px" @click="resetForm">重置</Button>
-        <Button type="primary" @click="onSubmit">提交</Button>
+        <Button style="margin-right: 8px" type="primary" @click="onSubmit">提交</Button>
+        <Button @click="resetForm">重置</Button>
       </div>
     </Drawer>
   </div>
@@ -91,12 +91,12 @@
           position: 'static'
         },
         formData: {
-          userName: 'admin1',
-          realName: 'admin1',
-          userPhone: '13266787765',
-          userEmail: '13266787765@qq.com',
+          userName: '',
+          realName: '',
+          userPhone: '',
+          userEmail: '',
           roleId: '',
-          password: '000000'
+          password: ''
         },
         rules: {
           userName: [
@@ -133,6 +133,7 @@
         this.title = '修改用户'
         this.drawer = true
         this.type = 'e'
+        this.$refs['form'].resetFields()
         this.formData = {
           ...selection[0]
         }

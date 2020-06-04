@@ -14,34 +14,34 @@
               inline
               style="margin-top:.75rem"
               class="search-box smzx-search-box"
-              label-position="right"
+              label-position="left"
               :label-width="remToPx(6.25)"
               width="100%"
           >
             <Row>
-              <i-col :md="4" :xl="4" :xxl="4">
-                <FormItem label="登录IP：">
+              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
+                <FormItem label="登录IP：" style="margin-right: 30px;">
                   <Input v-model.trim="formInline.loginIp" placeholder="请输入登录IP" clearable />
                 </FormItem>
               </i-col>
-              <i-col :md="4" :xl="4" :xxl="4">
+              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
                 <FormItem label="登录人姓名：">
                   <Input v-model.trim="formInline.loginRealName" placeholder="请输入登录人姓名" clearable />
                 </FormItem>
               </i-col>
-              <i-col :md="4" :xl="4" :xxl="4">
+              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
                 <FormItem label="登录设备：" style="width: 100%;">
                   <Select v-model="formInline.loginType" placeholder="请选择登录设备" clearable >
                     <Option v-for="item in logType" :value="item.value" :key="item.value">{{ item.label }}</Option>
                   </Select>
                 </FormItem>
               </i-col>
-              <i-col :md="5" :xl="5" :xxl="5">
+              <i-col :md="5" :xl="5" :xxl="5" class="form-col">
                 <FormItem label="登录时间：">
                   <DatePicker v-model="date_" :value="formInline.date_" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="请选择登录时间范围"></DatePicker>
                 </FormItem>
               </i-col>
-              <i-col span="2">
+              <i-col span="2" style="float: right;">
                 <FormItem :label-width="remToPx(2)">
                   <Button type="primary" class="smzx-search-btn" @click="onSearch">查询</Button>
                 </FormItem>
@@ -55,29 +55,29 @@
               inline
               style="margin-top:.75rem"
               class="search-box smzx-search-box"
-              label-position="right"
+              label-position="left"
               :label-width="remToPx(6.25)"
               width="100%"
           >
             <Row>
-              <i-col :md="4" :xl="4" :xxl="4">
+              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
                 <FormItem label="操作IP：">
                   <Input v-model.trim="formInline1.operationIp" placeholder="操作IP" clearable />
                 </FormItem>
               </i-col>
-              <i-col :md="4" :xl="4" :xxl="4">
+              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
                 <FormItem label="操作人：">
                   <Input v-model.trim="formInline1.operationUserRealName" placeholder="请输入操作人姓名" clearable />
                 </FormItem>
               </i-col>
-              <i-col :md="4" :xl="4" :xxl="4">
+              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
                 <FormItem label="操作类型：" style="width: 100%;">
                   <Select v-model="formInline1.operationType" placeholder="请选择操作类型" clearable >
                     <Option v-for="item in logOpt" :value="item.value" :key="item.value">{{ item.label }}</Option>
                   </Select>
                 </FormItem>
               </i-col>
-              <i-col span="2">
+              <i-col span="2" style="float: right;">
                 <FormItem :label-width="remToPx(2)">
                   <Button type="primary" class="smzx-search-btn" @click="onSearch">查询</Button>
                 </FormItem>
@@ -85,7 +85,7 @@
             </Row>
           </Form>
           <Row>
-            <Col style="margin-left: 30px;">
+            <Col style="padding-bottom: 5px;">
               <RadioGroup v-model="log" @on-change="logChange">
                 <Radio label="log">登录日志</Radio>
                 <Radio label="opt">操作日志</Radio>
@@ -225,6 +225,13 @@
           }, {
             title: "操作人",
             key: "operationUserRealName",
+            align: "center",
+            width: remToPx(18),
+            tooltip: true,
+            sortable: true
+          }, {
+            title: "操作模块",
+            key: "operationModular",
             align: "center",
             width: remToPx(18),
             tooltip: true,
@@ -383,23 +390,9 @@
 </script>
 <style lang="scss" scoped>
   .btn-margin {
-    margin-left: 1rem;
+    margin-right: 1rem;
   }
-  .img-wrap {
-    width: 5rem;
-    height: 5rem;
-    background: url("../../../assets/img/dataManage/query/map.png");
-  }
-  .service-list-item {
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    .item-title {
-      font-weight: 700;
-      font-size: 1.125rem;
-    }
-    .item-label {
-      display: inline-block;
-      width: 6rem;
-    }
+  .form-col {
+    margin-right: 30px;
   }
 </style>

@@ -212,10 +212,64 @@ const routes = [
             ]
           },
         ]
+      },
+      {
+        path: '/system',
+        name: 'system',
+        component: () => import('../views/systemManage'),
+        meta: {
+          title: '运维管理'
+        },
+        children: [
+          {
+            path: 'user',
+            name: 'User',
+            component: () => import('../views/systemManage/user/index.vue'),
+            meta: {
+              title: '用户管理',
+              id: 'page_4_1'
+            }
+          },
+          {
+            path: 'role',
+            name: 'Role',
+            component: () => import('../views/systemManage/role/index.vue'),
+            meta: {
+              title: '角色管理',
+              id: 'page_4_2'
+            }
+          },
+          {
+            path: 'log',
+            name: 'Log',
+            component: () => import('../views/systemManage/log/index.vue'),
+            meta: {
+              title: '日志管理',
+              id: 'page_4_4'
+            }
+          },
+          {
+            path: 'database',
+            name: 'Database',
+            component: () => import('../views/systemManage/database/index.vue'),
+            meta: {
+              title: '数据备份',
+              id: 'page_4_3'
+            }
+          },
+          {
+            path: 'monitor',
+            name: 'Monitor',
+            component: () => import('../views/systemManage/monitor/index.vue'),
+            meta: {
+              title: '系统监控',
+              id: 'page_4_5'
+            }
+          },
+        ]
       }
     ]
   },
-
   {
     path: '*',
     name: 'error_401',
@@ -245,7 +299,7 @@ export const canTurnTo = (name, roles, routes) => {//roles:localStorage存的rol
       if (item.children && item.children.length) {
         return routePermissionJudge(item.children)
       } else if (item.name === name) {
-
+        console.log(item)
         return hasAccess(roles, item)
       }
     })
@@ -274,6 +328,7 @@ const hasAccess = (roles, route) => {
 }
 
 router.beforeEach((to, from, next) => {
+
   const token = getToken();
   //没有token且要访问非登录页面
   if (!token && to.name !== LOGIN_PAGE_NAME) {

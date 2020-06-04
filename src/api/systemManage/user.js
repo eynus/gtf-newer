@@ -21,7 +21,23 @@ export const roleInsert = data => request({ url: baseUrl_user + 'api/system/role
 export const roleEdit = data => request({ url: baseUrl_user + 'api/system/role/updateRoleInfo', method: 'post', data })
 // 角色删除
 export const roleDel = data => request({ url: baseUrl_user + 'api/system/role/deleteRoleByPkid', method: 'post', data })
+// 资源和角色绑定
+export const resourceToUser = data => request({ url: baseUrl_user + 'api/system/resource/addRoleResourceBinding', method: 'post', data })
+// 资源名称信息列表
+export const resources = data => request({ url: baseUrl_user + 'api/system/resource/listResource', method: 'post', data })
+// 资源列表
+export const resourceList = data => request({ url: baseUrl_user + 'api/system/resource/listResourcesByPage', method: 'post', data })
+// 获取用户对应资源信息
+export const resourceByUid = data => request({ url: baseUrl_user + 'api/system/resource/listResourceByUserId', method: 'post', data })
+// 获取角色对应资源信息
+export const resourceByRid = data => request({ url: baseUrl_user + 'api/system/resource/listRoleResource', method: 'post', data })
 // 登录日志列表
 export const lnLogList = data => request({ url: baseUrl_user + 'api/system/log/listLoginLogInfoByPage', method: 'post', data })
 // 操作日志列表
 export const optLogList = data => request({ url: baseUrl_user + 'api/system/log/listOperationLogInfoByPage', method: 'post', data })
+// 数据库备份列表
+export const dbList = data => request({ url: baseUrl_user + 'api/backupRestore/getBackUpRecord', method: 'post', data })
+// 执行数据库备份
+export const dbExecute = data => request({ url: baseUrl_user + 'api/backupRestore/executeBackup', method: 'post', data })
+// 执行 数据恢复
+export const dbRecover = data => request({ url: baseUrl_user + 'api/backupRestore/recoverBackUp', method: 'post', data })
