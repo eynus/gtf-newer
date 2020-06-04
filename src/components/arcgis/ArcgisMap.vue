@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%; height: 100%">
+  <div style="width: 100%; height: 100%"  id="mapbox" v-on:keyup.122 = "fullClose" v-on:keyup.27 = "fullClose">
     <div id="viewDiv" ref="viewDiv" style="width: 100%; height: 100%"></div>
     <div style="position: absolute;bottom: 20;left: 50%"></div>
     <!-- 地图的工具框 -->
@@ -544,7 +544,91 @@ export default {
   }
 };
 </script>
-
+<style lang="scss" scoped>
+  #mapbox{
+    height: 100%;
+    display: flex;
+    position: relative;
+  }
+  #layersControl{
+    .layersControl_box{
+      padding:3px;
+      background: #fff;
+      border: 1px solid #d1d1d1;
+      .fraggableBox{
+        padding: 0;
+        .fraggableLi{
+          min-width: 100px;
+          padding: 5px 8px;
+          border-top: 1px solid #d1d1d1;
+        }
+      }
+    }
+  }
+  #viewDiv{
+    height: 100%;
+    flex-grow: 2;
+  }
+  #maptab{
+    width: 300px;
+    .firstmenu{
+      >li{
+        margin-bottom: 6px;
+        text-align: left;
+        >ul{
+          >li{
+            padding-left: 20px;
+          }
+        }
+        >p{
+          line-height: 40px;
+          text-align: left;
+          font-size: 16px;
+          background-color: rgb(42,177,245);
+          color: white;
+          padding-left: 10px;
+          border-radius: 4px;
+          cursor: pointer;
+          i{
+            font-size: 16px;
+            line-height: 40px;
+            margin-right: 10px;
+          }
+        }
+        .secondmenu{
+          label{
+            line-height: 30px;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+  #basemapToggle{
+    border: 5px #000 solid;
+  }
+</style>
 <style scoped>
+  #maptab >>> .ivu-tabs-content{
+    height: calc(100% - 40px);
+    margin-top: -16px;
+  }
+  #maptab >>> .ivu-tabs-content > .ivu-tabs-tabpane{
+    padding: 16px;
+    border: 1px solid #dcdee2;
+    border-radius: 0 0 4px 4px;
+    border-top: none;
+  }
+  #maptab >>> .ivu-tabs-nav{
+    display: flex;
+    float: none;
+  }
+  #maptab >>> .ivu-tabs-nav .ivu-tabs-tab{
+    flex-grow: 2;
+    margin-right: 0;
+  }
+  .sliderBox >>> .ivu-slider-wrap{
+    margin: 0 0 3px
+  }
 </style>
 
