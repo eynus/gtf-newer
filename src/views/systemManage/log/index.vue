@@ -77,6 +77,11 @@
                   </Select>
                 </FormItem>
               </i-col>
+              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
+                <FormItem label="操作时间：" style="width: 100%;">
+                  <DatePicker v-model="date_1" :value="formInline1.date_1" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="请选择登录时间范围"></DatePicker>
+                </FormItem>
+              </i-col>
               <i-col span="2" style="float: right;">
                 <FormItem :label-width="remToPx(2)">
                   <Button type="primary" class="smzx-search-btn" @click="onSearch">查询</Button>
@@ -95,6 +100,7 @@
           <div class="mt">
             <Table
                 v-if="log === 'log'"
+                :key="Math.random()"
                 :loading="tableLoading"
                 border
                 stripe
@@ -213,20 +219,20 @@
             title: "操作IP",
             key: "operationIp",
             align: "center",
-            width: remToPx(18),
-            tooltip: true,
-            sortable: true
-          }, {
-            title: "操作地址",
-            key: "operationUrl",
-            align: "center",
+            width: remToPx(10),
             tooltip: true,
             sortable: true
           }, {
             title: "操作人",
             key: "operationUserRealName",
             align: "center",
-            width: remToPx(18),
+            width: remToPx(10),
+            tooltip: true,
+            sortable: true
+          }, {
+            title: "操作地址",
+            key: "operationUrl",
+            align: "center",
             tooltip: true,
             sortable: true
           }, {
@@ -240,7 +246,7 @@
             title: "操作方法",
             key: "operationMethod",
             align: "center",
-            width: remToPx(18),
+            width: remToPx(10),
             tooltip: true,
             sortable: true
           },  {
@@ -257,14 +263,13 @@
             title: "耗时（毫秒）",
             key: "operationDuration",
             align: "center",
-            width: remToPx(9),
+            width: remToPx(10),
             tooltip: true,
             sortable: true
           }, {
             title: "操作时间",
             key: "operationDate",
             align: "center",
-            width: remToPx(18),
             tooltip: true,
             sortable: true
           }
@@ -284,11 +289,15 @@
           loginType: null
         },
         formInline1: {
+          date_: null,
           operationIp: null,
           operationType: null,
-          operationUserRealName: null
+          operationUserRealName: null,
+          operationDateStr: null,
+          operationDateEnd: null
         },
         date_: null,
+        date_1: null,
       };
     },
     computed: {
@@ -304,18 +313,26 @@
     },
     methods: {
       init() {
-        this.logChange('log')
+        this.log = 'log'
+        this.onSearch()
       },
       onSearch() {
+        let { date_, date_1 } = this
         if (this.log === 'log') {
-          let { date_ } = this
           if (date_.length) {
             this.formInline.loginTimeStr = date_[0]
             this.formInline.loginTimeEnd = date_[1]
           }
         }
+        if (this.log !== 'log') {
+          if (date_1.length) {
+            this.formInline1.operationDateStr = date_1[0]
+            this.formInline1.operationDateEnd = date_1[1]
+          }
+        }
         this.formInline = nullStr(this.formInline)
         this.formInline1 = nullStr(this.formInline1)
+        console.log(this.formInline1)
         this.logChange()
       },
       logChange(val) {
