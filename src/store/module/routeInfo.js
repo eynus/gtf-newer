@@ -9,6 +9,10 @@ export default {
                 title: "数据管理",
                 bgUrl: require('../../assets/img/dataManage/head_bg.png')
             },
+            system: {
+              title: "运维管理",
+              bgUrl: require('../../assets/img/dataManage/head_bg.png')
+            },
         }
     },
     mutations: {

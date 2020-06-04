@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Layout>
-      <Header id="head" class="flex flex-sb" 
+      <Header id="head" class="flex flex-sb"
             :style="{backgroundImage:`url(${moduleHeadBgUrl})`}"
       >
         <div>
@@ -70,7 +70,7 @@ export default {
     this.moduleName = obj.title
     this.moduleHeadBgUrl = obj.bgUrl
     // this.moduleHeadBgUrl = require(obj.bgUrl)
-    
+
 
   }
 };

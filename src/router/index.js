@@ -214,6 +214,61 @@ const routes = [
         ]
       },
       {
+        path: '/system',
+        name: 'system',
+        component: () => import('../views/systemManage'),
+        meta: {
+          title: '运维管理'
+        },
+        children: [
+          {
+            path: 'user',
+            name: 'User',
+            component: () => import('../views/systemManage/user/index.vue'),
+            meta: {
+              title: '用户管理',
+              id: 'page_4_1'
+            }
+          },
+          {
+            path: 'role',
+            name: 'Role',
+            component: () => import('../views/systemManage/role/index.vue'),
+            meta: {
+              title: '角色管理',
+              id: 'page_4_2'
+            }
+          },
+          {
+            path: 'log',
+            name: 'Log',
+            component: () => import('../views/systemManage/log/index.vue'),
+            meta: {
+              title: '日志管理',
+              id: 'page_4_4'
+            }
+          },
+          {
+            path: 'database',
+            name: 'Database',
+            component: () => import('../views/systemManage/database/index.vue'),
+            meta: {
+              title: '数据备份',
+              id: 'page_4_3'
+            }
+          },
+          {
+            path: 'monitor',
+            name: 'Monitor',
+            component: () => import('../views/systemManage/monitor/index.vue'),
+            meta: {
+              title: '系统监控',
+              id: 'page_4_5'
+            }
+          },
+        ]
+      },
+      {
         path: '/pic',
         // name: 'pic',
         component: () => import('../views/picVisualization'),
@@ -321,7 +376,7 @@ export const canTurnTo = (name, roles, routes) => {//roles:localStorage存的rol
 // 设置路由权限
 const turnTo = (to, role, next) => {
   // console.log(to.name, role, routes);
-  
+
   if (canTurnTo(to.name, role, routes)) next();// 有权限，可访问
   else next({ replace: true, name: 'error_401' });// 无权限，重定向到401页面
 };
@@ -333,8 +388,6 @@ const hasAccess = (roles, route) => {
   //有id代表是二级菜单
   if (route.meta && route.meta.id) {
     //判断route.meta.id在不在roles里面
-    // console.log(roles,'roles');
-    
     let result = roles.some((item) => {
       return item.childs.indexOf(route.meta.id) > -1//item.childs里面包含id
     })
