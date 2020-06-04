@@ -6,7 +6,7 @@ export const getFWListPage = data => request({ url: baseUrl_data + 'api/data/fw/
 // 分页查询模块服务记录
 export const getListById = data => request({ url: baseUrl_data + 'api/data/fw/listById', method: 'post', data })
 // 删除服务记录
-export const delFw = data => request({ url: baseUrl_data + 'api/data/fw/delFw', method: 'post', data })
+export const delFw = data => request({ url: baseUrl_data + 'api/data/fw/deleteFw', method: 'post', data })
 // 停止服务
 export const updateOver = data => request({ url: baseUrl_data + 'api/data/fw/updateOver', method: 'post', data })
 // 启动服务
