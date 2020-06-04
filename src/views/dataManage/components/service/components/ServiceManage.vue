@@ -441,8 +441,6 @@ export default {
     // 点击启动按钮
     handleStart() {
       if (this.selectedRowIds.length) {
-        console.log(this.selectedRowIds, this.startedArr,_.intersection(this.selectedRowIds, this.startedArr).length);
-        
         // 不包含已启动的选项
         if (_.intersection(this.selectedRowIds, this.startedArr).length) {
           this.$Message.info("您选择的服务中包含已启动项！");
@@ -523,22 +521,5 @@ export default {
 <style lang="scss" scoped>
 .btn-margin {
   margin-left: 1rem;
-}
-.img-wrap {
-  width: 5rem;
-  height: 5rem;
-  background: url("../../../../../assets/img/dataManage/query/map.png");
-}
-.service-list-item {
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  .item-title {
-    font-weight: 700;
-    font-size: 1.125rem;
-  }
-  .item-label {
-    display: inline-block;
-    width: 6rem;
-  }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="mt">
+  <div class="h100">
+    <div class="mt ">
       <Form inline>
         <FormItem>
           <Button type="success" @click="handleStartRule">默认启用</Button>

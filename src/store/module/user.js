@@ -46,11 +46,9 @@ export default {
     handleLogin ({ commit, state }, { username, password, kaptcha, publicKey, type }) {
 
       return new Promise((resolve, reject) => {
-
-        //开启服务之后再解开下面这段代码
         login({ kaptcha, username, password, publicKey, type })
           .then(res => {
-            const { code, data } = res.data;
+            const { code, data,message } = res.data;
             if (code === 1000) {
               let authList = data.userPower.map((item, index) => {
                 let list = []
@@ -67,13 +65,15 @@ export default {
               commit('setUserPower', data.userPower)
               commit('setRole', authList)
               commit('setToken', data.token)
-              resolve(data.userInfo.realName)
-            } else {
-              reject(data)
+              resolve()
+            } else if(code === 1013) {
+              resolve('init')//需要重置密码
+            }else {
+              reject([message,'user'])
             }
           })
           .catch(err => {
-            reject(err)
+            reject([err,'server'])
           })
       })
     },

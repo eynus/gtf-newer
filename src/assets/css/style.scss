@@ -1,6 +1,7 @@
 @charset "utf-8";
 html{
     font-size: 16px;
+    user-select: none;
 }
 /* 设定所有元素为边框盒 */
 *{
@@ -26,6 +27,7 @@ ul,dl,ol,li,dl,dt{
 a{
     text-decoration: none;
 }
+
 //滚动条样式
 .scroll {
     &::-webkit-scrollbar {
@@ -41,7 +43,7 @@ a{
   
     &::-webkit-scrollbar-thumb {
       border-radius: 0.08rem;
-      background: #00ffe6;
+      background: #e4e5e6;
       box-shadow: 0px 1px 3px 0px rgba(44, 47, 49, 0.4);
     }
   
@@ -50,6 +52,11 @@ a{
       height: 16px;
     }
   }
+.zt-scroll-y{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    @extend .scroll;
+}
 /* 设置height*/
 .h100{
     height: 100%;
@@ -88,8 +95,15 @@ a{
 .flex-nowrap{
     flex-wrap: nowrap;
 }
+.flex-wrap{
+    flex-wrap: wrap;
+}
 .flex-sb {
     justify-content: space-between;
+    align-items: center;
+  }
+.flex-sa {
+    justify-content: space-around;
     align-items: center;
   }
 .flex-center{
@@ -138,13 +152,16 @@ a{
     left: 50%;
     transform: translateX(-50%);
 }
+.position-a-c{
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    transform: translate(-50% -50%);
+}
 .position-a{
     position: absolute;
 }
-.scroll-y{
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
+
 // 字體大小
 .fs16{
     font-size: 1rem;
@@ -171,6 +188,12 @@ a{
 .text-darkgrey{
     color: rgba(0,0,0,0.75);
 }
+.text-normal{
+    color: #999db2;
+}
+.text-blue{
+    color: #3c8fff;
+}
 // 鼠标hover显示手指
 .cursor-pointer{
     cursor: pointer;
@@ -181,4 +204,8 @@ a{
 }
 .overflow-hidden{
     overflow: hidden;
+}
+// 白底
+.bg-white{
+    background-color: #fff;
 }

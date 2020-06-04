@@ -1,7 +1,6 @@
 
 import request from '@/utils/request'
 import { baseUrl_data } from "@/api/set"
-console.log(baseUrl_data,'????')
 // 分页查询服务记录
 export const getFWListPage = data => request({ url: baseUrl_data + 'api/data/fw/listfwPage', method: 'post', data })
 // 分页查询模块服务记录

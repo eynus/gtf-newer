@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <Row>
-      <i-col span="4" style="overflow:hidden" class="scroll">
-        <div class="pd">
-          <Menu :active-name="activeName" @on-select="onSelect">
+  <div class="h100">
+    <Row style="height:100%">
+      <i-col span="4" style="overflow:hidden" class="scroll bg-white h100">
+        <div class="pd h100">
+          <Menu :active-name="activeName" @on-select="onSelect" class="h100" :style="`width:${remToPx(15)}px`">
             <MenuItem
               :name="item.key"
               v-for="(item,index) in siderMenuList"
@@ -12,8 +12,8 @@
           </Menu>
         </div>
       </i-col>
-      <i-col span="20">
-        <div class="pd">
+      <i-col span="20 bg-white h100">
+        <div class="pd h100">
           <router-view></router-view>
         </div>
       </i-col>

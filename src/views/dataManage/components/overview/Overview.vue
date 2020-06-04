@@ -1,56 +1,66 @@
 <template>
   <div class="h100">
-    <div class="card-container">
+    <div class="card-container card-container1">
       <div class="card-title">
-        <Icon custom="iconfont  icon-type" size="16" color="#2d8cf0" />
+        <Icon custom="iconfont  icon-fenleihuizong" size="16" color="#fff" />
         <span class="ml">分类汇总</span>
       </div>
-      <div class="card-body pd">
-        <Row>
-          <i-col span="14">
-            <Row type="flex" :gutter="12">
-              <i-col span="12" order="1" v-for="(item,index) in typesTotal" :key="`type_${index}`">
-                <div class="card-left-item" :style="`backgroundColor:${item.bgColor}`">
-                  <div>
-                    <Row type="flex" align="bottom">
-                      <i-col span="18">
-                        <div class="card-left-item-title">
-                          <Icon :custom="`${item.icon}`" size="30" color="#fff" />
-                          <span class="ml">{{item.name}}</span>
-                        </div>
-                        <Row type="flex" class="mt">
-                          <i-col span="12">
-                            <span class="fs16">{{item.firstChilds}}个一级子类</span>
-                          </i-col>
-                          <i-col span="12">
-                            <span>{{item.secondChilds}}个二级子类</span>
-                          </i-col>
-                        </Row>
-                      </i-col>
-                      <i-col span="6">
-                        <div>
-                          <span class="card-left-item-total">{{item.totalChilds}}</span> 个
-                        </div>
-                      </i-col>
-                    </Row>
+      <div class="card-body">
+        <Row style="height:100%">
+          <i-col span="15" class="h100">
+            <div class="h100 w100 card-left flex flex-center flex-wrap">
+              <!-- <Row type="flex" :gutter="12"> -->
+              <!-- <div class=""> -->
+              <div
+                class="card-left-item w100 h100"
+                v-for="(item,index) in typesTotal"
+                :key="`type_${index}`"
+              >
+                <div class="card-left-item-inner h100 w100">
+                  <div class="flex flex-sa h100 w100">
+                    <div
+                      class="card-left-item-inner-left flex flex-center"
+                      :style="{backgroundColor:`${item.bgColor}`, boxShadow: `0 0 6px ${item.bgColor}`}"
+                     
+                    >
+                      <Icon :custom="`${item.icon}`" :size="remToPx(3)" color="#fff" />
+                    </div>
+                    <div class="card-left-item-inner-right">
+                      <div class="block-up">
+                        <span class="title">{{item.name}}</span>
+                        <span class="value" :style="`color:${item.bgColor}`">{{item.totalChilds}}</span>
+                        <span :style="`color:${item.bgColor}`">个</span>
+                      </div>
+                      <div class="block-bottom">
+                        <span class="mr-lg">{{item.firstChilds}}个一级子类</span>
+                        <span>{{item.secondChilds}}个二级子类</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </i-col>
-            </Row>
+              </div>
+            </div>
           </i-col>
-          <i-col span="10">
-            <rose-chart
-              :style="{ height: `${remToPx(16.25)}px` }"
-              :data="chartData"
-              :dataTotal="chartDataTotal"
-            ></rose-chart>
+          <i-col span="9" class="h100">
+            <div class="h100 w100 position-r card-right">
+              <!-- <div :style="{ height: `${remToPx(15)}px` ,width:`100%`}"> -->
+              <!-- <div :style="{ height: `${remToPx(15)}px` ,width:`100%`}">1</div> -->
+              <rose-chart
+             
+                class="position-a-c h100"
+                :data="chartData"
+                :dataTotal="chartDataTotal"
+              ></rose-chart>
+
+              <!-- </div> -->
+            </div>
           </i-col>
         </Row>
       </div>
     </div>
-    <div class="card-container">
+    <div class="card-container mt-lg card-container2">
       <div class="card-title">
-        <Icon custom="iconfont  icon-input" size="16" color="#2d8cf0" />
+        <Icon custom="iconfont  icon-rukulishi" size="16" color="#fff" />
         <span class="ml">入库历史</span>
       </div>
       <div class="card-body">
@@ -61,54 +71,60 @@
           style="margin-top:.75rem"
           class="search-box smzx-search-box"
           label-position="right"
-          :label-width="90"
+          :label-width="remToPx(6.5)"
           width="100%"
         >
-          <Row>
-            <i-col :md="6" :xxl="5">
-              <FormItem label="入库时间：">
-                <DatePicker
-                  type="daterange"
-                  :value="formInline.date"
-                  @on-change="handleDateChange"
-                  placeholder="请选择起止日期"
-                  :clearable="false"
-                  class="smzx-normal-datepick smzx-date-range"
-                ></DatePicker>
-              </FormItem>
-            </i-col>
-            <i-col :md="6" :xxl="5">
-              <FormItem label="数据路径：">
-                <Cascader :data="dataPaths" v-model="formInline.path" @on-change="handlePathChange"></Cascader>
-              </FormItem>
-            </i-col>
-            <i-col :md="5" :xxl="4">
-              <FormItem label="数据类型：">
-                <Select v-model="formInline.type" class="scroll dropdown" style="width:8.75rem">
-                  <Option v-for="item in typeList" :value="item.id" :key="item.id">
-                    {{
-                    item.name
-                    }}
-                  </Option>
-                </Select>
-              </FormItem>
-            </i-col>
-            <i-col :md="5" :xxl="5">
-              <FormItem label="上传用户：">
-                <Input v-model.trim="formInline.uploader" placeholder="请输入" clearable />
-              </FormItem>
-            </i-col>
-            <i-col :md="2">
-              <FormItem :label-width="remToPx(2)">
-                <Button type="primary" class="smzx-search-btn" @click="handleSubmit">查询</Button>
-              </FormItem>
-            </i-col>
-          </Row>
+          <!-- <Row> -->
+          <!-- <i-col :md="6" :xxl="5"> -->
+          <FormItem label="入库时间：">
+            <DatePicker
+              type="daterange"
+              :value="formInline.date"
+              @on-change="handleDateChange"
+              placeholder="请选择起止日期"
+              :clearable="false"
+              class="smzx-normal-datepick smzx-date-range"
+            ></DatePicker>
+          </FormItem>
+          <!-- </i-col> -->
+          <!-- <i-col :md="6" :xxl="5"> -->
+          <FormItem label="数据路径：">
+            <Cascader :data="dataPaths" v-model="formInline.path" @on-change="handlePathChange"></Cascader>
+          </FormItem>
+          <!-- </i-col> -->
+          <!-- <i-col :md="5" :xxl="4"> -->
+          <FormItem label="数据类型：">
+            <Select v-model="formInline.type" class="scroll dropdown" style="width:8.75rem">
+              <Option v-for="item in typeList" :value="item.id" :key="item.id">
+                {{
+                item.name
+                }}
+              </Option>
+            </Select>
+          </FormItem>
+          <!-- </i-col> -->
+          <!-- <i-col :md="5" :xxl="5"> -->
+          <FormItem label="上传用户：">
+            <Input v-model.trim="formInline.uploader" placeholder="请输入" clearable />
+          </FormItem>
+          <!-- </i-col> -->
+          <!-- <i-col :md="2"> -->
+          <FormItem :label-width="remToPx(2)">
+            <Button type="primary" class="smzx-search-btn" @click="handleSubmit">查询</Button>
+          </FormItem>
+          <!-- </i-col> -->
+          <!-- </Row> -->
         </Form>
 
-        <Table border size="small" :columns="columnsPutIn" :data="dataPutIn" class="ml-lg mr-lg">
+        <Table
+          border
+          size="small"
+          :columns="columnsPutIn"
+          :data="dataPutIn"
+          class="ml-lg mr-lg tb-min-height"
+        >
           <template slot="path" slot-scope="{row}">
-            <a href="#">{{row.dataPath}}</a>
+            <div>{{row.dataPath}}</div>
           </template>
         </Table>
         <div class="text-right mr-lg mt">
@@ -129,6 +145,7 @@
 import { format, subMonths } from "date-fns";
 import { remToPx } from "@/utils/common";
 import RoseChart from "./components/RoseChart.vue";
+import { getCatalogue } from "@/api/dataManage/query";
 import {
   getSJListPage,
   getTypeDetail,
@@ -168,7 +185,7 @@ export default {
           firstChilds: 0,
           secondChilds: 0,
           totalChilds: 0,
-          bgColor: "rgb(0,131,255)",
+          bgColor: "#0b89fe",
           icon: "iconfont icon-earth"
         },
         {
@@ -176,7 +193,7 @@ export default {
           firstChilds: 0,
           secondChilds: 0,
           totalChilds: 0,
-          bgColor: "rgb(255,195,0)",
+          bgColor: "#fe8e0b",
           icon: "iconfont icon-hill"
         },
         {
@@ -184,7 +201,7 @@ export default {
           firstChilds: 0,
           secondChilds: 0,
           totalChilds: 0,
-          bgColor: "rgb(67,207,124)",
+          bgColor: "#7c63ea",
           icon: "iconfont icon-setting"
         },
         {
@@ -192,7 +209,7 @@ export default {
           firstChilds: 0,
           secondChilds: 0,
           totalChilds: 0,
-          bgColor: "rgb(227,60,100)",
+          bgColor: "#08c28b",
           icon: "iconfont icon-person"
         }
       ],
@@ -250,7 +267,7 @@ export default {
       page: {
         current: 1,
         total: 0,
-        pageSize: 6
+        pageSize: 4
       }
     };
   },
@@ -266,6 +283,7 @@ export default {
     this.getPaths();
     this.setTypesTotalData();
     this.getSJListPage();
+    this.getCatalogue(); //先请求一次，为查询浏览做准备
   },
   methods: {
     //设置四大类各自的数据详情
@@ -299,6 +317,8 @@ export default {
     //获取查询列表
     getSJListPage() {
       getSJListPage({
+        identification: "",
+        fidentification: [],
         createdBy: this.formInline.uploader,
         dataPath: this.formInline.path.join("/"),
         dataType: this.formInline.type,
@@ -341,40 +361,115 @@ export default {
     //选中路径变化
     handlePathChange(a, b) {
       this.formInline.path = a;
+    },
+    // 获取左侧目录
+    getCatalogue() {
+      getCatalogue().then(res => {
+        const { data, code } = res.data;
+        if (code === 1000) {
+        }
+      });
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-
+::v-deep .ivu-col.ivu-col-span-12.ivu-col-order-1 {
+  padding: 0.5rem;
+}
 .ivu-table {
   min-height: 280px;
 }
 .card-container {
-  .card-title {
-    background-color: rgba(0, 0, 0, 0.1);
-    font-weight: bold;
+  background-color: #fff;
+ 
+  &1 {
+    padding-top: 0;
+    background-color: transparent;
+    height: calc(100% - 26rem);
+    .card-body {
+      margin-top: 1rem;
+      margin-left: -1rem;
+      margin-right: -1rem;
+      height: calc(100% - 2rem);
 
-    line-height: 1.75;
-    color: rgb(81, 81, 81);
-    padding: 0 4px;
-  }
-  .card-body {
-    .card-left-item {
-      border-radius: 0.25rem;
-      margin: 1rem;
-      padding: 0.75rem;
-      color: white;
-      .card-left-item-title {
-        font-size: 1.5rem;
+      .card-left {
+        .card-left-item:nth-of-type(1) .card-left-item-inner,
+        .card-left-item:nth-of-type(2) .card-left-item-inner {
+          margin-bottom: 0.5rem;
+        }
+        .card-left-item:nth-of-type(3) .card-left-item-inner,
+        .card-left-item:nth-of-type(4) .card-left-item-inner {
+          margin-top: 0.5rem;
+        }
+        .card-left-item {
+          width: 50%;
+          height: 50%;
+          &-inner {
+            background-color: #fff;
+            color: $text-normal;
+            margin-right: 1rem;
+            padding: 0 4rem;
+            width: calc(100% - 1rem);
+            height: calc(100% - 0.5rem);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            &-left {
+              height: 62%;
+              width: 22%;
+              border-radius: 6px;
 
-        font-weight: 600;
+              
+            }
+            &-right {
+              .block-up {
+                .title {
+                  display: inline-block;
+                  color: #000;
+                  font-size: 1.5rem;
+                  margin-right: 2rem;
+                  min-width: 8.5rem;
+                }
+                .value {
+                  font-size: 1.5rem;
+                }
+              }
+              .block-bottom {
+                margin-top: 1rem;
+              }
+            }
+          }
+        }
       }
-      .card-left-item-total {
-        font-size: 3rem;
-        font-weight: bold;
+      .card-right {
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
       }
     }
   }
+  &2 {
+    min-height: 24rem;
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  }
+  padding: 1rem;
+  .card-title {
+    text-align: center;
+    margin-left: -1rem;
+    background-color: $cardtitle-bg;
+    width: 8rem;
+    // font-weight: bold;
+    font-size: 1rem;
+    line-height: 1.75;
+    color: #fff;
+    padding: 0 4px;
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+   
+  }
+  .card-body {
+  }
+}
+.tb-min-height {
+  min-height: 198px;
 }
 </style>

@@ -1,12 +1,12 @@
 <template>
   <div class="h100">
      <Row style="height:100%">
-      <i-col span="4" class="h100 scroll-y">
+      <i-col span="4" class="h100 zt-scroll-y bg-white">
         <div class="pd h100">
           <my-tree :gData="gData" @handleSelect="handleSelect" type="service"></my-tree>
         </div>
       </i-col>
-      <i-col span="20">
+      <i-col span="20 bg-white h100">
         <div class="pd">
           <router-view :selectedId="selectedId"></router-view>
         </div>
@@ -66,21 +66,5 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.img-wrap {
-  width: 5rem;
-  height: 5rem;
-  background: url("../../../../assets/img/dataManage/query/map.png");
-}
-.service-list-item {
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  .item-title {
-    font-weight: 700;
-    font-size: 1.125rem;
-  }
-  .item-label {
-    display: inline-block;
-    width: 6rem;
-  }
-}
+
 </style>

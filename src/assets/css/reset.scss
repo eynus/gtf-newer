@@ -1,0 +1,102 @@
+@import './variable.scss';
+/* sider 高度百分之百 */
+.ivu-layout.ivu-layout-has-sider{  
+    height: 100%;
+}
+.ivu-layout-footer{
+    padding: 0;
+    text-align: center;
+}
+.ivu-layout-header{
+    background-color: transparent;
+}
+/* table样式 */
+.ivu-table{
+   color: $text-normal;
+}
+.ivu-table th{
+    background-color: $table-head;
+   color: $text-title;
+}
+.ivu-table-small td{
+    /* height: 2.5rem; */
+}
+.ivu-table-small{
+    font-size: 0.875rem;
+}
+.ivu-table-overflowX {
+    overflow-x: hidden !important;
+  }
+  
+  .ivu-table-tip {
+    overflow-x: hidden !important;
+  }
+  /* menu */
+  .ivu-menu{
+      color: $text-title;
+  }
+  .ivu-menu-item{
+      /* font-size:1rem; */
+  }
+  .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu){
+      color: #3d62f6;
+  }
+  .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu){
+      background: transparent;
+  }
+  .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):after{
+      display: none;
+  }
+  .ivu-menu-vertical .ivu-menu-item:hover, .ivu-menu-vertical .ivu-menu-submenu-title:hover{
+    color: #3d62f6;
+  }
+  /* tree */
+  .ant-tree{
+      /* font-size: 1rem; */
+      font-weight: bold;
+  }
+  .ant-tree li .ant-tree-node-content-wrapper{
+    color: rgba(0,0,0,0.65);
+  }
+  /* formItem,label */
+  .ivu-form .ivu-form-item-label{
+    padding-right: 0;
+    padding-left: 0;
+    color: $text-normal;
+    /* font-size: .875rem; */
+  }
+  .ivu-input{
+      color: $text-normal;
+    }
+    .ivu-select{
+        color: $text-normal;
+
+  }
+  .ivu-form-inline .ivu-form-item{
+      /* margin-right: .625rem; */
+  }
+  .ivu-form-item{
+      /* margin-bottom: 1rem; */
+  }
+  .ivu-table-header thead tr th{
+      /* padding:0.5rem 0; */
+  }
+//   page
+.ivu-page-item a{
+    color: $text-normal;
+}
+.ivu-page-options-elevator input{
+    color: $text-normal;
+    text-align: center;
+}
+.ivu-page-item-jump-next, .ivu-page-item-jump-prev, .ivu-page-next, .ivu-page-prev{
+    color: $text-normal;
+
+}
+.ant-tree{
+    color: $text-title;
+}
+.ant-tree li .ant-tree-node-content-wrapper{
+    color: $text-title;
+    font-weight: normal;
+}

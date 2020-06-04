@@ -19,11 +19,11 @@ export class RosePieOptionModel {
     }
   }
   legend = {
-    x: '66%',
+    x: '70%',
     y: 'center',
     icon: 'circle',
     orient: 'vertical',
-    textStyle: { color: '#000', fontSize: remToPx(1) },
+    textStyle: { color: '#999db2', fontSize: remToPx(1) },
 
   }
   // grid = {
@@ -42,17 +42,17 @@ export class RosePieOptionModel {
     {
       name: '半径模式',
       type: 'pie',
-      radius: ['50%', '90%'],
-      center: ['35%', '50%'],
+      radius: ['40%', '60%'],
+      center: ['45%', '50%'],
       // roseType : 'radius',
       label: {
         normal: {
-          show: false, //
+          show: true, //
           formatter: function (pargram) {
             return `${pargram.name}:${pargram.data[1]}(${pargram.percent}%)`
           },
-          position: 'inner', //
-          color: '#000',
+          position: 'outer', //
+          color: '#8f9bb3',
           fontSize: remToPx(1)
         },
         emphasis: {
@@ -61,23 +61,15 @@ export class RosePieOptionModel {
       },
       labelLine: {
         normal: {
-          show: false
+          show: true
         },
         emphasis: {
           show: true
         }
       },
-      // data: [
-      //   { value: 10, name: 'rose1' },
-      //   { value: 5, name: 'rose2' },
-      //   { value: 15, name: 'rose3' },
-      //   { value: 25, name: 'rose4' },
-      //   { value: 20, name: 'rose5' },
-      //   { value: 35, name: 'rose6' },
-      //   { value: 30, name: 'rose7' },
-      //   { value: 40, name: 'rose8' }
-      // ]
+  
     }
   ]
-  color = ["rgb(0,131,255)", "rgb(255,195,0)", "rgb(67,207,124)", "rgb(227,60,100)"]
+  color = ["#0b89fe", "#fe8e0b", "#7c63ea", "#08c28b"]
+  // color = ['rgba(8,92,217,1)', ' rgba(38,188,3,1)',  'rgba(4,227,182,1)', 'rgba(233,132,0,1)',' rgba(228,246,100,1)']
 }

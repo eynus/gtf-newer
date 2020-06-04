@@ -2,7 +2,7 @@
   <div>
     <Input style="margin-bottom: 8px" placeholder="请输入关键字进行搜索" @on-change="onChange" />
     <a-tree
-    ref="tree"
+      ref="tree"
       :expanded-keys="expandedKeys"
       :auto-expand-parent="autoExpandParent"
       :tree-data="gData"
@@ -23,16 +23,17 @@
   </div>
 </template>
 <script>
+
 const dataList = [];
 const generateList = data => {
   for (let i = 0; i < data.length; i++) {
     const node = data[i];
     const key = node.key;
-    // if (this.type === "service") {
-    dataList.push({ key, title: node.title, childrens: node.childrens });
-    // }else{
-    //  dataList.push({ key, title: node.title, childrens: node.childrens });
-    // }
+    dataList.push({
+      key,
+      title: node.title,
+      childrens: node.childrens 
+    });
 
     if (node.children) {
       generateList(node.children);
@@ -82,14 +83,12 @@ export default {
   },
   created() {
     generateList(this.gData);
+    
   },
   methods: {
-    onSelect(e,a) {
-      // console.log(a,a.node.$refs,a.node.$refs.selectHandle)
-      // this.$set(a.node.$refs.selectHandle,'className','ant-tree-node-content-wrapper ant-tree-node-content-wrapper-close ant-tree-node-selected')
-      // this.$set(a,'selected',true)
-      // this.$set(a.selectedNodes,0,a.node.$vnode)
-      
+    
+  
+    onSelect(e, a) {
       if (e[0]) {
         if (this.type === "service") {
           this.$emit("handleSelect", e[0]);
@@ -117,7 +116,7 @@ export default {
         searchValue: value,
         autoExpandParent: true
       });
-    },
+    }
   }
 };
 </script>

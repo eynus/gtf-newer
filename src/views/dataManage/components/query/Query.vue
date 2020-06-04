@@ -1,12 +1,12 @@
 <template>
   <div class="h100">
     <Row style="height:100%">
-      <i-col span="4" class="h100 scroll-y">
+      <i-col span="4" class="h100 zt-scroll-y bg-white">
         <div class="pd h100">
-          <my-tree :gData="gData" @handleSelect="handleSelect" type="query"></my-tree>
+          <my-tree @handleSelect="handleSelect" type="query"></my-tree>
         </div>
       </i-col>
-      <i-col span="20" class="pd h100">
+      <i-col span="20" class="pd h100 bg-white">
         <div class="text-right">
           <RadioGroup v-model="activeMode" type="button">
             <Radio label="normal">数据查看</Radio>
@@ -14,10 +14,10 @@
           </RadioGroup>
         </div>
         <div class="bordered w100 h100 mt img-container" :style="{ height: `calc(100% - ${remToPx(2.65)}px)` }">
-          <div v-if="activeMode==='normal'">
-            <img class="img" src="../../../../assets/img/dataManage/query/map.png" alt />
+          <div v-if="activeMode==='normal'" class="h100">
+            <my-map></my-map>
           </div>
-          <div v-else-if="activeMode==='meta'" class="pd meta_info scroll-y h100">
+          <div v-else-if="activeMode==='meta'" class="pd meta_info zt-scroll-y h100">
             <div>
               <div class="meta_title">内容信息</div>
               <div>
@@ -93,26 +93,10 @@
   </div>
 </template>
 <script>
-import MyTree from "_c/myTree/MyTree.vue";
+import MyTree from "./components/QueryTree";
+import MyMap from "./components/MyMap";
 import { getCatalogue, getMetaByName } from "@/api/dataManage/query";
-const handleRawData = data => {
-  let newData = [];
-  for (let i = 0; i < data.length; i++) {
-    newData.push({});
-    if (data[i].children) {
-      newData[i].children = handleRawData(data[i].children);
-    }
-    if (data[i].childrens) {
-      newData[i].children = handleRawData(data[i].childrens);
-    }
-    newData[i].key = data[i].dataName;
-    newData[i].title = data[i].dataName;
-    // pkId作为key,但是后端返回的数据pkId有重复，暂时用的是dataName作为标识
-    // newData[i].key = data[i].pkId;
-    newData[i].scopedSlots = { title: "title" };
-  }
-  return newData;
-};
+
 export default {
   name: "Home",
   data() {
@@ -148,31 +132,19 @@ export default {
       timer1: null
     };
   },
-  components: { MyTree },
+  components: { MyTree,MyMap },
   computed: {},
   created() {
-    this.getCatalogue();
+  
   },
   mounted() {
-    this.timer1 = setInterval(() => {
-      this.getCatalogue();
-    }, 1000*60*10);
+  
   },
   beforeDestroy() {
     clearInterval(this.timer1);
   },
   methods: {
-    // 获取左侧目录
-    getCatalogue() {
-      getCatalogue().then(res => {
-        const { data, code } = res.data;
-        if (code === 1000) {
-          let result = handleRawData(data);
-
-          this.gData = result;
-        }
-      });
-    },
+  
     // 获取元数据
     getMetaByName(name) {
       getMetaByName({ dataName: name }).then(res => {
@@ -195,7 +167,11 @@ export default {
       });
     },
     handleSelect(e) {
-      this.getMetaByName(e[0]);
+      if(this.activeMode==='meta'){
+        this.getMetaByName(e[0]);
+      }else{
+        // 加载地理信息
+      }
     }
   }
 };
@@ -226,7 +202,8 @@ export default {
   }
 }
 .bordered {
-  border: 1px solid rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
 }
 .img-container {
   overflow: hidden;

@@ -74,6 +74,9 @@ import { insertServer } from "@/api/dataManage/service";
 import { getSJListPage } from "@/api/dataManage/overview";
 export default {
   name: "Home",
+  props: {
+    selectedId: String
+  },
   data() {
     return {
       serviceName: "",
@@ -111,6 +114,15 @@ export default {
       }
     };
   },
+  watch: {
+    selectedId(newVal, oldVal) {
+      //重新請求数据 不为空则代表选择了模块
+      if (newVal) {
+        this.page.current = 1;
+        this.getSJListPage();
+      }
+    }
+  },
   computed: {},
   created() {
     this.getSJListPage();
@@ -132,9 +144,11 @@ export default {
     getSJListPage() {
       this.tableLoading = true;
       getSJListPage({
+           fidentification:[],
         pageSize: this.page.pageSize,
         pageNum: this.page.current,
         serviceName: this.serviceName,
+        identification: this.selectedId,
         createdBy: "", //this.formInline.uploader,
         dataPath: "", //this.formInline.path.join("/")
         dataType: "", //this.formInline.type,
@@ -202,21 +216,5 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.img-wrap {
-  width: 5rem;
-  height: 5rem;
-  background: url("../../../../../assets/img/dataManage/query/map.png");
-}
-.service-list-item {
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  .item-title {
-    font-weight: 700;
-    font-size: 1.125rem;
-  }
-  .item-label {
-    display: inline-block;
-    width: 6rem;
-  }
-}
+
 </style>
