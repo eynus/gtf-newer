@@ -80,6 +80,14 @@
         }
       }
 
+      const validateZh = (rule, value, callback) => {
+        if (/^[\u4E00-\u9FA5]+$/.test(value)) {
+          callback()
+        } else {
+          callback(new Error('真实姓名需要为中文汉字'))
+        }
+      }
+
       return {
         drawer: false,
         type: 'i',
@@ -103,7 +111,8 @@
             { required: true, message: '请填写用户名！', trigger: 'blur' }
           ],
           realName: [
-            { required: true, message: '请填写真实姓名！', trigger: 'blur' }
+            { required: true, message: '请填写真实姓名！', trigger: 'blur' },
+            { validator: validateZh, message: '真实姓名必须为中文汉字', trigger: 'blur'}
           ],
           userPhone: [
             { required: true, message: '请填写电话号码！', trigger: 'blur' },

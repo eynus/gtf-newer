@@ -136,7 +136,7 @@
             title: "角色名",
             key: "roleName",
             align: "center",
-            width: remToPx(18),
+            width: remToPx(10),
             tooltip: true,
             sortable: true
           },
@@ -144,7 +144,7 @@
             title: "真实姓名",
             key: "realName",
             align: "center",
-            width: remToPx(18),
+            width: remToPx(10),
             tooltip: true,
             sortable: true
           },
