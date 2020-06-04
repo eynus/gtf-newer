@@ -15,7 +15,7 @@
               <Icon
                   :custom="item.icon"
                   size="24"
-                  :color="activeMenuItem===`${item.key}`?'#2d8cf0':'#8391B8'"
+                  :color="activeMenuItem===`${item.key}`?'#3d62f6':'#8391B8'"
               />
               <div>{{item.name}}</div>
             </MenuItem>
@@ -24,16 +24,11 @@
         <!-- <div slot="trigger"></div> -->
       </Sider>
       <Layout class="h100">
-        <div
-            :style="{ height: `calc(100% - ${remToPx(2.8)}px)` }"
-            style="box-sizing: border-box;"
-            class="pd"
-        >
-          <div class="h100 card-style">
+        <div :style="{ height: `calc(100% - ${remToPx(3.2)}px)` }" class="pd-lg right-up-wrapper">
+          <div class="h100 card-style bg-white">
             <router-view />
           </div>
         </div>
-
         <div>
           <my-footer color="rgb(200,200,200)"></my-footer>
         </div>
@@ -109,9 +104,14 @@
 </script>
 
 <style lang="scss" scoped>
+  .right-up-wrapper {
+    box-sizing: border-box;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.25) inset;
+    background-color:$wrap-bg;
+  }
   .card-style {
-    background: #fff;
-    border-radius: 4px;
+    /*background: transparent;*/
+    // border-radius: 4px;
   }
   .menu-item {
     & + .menu-item {
