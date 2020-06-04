@@ -40,8 +40,8 @@ export default {
   inflectionPointcolor: [226, 119, 40], // 拐点颜色
   boundaryColor: [226, 119, 40], // 界桩颜色
   centerPoint: {
-    longitude: 106.267,
-    latitude: 38.467,
+    longitude: 103.717216,
+    latitude: 27.336999,
     spatialReference: {
       wkid: 3857
     }

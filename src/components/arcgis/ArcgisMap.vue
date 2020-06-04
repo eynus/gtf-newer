@@ -123,7 +123,7 @@ export default {
         map: this.map,
         container: this.mapId,
         center: config.centerPoint,
-        zoom: 6
+        zoom: 10
       })
       // 增加底图切换插件
       let basemapToggle = new BasemapToggle({
