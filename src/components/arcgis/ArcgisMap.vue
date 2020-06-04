@@ -1,9 +1,18 @@
 <template>
   <div style="width: 100%; height: 100%">
-    <div :id="mapId" ref="viewDiv" style="width: 100%; height: 100%"></div>
+    <div id="viewDiv" ref="viewDiv" style="width: 100%; height: 100%"></div>
     <div style="position: absolute;bottom: 20;left: 50%"></div>
     <!-- 地图的工具框 -->
     <ButtonGroup id="toolbar" vertical style="display: flex;flex-direction: column">
+      <Tooltip content="描点" placement="right">
+        <Button
+          :type="type=='point'?'primary':'default'"
+          @click="clickToolbar('point')"
+          style="padding:5px 5px 0px"
+        >
+           <Icon custom="iconfont icon-dingwei" :size="20"  />
+        </Button>
+      </Tooltip>
       <Tooltip content="距离测量" placement="right">
         <Button
           :type="type=='distance'?'primary':'default'"
@@ -90,9 +99,9 @@ export default {
     /**
      * 标绘工具--标绘的人类活动图层
      * */
-    plottingLayerUrl: {
-      type: String
-    },
+    // plottingLayerUrl: {
+    //   type: String
+    // },
     /**
      * 标绘工具--当前解译任务的id
      * */
@@ -117,7 +126,8 @@ export default {
       let Basemap = await arcgisPackage.Basemap;
       let BasemapToggle = await arcgisPackage.BasemapToggle;
       let Fullscreen = await arcgisPackage.Fullscreen;
-      let Plotting = await arcgisPackage.Plotting;
+      // let Plotting = await arcgisPackage.Plotting;
+
       // 天地图影像地图
       let tdtylayer = await tdtlayer().then(res => {
         return res;
@@ -150,73 +160,72 @@ export default {
         basemap: {
           vector: customBasemap,
           image: customBasemap1
-        }[this.baseMapType],
-     
+        }[this.baseMapType]
+        // basemap: "streets",
+        // layers: [sketchlayer]
       });
       this.view = new MapView({
         map: this.map,
-        container: this.mapId,
+        container: "viewDiv", // this.mapId,
         center: config.centerPoint,
-        zoom: 10
+        zoom: 11
       });
       // 添加工具框
       this.view.ui.add(document.getElementById("toolbar"), "top-left");
       // 添加全屏
       this.fullscreen = new Fullscreen({
         view: this.view,
-           autoResize:true
+        // autoResize: true
       });
       this.view.ui.add(this.fullscreen, "top-left");
       // 增加底图切换插件
-      let basemapToggle = new BasemapToggle({
-        view: this.view,
-        nextBasemap: {
-          vector: customBasemap1,
-          image: customBasemap
-        }[this.baseMapType]
-      });
+      // let basemapToggle = new BasemapToggle({
+      //   view: this.view,
+      //   nextBasemap: {
+      //     vector: customBasemap1,
+      //     image: customBasemap
+      //   }[this.baseMapType]
+      // });
       this.view.on("pointer-move", ["Shift"], e => {
         let point = this.view.toMap({ x: e.x, y: e.y });
         console.log(point);
       });
-      this.view.ui.add(basemapToggle, "top-bottom");
+      // this.view.ui.add(basemapToggle, "top-bottom");
       /* 将图层加载至地图上 */
       this.addLayers(this.layers);
       /* 判断是否需要创建图+形编辑工具sketch */
       if (this.isSketch) {
         let GraphicsLayer = await arcgisPackage.GraphicsLayer;
         let Sketch = await arcgisPackage.Sketch;
-        let sketchlayer = new GraphicsLayer({
-          id: "sketchlayer"
-        });
+        let sketchlayer = new GraphicsLayer({    id: 'sketchlayer'});
         this.map.layers.add(sketchlayer);
         let sketch = new Sketch({
-          view: this.view,
           layer: sketchlayer,
-          availableCreateTools: ["point", "polygon", "rectangle", "circle"]
+          view: this.view,
+          creationMode: "update"
         });
         this.view.ui.add(sketch, "top-right");
         sketch.on("create", e => {
           if (e.state === "complete") {
             console.log("create,?", e.tool);
-            sketchlayer.remove(e.graphic);
+            // sketchlayer.remove(e.graphic);
             /**
              * sketch组件绘制完成的时间
              * @property {Graphic} 绘制后的graphic
              * */
-            switch (e.tool) {
-              case "point":
-                this.startDraw("point");
-                break;
-              case "polyline":
-                this.startDraw("polyline");
-                break;
-              case "polygon":
-                this.startDraw("polygon");
-                break;
-              default:
-                break;
-            }
+            // switch (e.tool) {
+            //   case "point":
+            //     this.startDraw("point");
+            //     break;
+            //   case "polyline":
+            //     this.startDraw("polyline");
+            //     break;
+            //   case "polygon":
+            //     this.startDraw("polygon");
+            //     break;
+            //   default:
+            //     break;
+            // }
             this.$emit("sketchcreatecomplete", e.graphic);
           }
         });
@@ -249,6 +258,9 @@ export default {
           });
           this.activeWidget.viewModel.newMeasurement();
           this.view.ui.add(this.activeWidget, "top-right");
+          break;
+        case "point":
+          this.startDraw("point");
           break;
         default:
           break;
