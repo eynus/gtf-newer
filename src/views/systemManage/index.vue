@@ -46,14 +46,14 @@ export default {
           show: false,
           key: "log",
           icon: "iconfont  icon-overview",
-          id: "page_4_4"
+          id: "page_4_3"
         },
         {
           name: "数据备份",
           show: false,
           key: "database",
           icon: "iconfont  icon-overview",
-          id: "page_4_3"
+          id: "page_4_4"
         },
         {
           name: "系统监控",
