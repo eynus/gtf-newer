@@ -245,7 +245,7 @@ const routes = [
             component: () => import('../views/systemManage/log/index.vue'),
             meta: {
               title: '日志管理',
-              id: 'page_4_4'
+              id: 'page_4_3'
             }
           },
           {
@@ -254,7 +254,7 @@ const routes = [
             component: () => import('../views/systemManage/database/index.vue'),
             meta: {
               title: '数据备份',
-              id: 'page_4_3'
+              id: 'page_4_4'
             }
           },
           {
@@ -376,7 +376,6 @@ export const canTurnTo = (name, roles, routes) => {//roles:localStorage存的rol
 // 设置路由权限
 const turnTo = (to, role, next) => {
   // console.log(to.name, role, routes);
-
   if (canTurnTo(to.name, role, routes)) next();// 有权限，可访问
   else next({ replace: true, name: 'error_401' });// 无权限，重定向到401页面
 };
@@ -389,11 +388,11 @@ const hasAccess = (roles, route) => {
   if (route.meta && route.meta.id) {
     //判断route.meta.id在不在roles里面
     let result = roles.some((item) => {
-      return item.childs.indexOf(route.meta.id) > -1//item.childs里面包含id
+      return item.childs.find(val => val === route.meta.id) //item.childs存在id
     })
-    return true
-
-  } else return true
+    return result
+  }
+  return true
 }
 
 router.beforeEach((to, from, next) => {
