@@ -61,7 +61,7 @@ export default {
   text-align: center;
   color: #8391b8;
   padding: 10px 0;
-  font-size: 1rem;
+  font-size: 0.875rem;
   div {
     margin-top: 6px;
   }
