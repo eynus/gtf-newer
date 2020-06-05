@@ -29,35 +29,35 @@ export default {
       dataManageList: [
         {
           name: "用户管理",
-          show:false,
+          show: false,
           key: "user",
           icon: "iconfont  icon-overview",
           id: "page_4_1"
         },
         {
           name: "角色管理",
-          show:false,
+          show: false,
           key: "role",
           icon: "iconfont  icon-overview",
           id: "page_4_2"
         },
         {
           name: "日志管理",
-          show:false,
+          show: false,
           key: "log",
           icon: "iconfont  icon-overview",
           id: "page_4_4"
         },
         {
           name: "数据备份",
-          show:false,
+          show: false,
           key: "database",
           icon: "iconfont  icon-overview",
           id: "page_4_3"
         },
         {
           name: "系统监控",
-          show:false,
+          show: false,
           key: "monitor",
           icon: "iconfont  icon-overview",
           id: "page_4_5"
@@ -66,7 +66,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["role"]),
+    ...mapGetters(["role"])
   },
   mounted() {
     this.init();
@@ -75,18 +75,20 @@ export default {
     init() {
       this.activeMenuItem = this.$route.name.toLocaleLowerCase();
 
-        //判断当前用户是否有权限显示左侧列表menu
-    let dataSiderAuth = this.role.find(
-      (item, index) => item.resIdentif === "main_menu_4"
-    ).childs;
-    //设置show
-    dataSiderAuth.forEach((item, index) => {
-      let targetIndex = this.dataManageList.findIndex(
-        (data, idx) => data.id === item
-      );
-      this.dataManageList[targetIndex]["show"] = true;
-    });
-    },
+      //判断当前用户是否有权限显示左侧列表menu
+      let dataSiderAuth = this.role.find(
+        (item, index) => item.resIdentif === "main_menu_4"
+      ).childs;
+      // console.log(this.role,dataSiderAuth);
+
+      //设置show
+      dataSiderAuth.forEach((item, index) => {
+        let targetIndex = this.dataManageList.findIndex(
+          (data, idx) => data.id === item
+        );
+        this.dataManageList[targetIndex]["show"] = true;
+      });
+    }
   }
 };
 </script>

@@ -37,15 +37,19 @@ export default {
     };
   },
   created() {
-      this.activeMenuItem = this.$route.name.toLocaleLowerCase();
+      console.log(this.dataList);
+      
+    this.activeMenuItem = this.$route.name.toLocaleLowerCase();
   },
   methods: {
     changeRoute(data) {
       this.activeMenuItem = data;
+      console.log(data, this.$route);
+
       if (data === "inspection") {
         this.$router.push("/data/inspection/mathBasic?id=1");
       } else {
-        this.$router.push(this.$route.path.split('/')[0] + data);
+        this.$router.push("/" + this.$route.path.split("/")[1] + "/" + data);
       }
     }
   }
