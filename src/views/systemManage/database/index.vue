@@ -35,8 +35,8 @@
 <!--              </i-col>-->
 <!--            </Row>-->
 <!--          </Form>-->
-          <Button type="primary" @click="insert" class="btn-margin">新建备份</Button>
-          <Button type="primary" @click="recover" class="btn-margin">恢复备份</Button>
+          <Button v-auth="['page_4_4_1']" type="primary" @click="insert" class="btn-margin">新建备份</Button>
+          <Button v-auth="['page_4_4_2']" type="primary" @click="recover" class="btn-margin">恢复备份</Button>
           <div class="mt">
             <Table
                 :loading="tableLoading"

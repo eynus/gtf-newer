@@ -112,7 +112,7 @@
             }
             resourceToUser(param).then(res => {
               if (res.data.code === 1000) {
-                this.$Message.success('权限分配成功！')
+                this.$Message.success('权限分配成功，退出重新登录后生效！')
                 this.drawer = false
                 this.$emit('close')
               } else {

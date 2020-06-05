@@ -3,16 +3,16 @@
     <div class="mt">
       <Form inline>
         <FormItem>
-          <Button type="success" @click="handleStartRule">默认启用</Button>
+          <Button v-auth="['page_5_4_1']" type="success" @click="handleStartRule">默认启用</Button>
         </FormItem>
         <FormItem>
-          <Button type="info" @click="handleAddRule">添加规则</Button>
+          <Button v-auth="['page_5_4_2']" type="info" @click="handleAddRule">添加规则</Button>
         </FormItem>
         <FormItem>
-          <Button type="warning" @click="handleUpdateRule">修改规则</Button>
+          <Button v-auth="['page_5_4_3']" type="warning" @click="handleUpdateRule">修改规则</Button>
         </FormItem>
         <FormItem>
-          <Button type="error" @click="handleDeleteRule">删除规则</Button>
+          <Button v-auth="['page_5_4_4']" type="error" @click="handleDeleteRule">删除规则</Button>
         </FormItem>
       </Form>
     </div>
@@ -255,7 +255,7 @@ export default {
           //   length: 18,
           //   digit: ""
           // },
-       
+
         ]
       },
       modalKeyFormItem: {
@@ -310,7 +310,7 @@ export default {
             rdIdentify.dataPropDefine
           );
           this.$set(this.modalForm, "path", rdIdentify.path);
-        
+
         } else {
           this.$Message.info("修改操作只针对单个规则！请重新选择。");
         }
@@ -389,7 +389,7 @@ export default {
     handlePathChange(a, b) {
       this.modalForm.path = a;
       this.modalForm.pathChildNodeId = b[b.length - 1].pkId;
-      
+
     },
     //获取数据路径列表
     getPaths() {
@@ -399,7 +399,7 @@ export default {
           let raw = (data && data.data) || [];
           let result = handleRawData(raw);
           this.dataPaths = result;
-          
+
         }
       });
     },
@@ -526,8 +526,8 @@ export default {
           this.clearFormItem();
           this.clearPathAndKeys();
         } else {
-         
-          
+
+
           addRules(postData).then(res => {
             const { data, code } = res.data;
             if (code === 1000) {

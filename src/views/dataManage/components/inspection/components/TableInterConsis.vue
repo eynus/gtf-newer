@@ -4,16 +4,16 @@
       属性结构
       <Form inline>
         <FormItem>
-          <Button type="success">默认启用</Button>
+          <Button v-auth="['page_5_4_1']" type="success">默认启用</Button>
         </FormItem>
         <FormItem>
-          <Button type="info">添加规则</Button>
+          <Button v-auth="['page_5_4_2']" type="info">添加规则</Button>
         </FormItem>
         <FormItem>
-          <Button type="warning">修改规则</Button>
+          <Button v-auth="['page_5_4_3']" type="warning">修改规则</Button>
         </FormItem>
         <FormItem>
-          <Button type="error">删除规则</Button>
+          <Button v-auth="['page_5_4_4']" type="error">删除规则</Button>
         </FormItem>
       </Form>
     </div>

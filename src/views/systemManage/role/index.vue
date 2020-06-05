@@ -35,10 +35,10 @@
               </i-col>
             </Row>
           </Form>
-          <Button type="primary" @click="insert" class="btn-margin">新建</Button>
-          <Button type="primary" @click="edit" class="btn-margin">修改</Button>
-          <Button type="primary" @click="del" class="btn-margin">删除</Button>
-          <Button type="primary" @click="allot" class="btn-margin">权限分配</Button>
+          <Button v-auth="['page_4_2_1']" type="primary" @click="insert" class="btn-margin">新建</Button>
+          <Button v-auth="['page_4_2_2']" type="primary" @click="edit" class="btn-margin">修改</Button>
+          <Button v-auth="['page_4_2_3']" type="primary" @click="del" class="btn-margin">删除</Button>
+          <Button v-auth="['page_4_2_4']" type="primary" @click="allot" class="btn-margin">权限分配</Button>
           <div class="mt">
             <Table
                 :loading="tableLoading"
