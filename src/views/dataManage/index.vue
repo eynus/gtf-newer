@@ -2,26 +2,7 @@
   <div class="home h100">
     <Layout style="height:100%;">
       <Sider class="h100" :width="`${remToPx(5.25)}`" :style="{background: '#fff'}">
-        <Menu
-          :active-name="activeMenuItem"
-          theme="light"
-          :width="`100%`"
-          style="height:100%"
-          :class="menuitemClasses"
-          @on-select="changeRoute"
-        >
-          <template v-for="(item,index ) in dataManageList">
-            <MenuItem :name="item.key" class="menu-item mb" :key="`dml_${index}`" v-if="item.show">
-              <Icon
-                :custom="item.icon"
-                size="22"
-                :color="activeMenuItem===`${item.key}`?'#3d62f6':'#8391B8'"
-              />
-              <div>{{item.name}}</div>
-            </MenuItem>
-          </template>
-        </Menu>
-        <!-- <div slot="trigger"></div> -->
+        <my-side-bar :dataList="dataManageList"></my-side-bar>
       </Sider>
       <Layout class="h100">
         <div :style="{ height: `calc(100% - ${remToPx(3.2)}px)` }" class="pd-lg right-up-wrapper">
@@ -40,11 +21,12 @@
 
 <script>
 // @ is an alias to /src
-import MyFooter from "@/components/MyFooter";
+// import MyFooter from "@/components/MyFooter";
+// import MySideBar from "@/components/mySideBar";
 import { mapGetters } from "vuex";
 export default {
   name: "Home",
-  components: { MyFooter },
+  // components: { MyFooter, MySideBar },
   data() {
     return {
       activeMenuItem: "overview",
@@ -130,23 +112,11 @@ export default {
 .right-up-wrapper {
   box-sizing: border-box;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.25) inset;
-  background-color:$wrap-bg;
+  background-color: $wrap-bg;
 }
 .card-style {
   background: transparent;
   // border-radius: 4px;
-}
-.menu-item {
-  & + .menu-item {
-    margin-top: 1.5rem;
-  }
-  text-align: center;
-  color: #8391b8;
-  padding: 10px 0;
-  // font-weight: 600;
-  div {
-    margin-top: 6px;
-  }
 }
 </style>
 

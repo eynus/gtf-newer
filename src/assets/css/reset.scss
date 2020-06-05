@@ -35,9 +35,6 @@
   .ivu-menu{
       color: $text-title;
   }
-  .ivu-menu-item{
-      /* font-size:1rem; */
-  }
   .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu){
       color: #3d62f6;
   }
@@ -47,8 +44,8 @@
   .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):after{
       display: none;
   }
-  .ivu-menu-vertical .ivu-menu-item:hover, .ivu-menu-vertical .ivu-menu-submenu-title:hover{
-    color: #3d62f6;
+  .ivu-menu-vertical .ivu-menu-item:hover, .ivu-menu-vertical .ivu-menu-submenu-title:hover,.ivu-menu-vertical .ivu-menu-item:hover .iconfont{
+    color: #3d62f6 !important;
   }
   /* tree */
   .ant-tree{
