@@ -1,7 +1,7 @@
 <template>
   <div class="home h100">
     <Layout style="height:100%;">
-      <Sider class="h100" :width="`${remToPx(6)}`" :style="{background: '#fff'}">
+      <Sider class="h100" :width="`${remToPx(6.25)}`" :style="{background: '#fff'}">
       <!-- <Sider class="h100" :width="`${remToPx(5.25)}`" :style="{background: '#fff'}"> -->
         <my-side-bar :dataList="dataManageList"></my-side-bar>
       </Sider>

@@ -1,6 +1,6 @@
 <template>
-  <div class="h100 bg-white container w100">
-     
+  <div class="w100 h100 bg-white container w100 flex flex-center">
+     <img src="../../../../assets/img/picVisualization/welcome.png" alt="">
   </div>
 </template>
 <script>
@@ -20,9 +20,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .container{
-  background-image: url('../../../../assets/img/picVisualization/welcome.png');
-   background-repeat: no-repeat;
-  background-position: center center;
-  background-size: 100% 100%;
+  img{
+    max-height: 100%;
+  }
 }
 </style>
