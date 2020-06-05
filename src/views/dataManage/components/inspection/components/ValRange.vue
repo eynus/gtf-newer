@@ -4,16 +4,16 @@
       <div>
         <Form inline>
           <FormItem>
-            <Button type="success" @click="handleStartRule">默认启用</Button>
+            <Button v-auth="['page_5_4_1']" type="success" @click="handleStartRule">默认启用</Button>
           </FormItem>
           <FormItem>
-            <Button type="info" @click="handleAddRule">添加规则</Button>
+            <Button v-auth="['page_5_4_2']" type="info" @click="handleAddRule">添加规则</Button>
           </FormItem>
           <FormItem>
-            <Button type="warning" @click="handleUpdateRule">修改规则</Button>
+            <Button v-auth="['page_5_4_3']" type="warning" @click="handleUpdateRule">修改规则</Button>
           </FormItem>
           <FormItem>
-            <Button type="error" @click="handleDeleteRule">删除规则</Button>
+            <Button v-auth="['page_5_4_4']" type="error" @click="handleDeleteRule">删除规则</Button>
           </FormItem>
         </Form>
       </div>
@@ -475,7 +475,7 @@ export default {
       }
     },
 
-   
+
     // 清空规则
     clearFormItem() {
       this.$set(this.modalForm, "path", []);

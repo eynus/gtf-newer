@@ -3,7 +3,7 @@
     <div class="mt ">
       <Form inline>
         <FormItem>
-          <Button type="success" @click="handleStartRule">默认启用</Button>
+          <Button v-auth="['page_5_4_1']" type="success" @click="handleStartRule">默认启用</Button>
         </FormItem>
         <!-- <FormItem>
           <Button type="info" @click="handleAddRule">添加规则</Button>
@@ -321,7 +321,7 @@ export default {
     handlePathChange(a, b) {
       this.modalForm.path = a;
       console.log(a,b);
-      
+
     },
     //获取数据路径列表
     getPaths() {

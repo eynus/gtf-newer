@@ -92,10 +92,10 @@
       </Row>
     </Form>
     <Button type="primary" class="btn-margin">浏览</Button>
-    <Button type="primary" @click="handleStart" class="btn-margin">启动</Button>
-    <Button type="primary" @click="handleStop" class="btn-margin">停止</Button>
-    <Button type="primary" @click="handleDelete" class="btn-margin">删除</Button>
-    <Button type="primary" to="/data/service/register" class="btn-margin">注册</Button>
+    <Button v-auth="['page_5_3_1']" type="primary" @click="handleStart" class="btn-margin">启动</Button>
+    <Button v-auth="['page_5_3_2']" type="primary" @click="handleStop" class="btn-margin">停止</Button>
+    <Button v-auth="['page_5_3_3']" type="primary" @click="handleDelete" class="btn-margin">删除</Button>
+    <Button v-auth="['page_5_3_4']" type="primary" to="/data/service/register" class="btn-margin">注册</Button>
     <div class="mt">
       <Table
         :loading="tableLoading"
