@@ -19,8 +19,6 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 export default {
   name: "system",
   data() {
@@ -65,31 +63,9 @@ export default {
       ]
     };
   },
-  computed: {
-    ...mapGetters(["role"])
-  },
-  mounted() {
-    this.init();
-  },
-  methods: {
-    init() {
-      this.activeMenuItem = this.$route.name.toLocaleLowerCase();
-
-      //判断当前用户是否有权限显示左侧列表menu
-      let dataSiderAuth = this.role.find(
-        (item, index) => item.resIdentif === "main_menu_4"
-      ).childs;
-      // console.log(this.role,dataSiderAuth);
-
-      //设置show
-      dataSiderAuth.forEach((item, index) => {
-        let targetIndex = this.dataManageList.findIndex(
-          (data, idx) => data.id === item
-        );
-        this.dataManageList[targetIndex]["show"] = true;
-      });
-    }
-  }
+  computed: {},
+  mounted() {},
+  methods: {}
 };
 </script>
 
@@ -100,8 +76,6 @@ export default {
   background-color: $wrap-bg;
 }
 .card-style {
-  /*background: transparent;*/
-  // border-radius: 4px;
 }
 .menu-item {
   & + .menu-item {

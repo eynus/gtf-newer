@@ -8,7 +8,7 @@
     @on-select="changeRoute"
   >
     <template v-for="(item,index ) in dataList">
-      <MenuItem :name="item.key" class="menu-item mb" :key="`dml_${index}`" v-if="item.show">
+      <MenuItem :name="item.key" class="menu-item mb" :key="`dml_${index}`" v-auth="[item.id]">
         <Icon
           :custom="item.icon"
           :size="remToPx(1.75)"
@@ -37,15 +37,11 @@ export default {
     };
   },
   created() {
-      console.log(this.dataList);
-      
-    this.activeMenuItem = this.$route.name.toLocaleLowerCase();
+    this.activeMenuItem = this.$route.path.split('/')[2]
   },
   methods: {
     changeRoute(data) {
       this.activeMenuItem = data;
-      console.log(data, this.$route);
-
       if (data === "inspection") {
         this.$router.push("/data/inspection/mathBasic?id=1");
       } else {

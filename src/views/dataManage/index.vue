@@ -20,16 +20,11 @@
 </template>
 
 <script>
-// @ is an alias to /src
-// import MyFooter from "@/components/MyFooter";
-// import MySideBar from "@/components/mySideBar";
 import { mapGetters } from "vuex";
 export default {
-  name: "Home",
-  // components: { MyFooter, MySideBar },
+  name: "dataManage",
   data() {
     return {
-      activeMenuItem: "overview",
       dataManageList: [
         {
           name: "数据总览",
@@ -62,50 +57,10 @@ export default {
       ]
     };
   },
-  created() {
-    this.activeMenuItem = this.$route.path.replace("/data/", "").split("/")[0];
-    //判断当前用户是否有权限显示左侧列表menu
-    let dataSiderAuth = this.role.find(
-      (item, index) => item.resIdentif === "main_menu_5"
-    ).childs;
-    //设置show
-    dataSiderAuth.forEach((item, index) => {
-      let targetIndex = this.dataManageList.findIndex(
-        (data, idx) => data.id === item
-      );
-      this.dataManageList[targetIndex]["show"] = true;
-    });
-  },
-  computed: {
-    ...mapGetters(["role"]),
-    menuitemClasses() {
-      return ["menu-item", this.isCollapsed ? "collapsed-menu" : ""];
-    }
-  },
-  watch: {
-    "$route.path": function(newVal) {
-      switch (newVal) {
-        case "/data/query":
-        case "/data/inspection":
-        case "/data/service":
-        case "/data/overview":
-          this.activeMenuItem = newVal.slice(6);
-          break;
-        default:
-          break;
-      }
-    }
-  },
-  methods: {
-    changeRoute(data) {
-      this.activeMenuItem = data;
-      if (data === "inspection") {
-        this.$router.push("/data/inspection/mathBasic?id=1");
-      } else {
-        this.$router.push("/data/" + data);
-      }
-    }
-  }
+  created() {},
+  computed: {},
+  watch: {},
+  methods: {}
 };
 </script>
 <style lang="scss" scoped>

@@ -413,11 +413,10 @@ router.beforeEach((to, from, next) => {
     if (localStorage.getItem('role')) {
       turnTo(to, JSON.parse(localStorage.getItem('role')), next);
     } else {
-      // removeToken()
-      alert('你没有权限')
-      // next({
-      //   name: LOGIN_PAGE_NAME // 跳转到登录页
-      // });
+      removeToken()
+      next({
+        name: LOGIN_PAGE_NAME // 跳转到登录页
+      });
     }
   }
 });
