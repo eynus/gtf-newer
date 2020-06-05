@@ -37,9 +37,7 @@ export default {
     };
   },
   created() {
-      
       this.activeMenuItem = this.$route.name.toLocaleLowerCase();
-      console.log('?',this.dataList,this.activeMenuItem);
   },
   methods: {
     changeRoute(data) {
@@ -47,7 +45,7 @@ export default {
       if (data === "inspection") {
         this.$router.push("/data/inspection/mathBasic?id=1");
       } else {
-        this.$router.push("/data/" + data);
+        this.$router.push(this.$route.path.split('/')[0] + data);
       }
     }
   }
