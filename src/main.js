@@ -14,6 +14,9 @@ import { Tree } from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import './assets/css/reset.scss'
 import Mixin from './mixins';
+import { authDirective } from './utils/directives'
+
+Vue.use(authDirective)
 Vue.mixin(Mixin);
 Vue.config.productionTip = false
 

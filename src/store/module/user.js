@@ -18,7 +18,20 @@ export default {
     },
     //保存用户信息
     setUserPower (state, userPower) {
+      const handleAuth = (userPower) => {
+        let arr = []
+        userPower.forEach(item => {
+          arr.push(item.resIdentif)
+          if (item.childs.length) {
+            let res = handleAuth(item.childs)
+            arr = arr.concat(res)
+          }
+        })
+        return arr
+      }
       state.userPower = userPower
+      let userAuth = handleAuth(userPower)
+      localStorage.setItem('user_auth', JSON.stringify(userAuth))
       localStorage.setItem('userPower', JSON.stringify(userPower))
     },
     //保存用户权限
@@ -58,7 +71,7 @@ export default {
                 return {
                   resIdentif: item.resIdentif,
                   // id: item.pkId,
-                  childs: list 
+                  childs: list
                 }
               })
               commit('setUserInfo', data.userInfo)
@@ -87,14 +100,5 @@ export default {
         resolve()
       })
     }
-
-
-
-
-
-
-
-
-
   }
 }
