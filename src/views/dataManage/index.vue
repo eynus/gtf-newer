@@ -29,28 +29,24 @@ export default {
         {
           name: "数据总览",
           key: "overview",
-          show: false,
           icon: "iconfont  icon-shuju",
           id: "page_5_1"
         },
         {
           name: "查询浏览",
           key: "query",
-          show: false,
           icon: "iconfont  icon-zaitu",
           id: "page_5_2"
         },
         {
           name: "服务管理",
           key: "service",
-          show: false,
           icon: "iconfont  icon-fuwutiyanguanli",
           id: "page_5_3"
         },
         {
           name: "质检管理",
           key: "inspection",
-          show: false,
           icon: "iconfont  icon-zhijianguanli",
           id: "page_5_4"
         }

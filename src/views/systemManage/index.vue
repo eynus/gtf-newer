@@ -27,35 +27,30 @@ export default {
       dataManageList: [
         {
           name: "用户管理",
-          show: false,
           key: "user",
           icon: "iconfont  icon-overview",
           id: "page_4_1"
         },
         {
           name: "角色管理",
-          show: false,
           key: "role",
           icon: "iconfont  icon-overview",
           id: "page_4_2"
         },
         {
           name: "日志管理",
-          show: false,
           key: "log",
           icon: "iconfont  icon-overview",
           id: "page_4_4"
         },
         {
           name: "数据备份",
-          show: false,
           key: "database",
           icon: "iconfont  icon-overview",
           id: "page_4_3"
         },
         {
           name: "系统监控",
-          show: false,
           key: "monitor",
           icon: "iconfont  icon-overview",
           id: "page_4_5"

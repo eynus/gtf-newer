@@ -29,35 +29,30 @@ export default {
         {
           name: "现状一张图",
           key: "situation",
-          show: false,
           icon: "iconfont  icon-ditu-shi",
           id: "page_1_1"
         },
         {
           name: "规划一张图",
           key: "plan",
-          show: false,
           icon: "iconfont  icon-ditu2",
           id: "page_1_2"
         },
         {
           name: "审批一张图",
           key: "approve",
-          show: false,
           icon: "iconfont icon-resource-base",
           id: "page_1_3"
         },
         {
           name: "监管一张图",
           key: "supervision",
-          show: false,
           icon: "iconfont icon-jianguan",
           id: "page_1_4"
         },
         {
           name: "预警一张图",
           key: "warning",
-          show: false,
           icon: "iconfont  icon-jinggaowarning19",
           id: "page_1_5"
         }
