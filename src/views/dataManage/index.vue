@@ -25,35 +25,41 @@ export default {
   name: "dataManage",
   data() {
     return {
-      dataManageList: [
+      dataManageList: []
+    };
+  },
+  created() {
+    this.dataManageList = [
         {
           name: "数据总览",
           key: "overview",
-          icon: "iconfont  icon-shuju",
+          // icon: "iconfont  icon-shuju",
+          iconUrl: require("../../assets/img/dataManage/overview.png"),
           id: "page_5_1"
         },
         {
           name: "查询浏览",
           key: "query",
-          icon: "iconfont  icon-zaitu",
+          // icon: "iconfont  icon-zaitu",
+          iconUrl: require("../../assets/img/dataManage/query.png"),
           id: "page_5_2"
         },
         {
           name: "服务管理",
           key: "service",
-          icon: "iconfont  icon-fuwutiyanguanli",
+          // icon: "iconfont  icon-fuwutiyanguanli",
+          iconUrl: require("../../assets/img/dataManage/service.png"),
           id: "page_5_3"
         },
         {
           name: "质检管理",
           key: "inspection",
-          icon: "iconfont  icon-zhijianguanli",
+          // icon: "iconfont  icon-zhijianguanli",
+          iconUrl: require("../../assets/img/dataManage/inspection.png"),
           id: "page_5_4"
         }
       ]
-    };
   },
-  created() {},
   computed: {},
   watch: {},
   methods: {}

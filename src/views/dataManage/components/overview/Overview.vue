@@ -1,40 +1,43 @@
 <template>
   <div class="h100">
     <div class="card-container card-container1">
-      <div class="card-title">
-        <Icon custom="iconfont  icon-fenleihuizong" size="16" color="#fff" />
-        <span class="ml">分类汇总</span>
-      </div>
       <div class="card-body">
-        <Row style="height:100%">
-          <i-col span="15" class="h100">
-            <div class="h100 w100 card-left flex flex-center flex-wrap">
-              <!-- <Row type="flex" :gutter="12"> -->
-              <!-- <div class=""> -->
+        <Row style="height:100%;margin-left:0" :gutter="remToPx(2)">
+          <i-col span="15" class="h100 card-left" style="padding:0">
+            <div class="card-title">
+              <Icon custom="iconfont  icon-fenleihuizong" size="16" color="#fff" />
+              <span class="ml">分类汇总</span>
+            </div>
+            <div class="h100 w100 flex flex-center flex-wrap card-left-item-list">
               <div
                 class="card-left-item w100 h100"
                 v-for="(item,index) in typesTotal"
                 :key="`type_${index}`"
               >
                 <div class="card-left-item-inner h100 w100">
-                  <div class="flex flex-sa h100 w100">
-                    <div
-                      class="card-left-item-inner-left flex flex-center"
-                      :style="{backgroundColor:`${item.bgColor}`, boxShadow: `0 0 6px ${item.bgColor}`}"
-                     
-                    >
-                      <Icon :custom="`${item.icon}`" :size="remToPx(3)" color="#fff" />
-                    </div>
+                  <div
+                    class="flex flex-sa h100 w100"
+                    :style="{borderBottom:`2px solid ${item.bgColor}`}"
+                  >
                     <div class="card-left-item-inner-right">
                       <div class="block-up">
+                        <span class="value" :style="`color:${item.bgColor}`">
+                          {{item.totalChilds}}
+                          <i>个</i>
+                        </span>
+                        <!-- <span class="value" :style="`color:${item.bgColor}`">个</span> -->
                         <span class="title">{{item.name}}</span>
-                        <span class="value" :style="`color:${item.bgColor}`">{{item.totalChilds}}</span>
-                        <span :style="`color:${item.bgColor}`">个</span>
                       </div>
                       <div class="block-bottom">
-                        <span class="mr-lg">{{item.firstChilds}}个一级子类</span>
+                        <span class="left">{{item.firstChilds}}个一级子类</span>
                         <span>{{item.secondChilds}}个二级子类</span>
                       </div>
+                    </div>
+                    <div class="card-left-item-inner-left flex flex-center">
+                      <!-- :style="{backgroundColor:`${item.bgColor}`, boxShadow: `0 0 6px ${item.bgColor}`}" -->
+                      <!-- <Icon :custom="`${item.icon}`" :size="remToPx(3)" color="#fff" /> -->
+
+                      <img :src="item.iconUrl" alt />
                     </div>
                   </div>
                 </div>
@@ -46,8 +49,8 @@
               <!-- <div :style="{ height: `${remToPx(15)}px` ,width:`100%`}"> -->
               <!-- <div :style="{ height: `${remToPx(15)}px` ,width:`100%`}">1</div> -->
               <rose-chart
-             
-                class="position-a-c h100"
+                class="position-a-c"
+                style="margin-bottom:1rem;height:calc(100% - 1rem)"
                 :data="chartData"
                 :dataTotal="chartDataTotal"
               ></rose-chart>
@@ -58,25 +61,25 @@
         </Row>
       </div>
     </div>
-    <div class="card-container mt-lg card-container2">
+    <div class="card-container mt-lg card-container2 w100">
       <div class="card-title">
         <Icon custom="iconfont  icon-rukulishi" size="16" color="#fff" />
         <span class="ml">入库历史</span>
       </div>
-      <div class="card-body">
+      <div class="card-body w100">
         <Form
           ref="formInline"
           :model="formInline"
           inline
-          style="margin-top:.75rem"
-          class="search-box smzx-search-box"
+          style="width:calc(100% - 2.5rem )"
+          class="search-box smzx-search-box ml-lg mr-lg"
           label-position="right"
           :label-width="remToPx(6.5)"
           width="100%"
         >
           <!-- <Row> -->
           <!-- <i-col :md="6" :xxl="5"> -->
-          <FormItem label="入库时间：">
+          <FormItem label="入库时间："    style="margin-top:1.5rem;margin-bottom:1rem;width:calc(22% - 0.625rem )">
             <DatePicker
               type="daterange"
               :value="formInline.date"
@@ -84,17 +87,19 @@
               placeholder="请选择起止日期"
               :clearable="false"
               class="smzx-normal-datepick smzx-date-range"
+              style="width:90%"
+           
             ></DatePicker>
           </FormItem>
           <!-- </i-col> -->
           <!-- <i-col :md="6" :xxl="5"> -->
-          <FormItem label="数据路径：">
-            <Cascader :data="dataPaths" v-model="formInline.path" @on-change="handlePathChange"></Cascader>
+          <FormItem label="数据路径："  style="margin-top:1.5rem;margin-bottom:1rem;width:calc(22% - 0.625rem )">
+            <Cascader :data="dataPaths" v-model="formInline.path" @on-change="handlePathChange" style="width:90%"></Cascader>
           </FormItem>
           <!-- </i-col> -->
           <!-- <i-col :md="5" :xxl="4"> -->
-          <FormItem label="数据类型：">
-            <Select v-model="formInline.type" class="scroll dropdown" style="width:8.75rem">
+          <FormItem label="数据类型："  style="margin-top:1.5rem;margin-bottom:1rem;width:calc(22% - 0.625rem )">
+            <Select v-model="formInline.type" class="scroll dropdown" style="width:90%">
               <Option v-for="item in typeList" :value="item.id" :key="item.id">
                 {{
                 item.name
@@ -104,12 +109,12 @@
           </FormItem>
           <!-- </i-col> -->
           <!-- <i-col :md="5" :xxl="5"> -->
-          <FormItem label="上传用户：">
+          <FormItem label="上传用户："  style="margin-top:1.5rem;margin-bottom:1rem;width:calc(22% - 0.625rem )">
             <Input v-model.trim="formInline.uploader" placeholder="请输入" clearable />
           </FormItem>
           <!-- </i-col> -->
           <!-- <i-col :md="2"> -->
-          <FormItem :label-width="remToPx(2)">
+          <FormItem :label-width="remToPx(0)"  style="margin-top:1.5rem;margin-bottom:1rem;width:12%;margin-right:0;text-align:right">
             <Button type="primary" class="smzx-search-btn" @click="handleSubmit">查询</Button>
           </FormItem>
           <!-- </i-col> -->
@@ -280,12 +285,20 @@ export default {
     }
   },
   created() {
+    this.init();
     this.getPaths();
     this.setTypesTotalData();
     this.getSJListPage();
     this.getCatalogue(); //先请求一次，为查询浏览做准备
   },
   methods: {
+    init() {
+      this.typesTotal = this.typesTotal.map((item, index) => ({
+        ...item,
+        iconUrl: require(`../../../../assets/img/dataManage/overview/${index +
+          1}.png`)
+      }));
+    },
     //设置四大类各自的数据详情
     setTypesTotalData() {
       this.typesTotal.forEach((item, index) => {
@@ -377,23 +390,27 @@ export default {
 ::v-deep .ivu-col.ivu-col-span-12.ivu-col-order-1 {
   padding: 0.5rem;
 }
-.ivu-table {
-  min-height: 280px;
-}
 .card-container {
   background-color: #fff;
- 
-  &1 {
-    padding-top: 0;
-    background-color: transparent;
-    height: calc(100% - 26rem);
-    .card-body {
-      margin-top: 1rem;
-      margin-left: -1rem;
-      margin-right: -1rem;
-      height: calc(100% - 2rem);
 
+  &1 {
+    background-color: transparent;
+    height: calc(100% - 25.5rem);
+    // height: calc(100% - 26rem);
+    .card-title {
+    }
+    .card-body {
+      // margin-top: 1rem;
+      // margin-left: -1rem;
+      // margin-right: -1rem;
+      // height: calc(100% - 2rem);
+      height: 100%;
       .card-left {
+        background-color: #fff;
+        &-item-list {
+          height: calc(100% - 4rem);
+          margin: 1rem;
+        }
         .card-left-item:nth-of-type(1) .card-left-item-inner,
         .card-left-item:nth-of-type(2) .card-left-item-inner {
           margin-bottom: 0.5rem;
@@ -409,32 +426,46 @@ export default {
             background-color: #fff;
             color: $text-normal;
             margin-right: 1rem;
-            padding: 0 4rem;
+            padding: 0 1.5rem;
             width: calc(100% - 1rem);
             height: calc(100% - 0.5rem);
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            // box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
             &-left {
-              height: 62%;
+              height: 80%;
               width: 22%;
-              border-radius: 6px;
-
-              
+              // border-radius: 6px;
+              img {
+                display: inline-block;
+                max-height: 100%;
+              }
             }
             &-right {
+              width: 78%;
+              margin: 0 2rem;
               .block-up {
                 .title {
                   display: inline-block;
-                  color: #000;
+                  color: $text-title;
                   font-size: 1.5rem;
-                  margin-right: 2rem;
-                  min-width: 8.5rem;
+                  // margin-right: 2rem;
+                  // min-width: 8.5rem;
                 }
                 .value {
-                  font-size: 1.5rem;
+                  display: inline-block;
+                  font-size: 2.25rem;
+                  min-width: 10rem;
+                  i {
+                    font-style: normal;
+                    font-size: 1.25rem;
+                  }
                 }
               }
               .block-bottom {
                 margin-top: 1rem;
+                .left {
+                  display: inline-block;
+                  min-width: 10rem;
+                }
               }
             }
           }
@@ -447,26 +478,24 @@ export default {
     }
   }
   &2 {
+    .card-title {
+      // margin-left: -1rem;
+    }
     min-height: 24rem;
-     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   }
-  padding: 1rem;
+  // padding: 1rem;
+  padding-top: 0;
   .card-title {
     text-align: center;
-    margin-left: -1rem;
     background-color: $cardtitle-bg;
-    width: 8rem;
-    // font-weight: bold;
+    width: 9.25rem;
     font-size: 1rem;
-    line-height: 1.75;
+    line-height: 2rem;
+    height: 2rem;
     color: #fff;
-    padding: 0 4px;
-    border-top-right-radius: 0.25rem;
-    border-bottom-right-radius: 0.25rem;
+    // padding: 0 4px;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
-   
-  }
-  .card-body {
   }
 }
 .tb-min-height {
