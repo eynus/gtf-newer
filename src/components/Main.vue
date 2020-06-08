@@ -1,9 +1,7 @@
 <template>
   <div id="app">
     <Layout>
-      <Header id="head" class="flex flex-sb"
-            :style="{backgroundImage:`url(${moduleHeadBgUrl})`}"
-      >
+      <Header id="head" class="flex flex-sb" :style="{backgroundImage:`url(${moduleHeadBgUrl})`}">
         <div>
           昭通市国土空间基础信息平台
           <span>
@@ -22,7 +20,7 @@
             </a>
             <DropdownMenu slot="list">
               <DropdownItem class="text-center fs16 pd" @click.native="returnHome">返回主页</DropdownItem>
-              <DropdownItem class="text-center fs16 pd" >修改密码</DropdownItem>
+              <DropdownItem class="text-center fs16 pd">修改密码</DropdownItem>
               <DropdownItem class="text-center fs16 pd" @click.native="quit">退出</DropdownItem>
             </DropdownMenu>
           </Dropdown>
@@ -36,12 +34,13 @@
 </template>
 <script>
 import { removeToken } from "@/utils/auth";
+import { mapActions } from "vuex";
 export default {
   name: "mainpage",
   data() {
     return {
       moduleName: "",
-      moduleHeadBgUrl:''
+      moduleHeadBgUrl: ""
     };
   },
   computed: {
@@ -57,21 +56,28 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["handleLogOut"]),
     returnHome() {
       this.$router.push("/home");
     },
     quit() {
-      removeToken();
-      this.$router.push("/login");
+      this.handleLogOut()
+        .then(res => {
+          this.$router.push("/login");
+        })
+        .catch(err => {
+          this.$Message.error({
+            content: err[0],
+            duration: 5
+          });
+        });
     }
   },
   created() {
-   let obj = this.headInfo[this.$route.path.split('/')[1]]
-    this.moduleName = obj.title
-    this.moduleHeadBgUrl = obj.bgUrl
+    let obj = this.headInfo[this.$route.path.split("/")[1]];
+    this.moduleName = obj.title;
+    this.moduleHeadBgUrl = obj.bgUrl;
     // this.moduleHeadBgUrl = require(obj.bgUrl)
-
-
   }
 };
 </script>
