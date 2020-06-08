@@ -7,8 +7,6 @@ export const authDirective =  {
   install (Vue) {
     Vue.directive('auth', {
       bind (el, binding) {
-        console.log(el)
-        console.log(binding)
         const auths = JSON.parse(localStorage.getItem('user_auth'))
         const isAllow = isAllowed(binding.value, auths)
         if (!isAllow && binding.value) {

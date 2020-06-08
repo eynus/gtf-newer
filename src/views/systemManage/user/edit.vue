@@ -20,6 +20,16 @@
             </FormItem>
           </Col>
           <Col class-name="col-item">
+            <FormItem label="行政区划" prop="xz_pkId">
+              <Select v-model="formData.xz_pkId" placeholder="请选择用户所属行政区划">
+                <Option v-for="item in areas"
+                        :key="item.pkId"
+                        :value="item.pkId"
+                >{{ item.placeName }}</Option>
+              </Select>
+            </FormItem>
+          </Col>
+          <Col class-name="col-item">
             <FormItem label="角色" prop="roleId">
               <Select v-model="formData.roleId" placeholder="请选择角色">
                 <Option v-for="item in roles"
@@ -59,9 +69,7 @@
     name: 'UserEdit',
     props: {
       roles: Array,
-      default() {
-        return []
-      }
+      areas: Array,
     },
     data () {
       const validatePhone = (rule, value, callback) => {
@@ -101,6 +109,7 @@
         formData: {
           userName: '',
           realName: '',
+          xz_pkId: '',
           userPhone: '',
           userEmail: '',
           roleId: '',
@@ -113,6 +122,9 @@
           realName: [
             { required: true, message: '请填写真实姓名！', trigger: 'blur' },
             { validator: validateZh, message: '真实姓名必须为中文汉字', trigger: 'blur'}
+          ],
+          xz_pkId: [
+            { required: true, type: 'number', message: '请选择用户所属行政区划！', trigger: 'change' },
           ],
           userPhone: [
             { required: true, message: '请填写电话号码！', trigger: 'blur' },
@@ -143,11 +155,20 @@
         this.drawer = true
         this.type = 'e'
         this.$refs['form'].resetFields()
-        this.formData = {
-          ...selection[0]
-        }
-        this.formData.password = '000000'
-        this.formData.roleId = Number(this.formData.roleId)
+
+        userDetail({ pkId: selection[0].pkId }).then(res => {
+          if (res.data.code === 1000) {
+            let { userName, realName, xzPkid, userPhone, userEmail, roleId, pkId } = res.data.data
+            this.pkId = pkId
+            this.formData.userName = userName
+            this.formData.realName = realName
+            this.formData.xz_pkId = Number(xzPkid)
+            this.formData.userPhone = userPhone
+            this.formData.userEmail = userEmail
+            this.formData.roleId = Number(roleId)
+            this.formData.password = '000000'
+          }
+        })
       },
       visiable() {
         // 修改不保存状态，新建保存状态
@@ -157,14 +178,22 @@
       },
       resetForm() {
         this.$refs['form'].resetFields()
-        this.formData = {}
+        this.formData = {
+          userName: '',
+          realName: '',
+          xz_pkId: '',
+          userPhone: '',
+          userEmail: '',
+          roleId: '',
+          password: ''
+        }
       },
       onSubmit() {
         this.$refs['form'].validate((valid) => {
           if (valid) {
-            let { userName, realName, userPhone, userEmail, roleId } = this.formData
+            let { userName, realName, userPhone, userEmail, roleId, xz_pkId } = this.formData
 
-            let param  = { userName, realName, userPhone, userEmail, roleId, password: '000000' }
+            let param  = { userName, realName, userPhone, userEmail, roleId, xz_pkId, password: '000000' }
             if (this.type === 'i') {
               userInsert(param).then(res => {
                 if (res.data.code === 1000) {
@@ -176,7 +205,7 @@
                 }
               })
             } else {
-              param['pkId'] = this.formData.pkId
+              param['pkId'] = this.pkId
               userEdit(param).then(res => {
                 if (res.data.code === 1000) {
                   this.$Message.success("修改成功！")

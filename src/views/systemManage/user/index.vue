@@ -89,13 +89,14 @@
       </i-col>
     </Row>
 <!--    用户信息编辑-->
-    <uedit ref="uedit" :roles="roles" @close="getList"></uedit>
+    <uedit ref="uedit" :roles="roles" :areas="areas" @close="getList"></uedit>
 <!--    用户信息编辑-->
   </div>
 </template>
 <script>
   import { remToPx } from "@/utils/common";
   import { userList, roles, userDel } from "@/api/systemManage/user";
+  import { areaList } from '@/api/common'
   import edit from './edit'
   import MyDelete from '../../../components/delete'
   import { nullStr } from "../../../utils/common";
@@ -149,6 +150,14 @@
             sortable: true
           },
           {
+            title: "所属行政区划",
+            key: "placeName",
+            align: "center",
+            width: remToPx(11),
+            tooltip: true,
+            sortable: true
+          },
+          {
             title: "电话号码",
             key: "userPhone",
             align: "center",
@@ -180,6 +189,7 @@
         ],
         datas: [],
         roles: [],
+        areas: [],
         page: {
           current: 1,
           total: 0,
@@ -201,6 +211,7 @@
       init() {
         this.getList()
         this.getRole()
+        this.getArea()
       },
       onSearch() {
         this.formInline = nullStr(this.formInline)
@@ -245,6 +256,13 @@
           msg = '每次只能'+ tip +'一条数据！'
         }
         return msg
+      },
+      getArea() {
+        areaList().then(res => {
+          if (res.data.code === 1000) {
+            this.areas = res.data.data
+          }
+        })
       },
       getRole() {
         roles({}).then(res => {
