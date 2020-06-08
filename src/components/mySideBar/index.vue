@@ -12,8 +12,17 @@
         <Icon
           :custom="item.icon"
           :size="remToPx(1.75)"
-          :color="activeMenuItem===`${item.key}`?'#3d62f6':'#8391B8'"
+          :color="activeMenuItem===`${item.key}`?'#0083ff':'#8391B8'"
         />
+
+        <!-- <div
+          v-else
+        >
+          <img :src="activeMenuItem===`${item.key}`?item.iconActiveUrl:item.iconUrl" alt="">
+          <div  class="menu-item-filter"
+          :style="{background:`url(${item.iconUrl}) no-repeat center`}"></div>
+        </div>  -->
+
         <div>{{item.name}}</div>
       </MenuItem>
     </template>
@@ -37,7 +46,7 @@ export default {
     };
   },
   created() {
-    this.activeMenuItem = this.$route.path.split('/')[2]
+    this.activeMenuItem = this.$route.path.split("/")[2];
   },
   methods: {
     changeRoute(data) {
@@ -52,7 +61,27 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+// ::v-deep .ivu-menu-item-selected .menu-item-filter {
+//   margin-left: -999px;
+//   filter: drop-shadow(#3d62f6 999px 0);
+// }
 .menu-item {
+  overflow: hidden;
+  // img{
+  //   display: inline-block;
+  //   height: 1.75rem;
+    // width:2rem;
+    // margin-left:-900px;
+    // filter: drop-shadow(#3d62f6 900px 0);
+  // }
+  // .menu-item-filter {
+  //   width: 100%;
+  //   height: 38px;
+  // }
+  // &:hover > &-filter {
+  //   margin-left: -999px;
+  //   filter: drop-shadow(#3d62f6 999px 0);
+  // }
   & + .menu-item {
     margin-top: 1.5rem;
   }
@@ -62,6 +91,6 @@ export default {
   font-size: 0.875rem;
   div {
     margin-top: 6px;
-  }
+  }  
 }
 </style>

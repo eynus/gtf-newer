@@ -28,7 +28,7 @@
       @on-select-all-cancel="handleCancelRowAll"
     >
       <template slot="ruleStatusSlot" slot-scope="{row,index}">
-        <span :style="`color:${row.ruleStatus==='启用'?'rgb(81,81,81)':'#f00'}`">{{row.ruleStatus}}</span>
+      <span :class="`${row.ruleStatus==='启用'?'text-blue':'text-normal'}`">{{row.ruleStatus}}</span>
       </template>
     </Table>
     <div class="text-right mr-lg mt">

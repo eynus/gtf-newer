@@ -18,7 +18,7 @@
     </div>
     <Table border size="small" :columns="columnsPutIn" :data="dataPutIn" ref="selection">
       <template slot="operation" slot-scope="{row,index}">
-        <a href="#">启用</a>
+        <a href="#" class="text-blue">启用</a>
       </template>
     </Table>
   </div>

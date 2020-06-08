@@ -66,7 +66,13 @@
                   <span>1</span>
                   {{errorMsg}}
                 </div>
-                <Button @click="handleSubmit" type="primary" size="large" long class="let-spc">{{!loginLoading?'登录':'正在登录...'}}</Button>
+                <Button
+                  @click="handleSubmit"
+                  type="primary"
+                  size="large"
+                  long
+                  class="let-spc"
+                >{{!loginLoading?'登录':'正在登录...'}}</Button>
               </FormItem>
             </Form>
           </div>
@@ -148,7 +154,7 @@ export default {
       }
     };
     return {
-      loginLoading:false,
+      loginLoading: false,
       errorMsg: " ",
       formModalValidate: {
         password: "",
@@ -263,9 +269,9 @@ export default {
     },
     // 验证通过后进行登录请求
     handleSubmit() {
-       this.loginLoading = true
       this.$refs.loginForm.validate(valid => {
         if (valid) {
+          this.loginLoading = true;
           let jm_username = this.encryptedData(this.form.userName);
           let jm_password = this.encryptedData(this.form.password);
           let jm_ver = this.encryptedData(this.form.validateCode);
@@ -279,7 +285,7 @@ export default {
             publicKey: this.publicKey
           })
             .then(res => {
-                this.loginLoading = false
+              this.loginLoading = false;
               this.errorMsg = "";
               if (res === "init") {
                 this.modalFlag = true;
@@ -287,9 +293,9 @@ export default {
                 this.$router.push({ path: `/home` });
               }
             })
-            .catch((err) => {
-               this.loginLoading = false
-              
+            .catch(err => {
+              this.loginLoading = false;
+
               if (err[1] === "user") {
                 // 用户输入错误
                 this.errorMsg = err[0];
@@ -309,7 +315,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .error-msg {
-margin-top: -1rem;
+  margin-top: -1rem;
   height: 2rem;
   line-height: 2rem;
   width: 100%;

@@ -1,5 +1,5 @@
 <template>
-  <div class="h100 w100 upper" ref="rosewrap">
+  <div class=" w100 upper" ref="rosewrap">
     <chart-rose-pie
       :option="option"
       :value="data"
@@ -15,7 +15,7 @@
 <script>
 // @ is an alias to /src
 import { ChartRosePie } from "_c/charts";
-import { RosePieOptionModel } from "_model/echarts/rose-pie.model";
+import { RosePieOptionModel } from "./modelOption";
 
 export default {
   name: "rose-chart",
@@ -85,7 +85,7 @@ export default {
   top: 0;
   &-inner {
     position: absolute;
-    top: 50%;
+    top: 55%;
     left: 45%;
     transform: translate(-50%, -50%);
     h3,
