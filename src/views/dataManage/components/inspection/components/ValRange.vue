@@ -263,7 +263,7 @@ export default {
         {
           title: "规则描述",
           key: "rulesName",
-          align: "center"
+          // align: "center"
         },
         {
           title: "默认启用",

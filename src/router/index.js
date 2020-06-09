@@ -333,6 +333,71 @@ const routes = [
             children: []
           },
         ]
+      },
+      {
+        path: '/modelConfig',
+        // name: 'pic',
+        component: () => import('../views/modelConfig'),
+        meta: {
+          title: '模型指标配置管理',
+          id: 'page_1_1'
+        },
+        children: [
+          {
+            path: '',
+            name: 'pic',
+            component: () => import('../views/modelConfig/components/firstview/index.vue'),
+            meta: {
+              title: '模型指标配置管理首页',
+              // id: 'page_1_1'
+            }
+          },
+          {
+            path: 'config',
+            name: 'config',
+            component: () => import('../views/modelConfig/components/config/Config.vue'),
+            meta: {
+              title: '指标配置',
+              id: 'page_3_1'
+            }
+          },
+          {
+            path: 'data',
+            name: 'data',
+            component: () => import('../views/modelConfig/components/data/Data.vue'),
+            meta: {
+              title: '数据管理',
+              id: 'page_3_2'
+            }
+          },
+          {
+            path: 'dict',
+            component: () => import('../views/modelConfig/components/dict/Dict.vue'),
+            meta: {
+              title: '字典管理',
+              id: 'page_3_3'
+            },
+            children: []
+          },
+          {
+            path: 'gpservice',
+            component: () => import('../views/modelConfig/components/gpservice/GPService.vue'),
+            meta: {
+              title: 'GP服务管理',
+              id: 'page_3_4'
+            },
+            children: []
+          },
+          {
+            path: 'model',
+            component: () => import('../views/modelConfig/components/model/Model.vue'),
+            meta: {
+              title: '模型服务管理',
+              id: 'page_3_5'
+            },
+            children: []
+          },
+        ]
       }
     ]
   },

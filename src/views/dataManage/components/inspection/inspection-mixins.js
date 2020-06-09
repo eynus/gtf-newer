@@ -106,6 +106,7 @@ const InspectionMixins = {
                             id: item.pkId,
                             ruleStatus: item.unCheck === "0" ? "启用" : "未启用",
                             ruleStatusCode: item.unCheck,
+                            path:item.dataPath&&item.dataPath.split(',')||[]
                         }
 
                         if (this.$route.query.id == 3) {

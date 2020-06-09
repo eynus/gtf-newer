@@ -116,7 +116,8 @@
                   <Select v-model="modalKeyFormItem.keyType" style="width:10.25rem">
                     <Option value="Char">Char</Option>
                     <Option value="Int">Int</Option>
-                    <Option value="String">String</Option>
+                    <Option value="VarChar">VarChar</Option>
+                    <Option value="Float">Float</Option>
                   </Select>
                 </FormItem>
                 <FormItem label="字段代码：" prop="keyCode">
@@ -276,7 +277,7 @@ export default {
         {
           title: "规则描述",
           key: "rulesName",
-          align: "center"
+          // align: "center"
         },
         {
           title: "默认启用",
@@ -489,10 +490,19 @@ export default {
         this.$Message.info("请添加字段");
         return;
       } else {
+        // !~!!!!!!!!
+        // let newData = {
+        //   dataPropDefine: this.modalForm.dataPropDefine,
+        //   path: this.modalForm.path
+        // };
         let newData = {
-          dataPropDefine: this.modalForm.dataPropDefine,
-          path: this.modalForm.path
-        };
+            FiledName: this.modalForm.dataPropDefine.name,
+            FiledCode: this.modalForm.dataPropDefine.code,
+            FiledType: this.modalForm.dataPropDefine.type,
+            DecimalLength: this.modalForm.dataPropDefine.length,
+            digit: this.modalForm.dataPropDefine.digit
+        }
+        this.modalForm.dataPropDefine
         let rulesNameConcat = `${this.modalForm.path[this.modalForm.path.length-1]}属性结构符合要求，包括数量、名称、类型、长度、小数位数均符合要求`
         // 请求addRules接口
         let postData ={
@@ -501,6 +511,7 @@ export default {
           dataName: this.activeRow.dataName,
           dsPkid: String(this.modalForm.pathChildNodeId),
           pkId: this.activeRow.id,
+          dataPath:this.modalForm.path.join(','),
           rdIdentify: JSON.stringify(newData),
           rulesCode: this.activeRow.rulesCode,
           rulesMlId: this.$route.query.id,
