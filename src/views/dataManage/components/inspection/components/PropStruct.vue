@@ -49,8 +49,8 @@
       :width="remToPx(45)"
     >
       <div slot="footer">
-        <Button @click="cancel">取消</Button>
         <Button type="primary" @click="ok">确定</Button>
+        <Button @click="cancel">取消</Button>
       </div>
       <div class="modal-item">
         <div class="title mb">规则适用对象</div>
@@ -112,6 +112,9 @@
                 <FormItem label="字段名称：" prop="keyName">
                   <Input v-model.trim="modalKeyFormItem.keyName" />
                 </FormItem>
+                <FormItem label="字段代码：" prop="keyCode">
+                  <Input v-model="modalKeyFormItem.keyCode" />
+                </FormItem>
                 <FormItem label="字段类型：" prop="keyType">
                   <Select v-model="modalKeyFormItem.keyType" style="width:10.25rem">
                     <Option value="Char">Char</Option>
@@ -120,20 +123,17 @@
                     <Option value="Float">Float</Option>
                   </Select>
                 </FormItem>
-                <FormItem label="字段代码：" prop="keyCode">
-                  <Input v-model="modalKeyFormItem.keyCode" />
+                <FormItem label="字段长度：" prop="keyLength">
+                  <Input v-model.trim="modalKeyFormItem.keyLength" />
                 </FormItem>
                 <FormItem label="小数位数：" prop="keyDigit">
                   <Input v-model.number="modalKeyFormItem.keyDigit" />
                 </FormItem>
-                <FormItem label="字段长度：" prop="keyLength">
-                  <Input v-model.trim="modalKeyFormItem.keyLength" />
-                </FormItem>
-                <FormItem>
-                  <Button type="primary" @click="handleKeySubmit">提交</Button>
-                  <Button style="margin-left: 8px" @click="handleKeyQuit">取消</Button>
-                </FormItem>
               </Form>
+              <div class="text-right divided">
+                <Button type="primary" @click="handleKeySubmit">提交</Button>
+                <Button style="margin-left: 8px" @click="handleKeyQuit">取消</Button>
+              </div>
             </div>
           </div>
         </div>
@@ -582,7 +582,15 @@ export default {
     }
   }
   .right-box {
-    padding-left: 32px;
+    border:1px solid rgba(0,0,0,0.1);
+    border-radius: 4px;
+    padding: 1.25rem ;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    .divided{
+      border-top:1px solid rgba(0,0,0,0.1);
+      padding-top: 1rem;
+    }
   }
 }
 </style>
