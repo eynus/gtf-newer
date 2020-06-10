@@ -564,10 +564,10 @@ export default {
       this.clearPathAndKeys();
     },
     handleKeyTypechange(e) {
-      console.log(e);
-      // if(e==='Int'){
-      //   this.
-      // }
+      // console.log(e);
+      if (e !== "Float") {
+        this.modalKeyFormItem.keyDigit = "";
+      }
     }
   }
 };

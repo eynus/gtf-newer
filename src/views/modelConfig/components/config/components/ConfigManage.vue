@@ -7,7 +7,13 @@
     <card-title icon="iconfont  icon-type" title="指标配置"></card-title>
 
     <div class="flex mt">
-      <Input search enter-button="搜索" v-model="inputVal" placeholder="Enter something..." style="width:400px" />
+      <Input
+        search
+        enter-button="搜索"
+        v-model="inputVal"
+        placeholder="Enter something..."
+        style="width:400px"
+      />
       <Button v-auth="['page_3_1_1']" type="primary" @click="handleAdd" class="btn-margin">添加指标</Button>
       <Button v-auth="['page_3_1_2']" type="primary" @click="handleUpdate" class="btn-margin">修改指标</Button>
       <Button v-auth="['page_3_1-3']" type="primary" @click="handleDelete" class="btn-margin">删除指标</Button>
@@ -78,7 +84,7 @@ export default {
   },
   data() {
     return {
-      inputVal:'',
+      inputVal: "",
       addModalData: {
         id: 0,
         class: "",
@@ -96,10 +102,23 @@ export default {
       startedArr: [], //已启用集合
       isRuleUpdate: false,
       selectedRowIds: [],
-
       modalFlag: false,
       tableLoading: false,
       delModalFlag: false,
+      fitRangeList: [
+        { id: 0, name: "全域" },
+        { id: 1, name: "城区" }
+      ],
+      typeList: [
+        { id: 0, name: "约束性" },
+        { id: 1, name: "预期性" }
+      ],
+      unitList: [
+        { id: 0, name: "平方千米(km²)" },
+        { id: 1, name: "百分比(%)" },
+        { id: 2, name: "平方米(㎡)" },
+        { id: 3, name: "亩" }
+      ],
       statusList: [
         { name: "正常", id: "0" },
         { name: "停止", id: "1" }
@@ -239,7 +258,7 @@ export default {
     getData() {
       getListPage({
         pageNum: this.page.current,
-        pageSize:  this.page.pageSize,
+        pageSize: this.page.pageSize,
         queryTerms: {
           pkZbflId: this.selectedId,
           zbmxName: this.inputVal
@@ -247,26 +266,25 @@ export default {
       }).then(res => {
         const { code, data } = res.data;
         if (code === 1000) {
-           this.page.total = data.total;
+          this.page.total = data.total;
           if (data.records.length) {
             data.records.forEach(it2 => {
               this.dataPutIn.push({
-                ...it2,
-                name: it2.serviceName,
-                code: "-",
-                unit: this.statusList.find(it => it.id === it2.serviceStatus)
-                  .name,
-                class: "-",
-                valrange: "-",
-                max: "-",
-                fitrange: "-",
+                // ...it2,
+                name: it2.zbmxName,
+                code: it2.zbmxCode,
+                unit: this.unitList.find(it => it.id === it2.zbmxZbdw).name,
+                class: it2.pkZbflId,
+                valrange: it2.zbmxZyfw,
+                max: it2.zbmxYz,
+                fitrange: this.fitRangeList.find(it => it.id === it2.zbmxZbfw).name,
                 type:
                   (it2.dataType &&
-                    this.typeList.find(it => it.typeId === it2.dataType)
+                    this.typeList.find(it => it.id === it2.zbmxType)
                       .typeName) ||
                   "-",
-                source: format(it2.releaseTime, "yyyy-MM-dd hh:mm:ss"),
-                content: it2.serviceDesc,
+                source: it2.zbmxZbly,
+                content: it2.zbmxZbhy,
                 id: it2.pkId
               });
               if (it2.serviceStatus === "0") {
