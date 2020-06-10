@@ -63,24 +63,18 @@ import { remToPx } from "@/utils/common";
 import { format, subMonths } from "date-fns";
 import MyDelete from "_c/delete";
 import ConfigManageAddModal from "./ConfigManageAddModal";
-import {
-  getFWListPage,
-  getListById,
-  delFw,
-  updateOver,
-  updateStart
-} from "@/api/dataManage/service";
 import { getListPage } from "@/api/modelConfig/config";
 
 export default {
   name: "configManage",
   props: {
-    selectedId: Number
+    selectedId: Number,
+    selectedName: String,
   },
   computed: {
-    selectedId() {
-      return selectedId;
-    }
+    // selectedId() {
+    //   return selectedId;
+    // }
   },
   data() {
     return {
@@ -123,25 +117,7 @@ export default {
         { name: "正常", id: "0" },
         { name: "停止", id: "1" }
       ],
-      // typeList: [
-      //   {
-      //     typeId: "0",
-      //     typeName: "矢量"
-      //   },
-      //   {
-      //     typeId: "1",
-      //     typeName: "栅格"
-      //   },
-      //   {
-      //     typeId: "2",
-      //     typeName: "表格"
-      //   },
-      //   {
-      //     typeId: "3",
-      //     typeName: "其他"
-      //   }
-      // ],
-
+   
       formInline: {
         serviceName: "",
         date: [
@@ -181,7 +157,7 @@ export default {
         },
         {
           title: "指标单位",
-          key: "unit",
+          key: "unitName",
           align: "center"
           // width: remToPx(8)
         },
@@ -193,13 +169,13 @@ export default {
         },
         {
           title: "指标类型",
-          key: "type",
+          key: "typeName",
           align: "center"
           // width: remToPx(8)
         },
         {
           title: "适用范围",
-          key: "fitrange",
+          key: "fitrangeName",
           align: "center"
           // width: remToPx(8)
         },
@@ -245,7 +221,7 @@ export default {
       //重新請求数据 不为空则代表选择了模块
       if (newVal) {
         this.page.current = 1;
-        this.getListById(newVal);
+        this.getData(newVal);
       }
     }
   },
@@ -268,25 +244,27 @@ export default {
         if (code === 1000) {
           this.page.total = data.total;
           if (data.records.length) {
-            console.log(this.unitList, data.records[0].zbmxZbdw);
-            console.log(this.typeList, data.records[0].zbmxType);
-
             data.records.forEach(it2 => {
               this.dataPutIn.push({
                 // ...it2,
                 name: it2.zbmxName,
                 code: it2.zbmxCode,
-                unit: this.unitList.find(it => it.id === Number(it2.zbmxZbdw))
-                  .name,
+                unit: Number(it2.zbmxZbdw),
+                unitName: this.unitList.find(
+                  it => it.id === Number(it2.zbmxZbdw)
+                ).name,
                 class: it2.pkZbflId,
-                classname:it2.pkZbflName,
+                classname: it2.pkZbflName,
                 valrange: it2.zbmxZyfw,
                 max: it2.zbmxYz,
-                fitrange: this.fitRangeList.find(
+                fitrange: Number(it2.zbmxZbfw),
+                fitrangeName: this.fitRangeList.find(
                   it => it.id === Number(it2.zbmxZbfw)
                 ).name,
-                type: this.typeList.find(it => it.id === Number(it2.zbmxType))
-                  .name,
+                type: Number(it2.zbmxType),
+                typeName: this.typeList.find(
+                  it => it.id === Number(it2.zbmxType)
+                ).name,
                 source: it2.zbmxZbly,
                 content: it2.zbmxZbhy,
                 id: it2.pkId
@@ -303,152 +281,18 @@ export default {
         }
       });
     },
-    // 分页查询模块服务列表
-    getListById(id) {
-      let postData = {
-        identification: id,
-        serviceName: this.formInline.serviceName,
-        serviceStatus: this.formInline.serviceStatus
-          ? this.formInline.serviceStatus
-          : "",
-        startTime: this.formInline.date[0],
-        endTime: this.formInline.date[1],
-        pageNum: this.page.current,
-        pageSize: this.page.pageSize,
-        pkId: "",
-        createdBy: "",
-        serviceDesc: "",
-        createdTime: "",
-        releaseTime: "",
-        rkId: "",
-        updatedBy: "",
-        updatedTime: "",
-        validity: ""
-      };
-
-      getListById(postData).then(res => {
-        const { data, code } = res.data;
-        this.dataPutIn = [];
-        this.unstartedArr = [];
-        this.startedArr = [];
-        this.tableLoading = false;
-        if (code === 1000) {
-          this.page.total = data.total;
-          if (data.list.length) {
-            console.log(it2, "it2");
-
-            data.list.forEach(it2 => {
-              this.dataPutIn.push({
-                ...it2,
-                name: it2.serviceName,
-                code: "-",
-                unit: this.statusList.find(it => it.id === it2.serviceStatus)
-                  .name,
-                class: "-",
-                valrange: "-",
-                max: "-",
-                fitrange: "-",
-                type:
-                  (it2.dataType &&
-                    this.typeList.find(it => it.typeId === it2.dataType)
-                      .typeName) ||
-                  "-",
-                source: format(it2.releaseTime, "yyyy-MM-dd hh:mm:ss"),
-                content: it2.serviceDesc,
-                id: it2.pkId
-              });
-              if (it2.serviceStatus === "0") {
-                this.startedArr.push(it2.pkId + "");
-              } else {
-                this.unstartedArr.push(it2.pkId + "");
-              }
-            });
-            // }
-          } else {
-            this.dataPutIn = [];
-          }
-        }
-      });
-    },
-    //分页查询服务列表
-    getFWListPage() {
-      this.tableLoading = true;
-      let postData = {
-        serviceName: this.formInline.serviceName,
-        serviceStatus: this.formInline.serviceStatus
-          ? this.formInline.serviceStatus
-          : "",
-        startTime: this.formInline.date[0],
-        endTime: this.formInline.date[1],
-        pageNum: this.page.current,
-        pageSize: this.page.pageSize,
-        pkId: 0,
-        identification: 0,
-        createdBy: "",
-        serviceDesc: "",
-        createdTime: "",
-        releaseTime: "",
-        rkId: "",
-        updatedBy: "",
-        updatedTime: "",
-        validity: ""
-      };
-
-      getFWListPage(postData).then(res => {
-        const { data, code } = res.data;
-        this.dataPutIn = [];
-        this.unstartedArr = [];
-        this.startedArr = [];
-        this.tableLoading = false;
-        if (code === 1000) {
-          this.page.total = data.total;
-          if (data.list.length) {
-            data.list.forEach(it2 => {
-              this.dataPutIn.push({
-                ...it2,
-                name: it2.serviceName,
-                code: "-",
-                unit: this.statusList.find(it => it.id === it2.serviceStatus)
-                  .name,
-                class: "-",
-                valrange: "-",
-                max: "-",
-                fitrange: "-",
-                type:
-                  (it2.dataType &&
-                    this.typeList.find(it => it.typeId === it2.dataType)
-                      .typeName) ||
-                  "-",
-                source: format(it2.releaseTime, "yyyy-MM-dd hh:mm:ss"),
-                content: it2.serviceDesc,
-                id: it2.pkId
-              });
-              if (it2.serviceStatus === "0") {
-                this.startedArr.push(it2.pkId + "");
-              } else {
-                this.unstartedArr.push(it2.pkId + "");
-              }
-            });
-          } else {
-            this.dataPutIn = [];
-          }
-        }
-      });
-    },
+  
     // 点击查询按钮
     handleSubmit() {
       this.page.current = 1;
-      this.getFWListPage();
+      this.getData();
     },
 
     //切换页数
     changePage(index) {
       this.page.current = index;
-      if (this.selectedId) {
-        this.getListById(this.selectedId);
-      } else {
-        this.getFWListPage();
-      }
+   
+        this.getData();
     },
     //选择日期变化
     handleDateChange(e) {
@@ -459,6 +303,7 @@ export default {
       this.addModalData = {
         id: this.selectedId,
         class: this.selectedId,
+        classname: this.selectedName,
         code: "A1",
         name: "",
         unit: 0,
@@ -473,36 +318,15 @@ export default {
     },
     // 修改规则
     handleUpdate() {
-      this.addModalData = {
-        id: this.selectedId,
-        class: this.selectedId,
-        code: "A1",
-        name: "33",
-        unit: 0,
-        fitrange: 0,
-        type: 0,
-        valrange: "77",
-        source: "88",
-        content: "99"
-      };
       // 判断是否只选了一个
       if (this.selectedRowIds.length) {
         if (this.selectedRowIds.length === 1) {
           this.modalFlag = true;
           this.addModalType = "update";
-          // this.isRuleUpdate = true;
-          // this.modalFlag = true;
-          // this.activeRow = this.tableData.find(
-          //   item => String(item.pkId) === this.selectedRowIds[0]
-          // );
-          // this.$set(this.modalForm, "pathChildNodeId", this.activeRow.id);
-          // let rdIdentify = JSON.parse(this.activeRow.rdIdentify);
-          // this.$set(
-          //   this.modalForm,
-          //   "dataPropDefine",
-          //   rdIdentify.dataPropDefine
-          // );
-          // this.$set(this.modalForm, "path", rdIdentify.path);
+          this.addModalData = this.dataPutIn.find(
+            item => String(item.id) === this.selectedRowIds[0]
+          );
+          
         } else {
           this.$Message.info("修改操作只针对单个规则！请重新选择。");
         }
@@ -512,15 +336,15 @@ export default {
     },
     // 确认删除
     confirmDel() {
-      delFw({ ids: this.selectedRowIds.join(",") }).then(res => {
-        const { data, code } = res.data;
-        if (code === 1000) {
-          this.delModalFlag = false;
-          this.$Message.info("删除成功");
-          this.selectedRowIds = [];
-          this.getFWListPage();
-        }
-      });
+      // delFw({ ids: this.selectedRowIds.join(",") }).then(res => {
+      //   const { data, code } = res.data;
+      //   if (code === 1000) {
+      //     this.delModalFlag = false;
+      //     this.$Message.info("删除成功");
+      //     this.selectedRowIds = [];
+      //     this.getData();
+      //   }
+      // });
     },
     // 点击删除按钮
     handleDelete() {

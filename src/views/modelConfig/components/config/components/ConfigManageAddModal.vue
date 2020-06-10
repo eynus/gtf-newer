@@ -13,7 +13,7 @@
         inline
       >
         <FormItem label="指标分类：">
-          <Input disabled v-model.trim="modalKeyFormItem.class" />
+          <Input disabled v-model.trim="modalKeyFormItem.classname" />
         </FormItem>
         <FormItem label="指标代码：">
           <Input disabled v-model.trim="modalKeyFormItem.code" />

@@ -38,21 +38,21 @@
 <script>
 import { getTreeList, getYear } from "@/api/modelConfig/config";
 const dataList = [];
-const generateList = data => {
-  for (let i = 0; i < data.length; i++) {
-    const node = data[i];
-    const key = node.key;
-    dataList.push({
-      key,
-      title: node.title,
-      childs: node.childs
-    });
+// const generateList = data => {
+//   for (let i = 0; i < data.length; i++) {
+//     const node = data[i];
+//     const key = node.key;
+//     dataList.push({
+//       key,
+//       title: node.title,
+//       childs: node.childs
+//     });
 
-    if (node.childs) {
-      generateList(node.childs);
-    }
-  }
-};
+//     if (node.childs) {
+//       generateList(node.childs);
+//     }
+//   }
+// };
 
 const getParentKey = (key, tree) => {
   let parentKey;
@@ -119,7 +119,10 @@ export default {
         const { data, code } = res.data;
         if (code === 1000) {
           this.gData = handleRawData(data);
-          generateList(this.gData);
+          // generateList(this.gDatathis.gData);
+          // console.log(this.gData,dataList);
+          
+          this.$emit('handleTreeList',this.gData)
         }
       });
     },
@@ -144,22 +147,7 @@ export default {
       this.expandedKeys = expandedKeys;
       this.autoExpandParent = false;
     }
-    // onChange(e) {
-    //   const value = e.target.value;
-    //   const expandedKeys = dataList
-    //     .map(item => {
-    //       if (item.title.indexOf(value) > -1) {
-    //         return getParentKey(item.key, this.gData);
-    //       }
-    //       return null;
-    //     })
-    //     .filter((item, i, self) => item && self.indexOf(item) === i);
-    //   Object.assign(this, {
-    //     expandedKeys,
-    //     searchValue: value,
-    //     autoExpandParent: true
-    //   });
-    // }
+   
   }
 };
 </script>

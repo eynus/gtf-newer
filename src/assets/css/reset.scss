@@ -31,6 +31,12 @@
   .ivu-table-tip {
     overflow-x: hidden !important;
   }
+//   下拉框高度
+  .ivu-select-dropdown{
+    ol, ul, dl{
+        margin-bottom: 0;
+    }
+}
   /* menu */
   .ivu-menu{
       color: $text-title;

@@ -4,12 +4,17 @@
       <i-col span="4" class="h100 zt-scroll-y bg-white">
         <div class="pd h100">
           <card-title title="指标分类"></card-title>
-          <my-config-tree :gData="gData" @handleSelect="handleSelect" type="service"></my-config-tree>
+          <my-config-tree
+            :gData="gData"
+            @handleSelect="handleSelect"
+            type="service"
+            @handleTreeList="handleTreeList"
+          ></my-config-tree>
         </div>
       </i-col>
       <i-col span="20 bg-white h100">
         <div class="pd">
-          <config-manage :selectedId="selectedId"></config-manage>
+          <config-manage :selectedId="selectedId" :selectedName="selectedName"></config-manage>
         </div>
       </i-col>
     </Row>
@@ -41,10 +46,11 @@ export default {
   name: "Home",
   data() {
     return {
-   
       buttonSize: "large",
       gData: [],
-      selectedId: 2
+      selectedId: 2,
+      TreeFlatList: [],
+      selectedName: "基本指标"
     };
   },
   created() {
@@ -64,6 +70,31 @@ export default {
     },
     handleSelect(e) {
       this.selectedId = e;
+      console.log(this.selectedId, this.TreeFlatList);
+
+      this.selectedName = this.TreeFlatList.find(
+        item => item.key === this.selectedId
+      ).title;
+    },
+    handleTreeList(e) {
+      console.log("e0", e);
+      // this.TreeFlatList = e;
+      this.getFlattenList(e)
+      
+    },
+    getFlattenList(data) {
+      for (let i = 0; i < data.length; i++) {
+        const node = data[i];
+        const key = node.key;
+        this.TreeFlatList.push({
+          key,
+          title: node.title,
+        });
+
+        if (node.children) {
+          this.getFlattenList(node.children);
+        }
+      }
     }
   }
 };
