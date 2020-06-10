@@ -11,8 +11,9 @@
         search
         enter-button="搜索"
         v-model="inputVal"
-        placeholder="Enter something..."
+        placeholder="输入指标名称进行搜索"
         style="width:400px"
+        @on-search="handleSearch"
       />
       <Button v-auth="['page_3_1_1']" type="primary" @click="handleAdd" class="btn-margin">添加指标</Button>
       <Button v-auth="['page_3_1_2']" type="primary" @click="handleUpdate" class="btn-margin">修改指标</Button>
@@ -63,13 +64,13 @@ import { remToPx } from "@/utils/common";
 import { format, subMonths } from "date-fns";
 import MyDelete from "_c/delete";
 import ConfigManageAddModal from "./ConfigManageAddModal";
-import { getListPage } from "@/api/modelConfig/config";
+import { getListPage, deleteZB } from "@/api/modelConfig/config";
 
 export default {
   name: "configManage",
   props: {
     selectedId: Number,
-    selectedName: String,
+    selectedName: String
   },
   computed: {
     // selectedId() {
@@ -87,7 +88,7 @@ export default {
         unit: "",
         fitrange: "",
         type: "",
-        valrange: "",
+        valrange: ["", ""],
         source: "",
         content: ""
       },
@@ -117,7 +118,7 @@ export default {
         { name: "正常", id: "0" },
         { name: "停止", id: "1" }
       ],
-   
+
       formInline: {
         serviceName: "",
         date: [
@@ -132,13 +133,13 @@ export default {
           type: "selection",
           key: "time",
           align: "center",
-          width: remToPx(5)
+          width: remToPx(4)
         },
         {
           type: "index",
           // key: "",
-          align: "center"
-          // width: remToPx(18)
+          align: "center",
+          width: remToPx(4)
         },
 
         {
@@ -255,7 +256,7 @@ export default {
                 ).name,
                 class: it2.pkZbflId,
                 classname: it2.pkZbflName,
-                valrange: it2.zbmxZyfw,
+                valrange: it2.zbmxZyfw.split("~"),
                 max: it2.zbmxYz,
                 fitrange: Number(it2.zbmxZbfw),
                 fitrangeName: this.fitRangeList.find(
@@ -281,7 +282,13 @@ export default {
         }
       });
     },
-  
+    // 点击查询
+    handleSearch() {
+      console.log("click");
+
+      this.page.current = 1;
+      this.getData();
+    },
     // 点击查询按钮
     handleSubmit() {
       this.page.current = 1;
@@ -291,8 +298,8 @@ export default {
     //切换页数
     changePage(index) {
       this.page.current = index;
-   
-        this.getData();
+
+      this.getData();
     },
     //选择日期变化
     handleDateChange(e) {
@@ -309,7 +316,7 @@ export default {
         unit: 0,
         fitrange: 0,
         type: 0,
-        valrange: "",
+        valrange: ["", ""],
         source: "",
         content: ""
       };
@@ -326,7 +333,6 @@ export default {
           this.addModalData = this.dataPutIn.find(
             item => String(item.id) === this.selectedRowIds[0]
           );
-          
         } else {
           this.$Message.info("修改操作只针对单个规则！请重新选择。");
         }
@@ -336,22 +342,28 @@ export default {
     },
     // 确认删除
     confirmDel() {
-      // delFw({ ids: this.selectedRowIds.join(",") }).then(res => {
-      //   const { data, code } = res.data;
-      //   if (code === 1000) {
-      //     this.delModalFlag = false;
-      //     this.$Message.info("删除成功");
-      //     this.selectedRowIds = [];
-      //     this.getData();
-      //   }
-      // });
+      // 判断是否只选了一个
+
+      deleteZB({ pkid: this.selectedRowIds[0] }).then(res => {
+        const { data, code } = res.data;
+        if (code === 1000) {
+          this.delModalFlag = false;
+          this.$Message.info("删除成功");
+          this.selectedRowIds = [];
+          this.getData();
+        }
+      });
     },
     // 点击删除按钮
     handleDelete() {
       if (this.selectedRowIds.length) {
-        this.delModalFlag = true;
+        if (this.selectedRowIds.length === 1) {
+          this.delModalFlag = true;
+        }else{
+            this.$Message.warning("删除操作只针对单个规则！请重新选择。");
+        }
       } else {
-        this.$Message.info("请选择服务");
+        this.$Message.warning("请选择服务");
       }
     },
     // 选择某一行

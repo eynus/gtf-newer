@@ -5,68 +5,92 @@
         <Button type="primary" @click="ok">确定</Button>
         <Button @click="cancel">取消</Button>
       </div>
-      <Form
-        :model="modalKeyFormItem"
-        ref="modalKeyFormItem"
-        :rules="modalKeyFormRuleValidate"
-        :label-width="remToPx(7.5)"
-        inline
-      >
-        <FormItem label="指标分类：">
-          <Input disabled v-model.trim="modalKeyFormItem.classname" />
-        </FormItem>
-        <FormItem label="指标代码：">
-          <Input disabled v-model.trim="modalKeyFormItem.code" />
-        </FormItem>
-        <FormItem label="指标名称：" prop="name">
-          <Input v-model.trim="modalKeyFormItem.name" />
-        </FormItem>
-        <FormItem label="指标单位：" prop="unit">
-          <Select v-model="modalKeyFormItem.unit" style="width:10.25rem">
-            <Option
-              :value="item.id"
-              v-for="(item,index) in unitList"
-              :key="`unit_${index}`"
-            >{{item.name}}</Option>
-          </Select>
-        </FormItem>
-        <FormItem label="适用范围：" prop="fitrange">
-          <Select v-model="modalKeyFormItem.fitrange" style="width:10.25rem">
-            <Option
-              :value="item.id"
-              v-for="(item,index) in fitRangeList"
-              :key="`fitr_${index}`"
-            >{{item.name}}</Option>
-          </Select>
-        </FormItem>
-        <FormItem label="指标类型：" prop="type">
-          <Select v-model="modalKeyFormItem.type" style="width:10.25rem">
-            <Option
-              :value="item.id"
-              v-for="(item,index) in typeList"
-              :key="`fitr_${index}`"
-            >{{item.name}}</Option>
-          </Select>
-        </FormItem>
-        <FormItem label="值域范围：" prop="valrange">
-          <Input v-model="modalKeyFormItem.valrange" />
-        </FormItem>
-        <FormItem label="指标来源：" prop="source">
-          <Input v-model="modalKeyFormItem.source" />
-        </FormItem>
-        <FormItem label="指标阈值：" prop="max">
-          <Input v-model="modalKeyFormItem.max" />
-        </FormItem>
-        <FormItem label="指标涵义：" prop="content">
-          <Input type="textarea" v-model="modalKeyFormItem.content" />
-        </FormItem>
-      </Form>
+      <Row>
+        <Form
+          :model="modalKeyFormItem"
+          ref="modalKeyFormItem"
+          :rules="modalKeyFormRuleValidate"
+          :label-width="remToPx(7.5)"
+          inline
+        >
+          <i-col span="12">
+            <FormItem label="指标分类：">
+              <Input disabled v-model.trim="modalKeyFormItem.classname" />
+            </FormItem>
+          </i-col>
+          <i-col span="12">
+            <FormItem label="指标代码：">
+              <Input disabled v-model.trim="modalKeyFormItem.code" />
+            </FormItem>
+          </i-col>
+          <i-col span="12">
+            <FormItem label="指标名称：" prop="name">
+              <Input v-model.trim="modalKeyFormItem.name" />
+            </FormItem>
+          </i-col>
+          <i-col span="12">
+            <FormItem label="指标单位：" prop="unit">
+              <Select v-model="modalKeyFormItem.unit" style="width:10.25rem">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in unitList"
+                  :key="`unit_${index}`"
+                >{{item.name}}</Option>
+              </Select>
+            </FormItem>
+          </i-col>
+          <i-col span="12">
+            <FormItem label="适用范围：" prop="fitrange">
+              <Select v-model="modalKeyFormItem.fitrange" style="width:10.25rem">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in fitRangeList"
+                  :key="`fitr_${index}`"
+                >{{item.name}}</Option>
+              </Select>
+            </FormItem>
+          </i-col>
+          <i-col span="12">
+            <FormItem label="指标类型：" prop="type">
+              <Select v-model="modalKeyFormItem.type" style="width:10.25rem">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in typeList"
+                  :key="`fitr_${index}`"
+                >{{item.name}}</Option>
+              </Select>
+            </FormItem>
+          </i-col>
+          <i-col span="12">
+            <FormItem label="值域范围：" prop="valrange">
+              <!-- <Input v-model="modalKeyFormItem.valrange" /> -->
+              <InputNumber :max="100" :min="1" v-model="modalKeyFormItem.valrange[0]"></InputNumber>-
+              <InputNumber :max="100" :min="1" v-model="modalKeyFormItem.valrange[1]"></InputNumber>
+            </FormItem>
+          </i-col>
+          <i-col span="12">
+            <FormItem label="指标来源：" prop="source">
+              <Input v-model="modalKeyFormItem.source" />
+            </FormItem>
+          </i-col>
+          <i-col span="12">
+            <FormItem label="指标阈值：" prop="max">
+              <InputNumber v-model="modalKeyFormItem.max" />
+            </FormItem>
+          </i-col>
+          <i-col span="24">
+            <FormItem label="指标涵义：" prop="content">
+              <Input type="textarea" v-model="modalKeyFormItem.content" style="width:30rem" />
+            </FormItem>
+          </i-col>
+        </Form>
+      </Row>
     </Modal>
   </div>
 </template>
 <script>
 import { remToPx } from "@/utils/common";
-import { insertZB } from "@/api/modelConfig/config";
+import { insertZB,updateZB } from "@/api/modelConfig/config";
 export default {
   name: "add-modal",
   props: {
@@ -83,7 +107,7 @@ export default {
           unit: "",
           fitrange: "",
           type: "",
-          valrange: "",
+          valrange: ["", ""],
           source: "",
           content: ""
         };
@@ -155,11 +179,11 @@ export default {
           }
         ],
         valrange: [
-          {
-            required: true,
-            message: "值域范围不能为空",
-            trigger: "blur"
-          }
+          // {
+          //   required: true,
+          //   message: "值域范围不能为空",
+          //   trigger: "blur"
+          // }
         ],
         source: [
           //   {
@@ -190,7 +214,7 @@ export default {
         unit: "",
         fitrange: "",
         type: "",
-        valrange: "",
+        valrange: ["", ""],
         source: "",
         content: ""
       }
@@ -224,17 +248,29 @@ export default {
             zbmxZbfw: this.modalKeyFormItem.fitrange,
             zbmxZbhy: this.modalKeyFormItem.content,
             zbmxZbly: this.modalKeyFormItem.source,
-            zbmxZyfw: this.modalKeyFormItem.valrange
+            zbmxZyfw: this.modalKeyFormItem.valrange.join("~")
           };
-          insertZB(postData).then(res => {
-            const { code, data } = res.data;
-            if (code === 1000) {
-              this.visible = false;
-              this.$Message.info('添加成功')
-              this.$emit("showModel", this.visible);
-              this.$emit("handleAdd");
-            }
-          });
+          if (this.type === "add") {
+            insertZB(postData).then(res => {
+              const { code, data } = res.data;
+              if (code === 1000) {
+                this.visible = false;
+                this.$Message.info("添加成功");
+                this.$emit("showModel", this.visible);
+                this.$emit("handleAdd");
+              }
+            });
+          } else {
+             updateZB(postData).then(res => {
+              const { code, data } = res.data;
+              if (code === 1000) {
+                this.visible = false;
+                this.$Message.info("修改成功");
+                this.$emit("showModel", this.visible);
+                this.$emit("handleAdd");
+              }
+            });
+          }
         }
       });
       // this.clearFormItem();
