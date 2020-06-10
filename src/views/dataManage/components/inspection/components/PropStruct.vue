@@ -82,7 +82,7 @@
             </FormItem>
           </Form>
         </div>
-        <div class="overflow-hidden">
+        <div class="overflow-hidden-x ">
           <div
             class="flex flex-nowrap transition"
             :style="{ width: `${remToPx(90)}px`,'margin-left':`${positionLeft}px `}"
@@ -116,7 +116,11 @@
                   <Input v-model="modalKeyFormItem.keyCode" />
                 </FormItem>
                 <FormItem label="字段类型：" prop="keyType">
-                  <Select v-model="modalKeyFormItem.keyType" style="width:10.25rem">
+                  <Select
+                    v-model="modalKeyFormItem.keyType"
+                    style="width:10.25rem"
+                    @on-change="handleKeyTypechange"
+                  >
                     <Option value="Char">Char</Option>
                     <Option value="Int">Int</Option>
                     <Option value="VarChar">VarChar</Option>
@@ -126,7 +130,7 @@
                 <FormItem label="字段长度：" prop="keyLength">
                   <Input v-model.trim="modalKeyFormItem.keyLength" />
                 </FormItem>
-                <FormItem label="小数位数：" prop="keyDigit">
+                <FormItem label="小数位数：" prop="keyDigit" v-if="modalKeyFormItem.keyType==='Int'">
                   <Input v-model.number="modalKeyFormItem.keyDigit" />
                 </FormItem>
               </Form>
@@ -554,6 +558,12 @@ export default {
       this.modalFlag = false;
       this.clearFormItem();
       this.clearPathAndKeys();
+    },
+    handleKeyTypechange(e) {
+      console.log(e);
+      // if(e==='Int'){
+      //   this.
+      // }
     }
   }
 };
@@ -582,13 +592,15 @@ export default {
     }
   }
   .right-box {
-    border:1px solid rgba(0,0,0,0.1);
+    min-height: 15rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 4px;
-    padding: 1.25rem ;
+    padding: 1.25rem;
     margin-left: 2rem;
     margin-right: 2rem;
-    .divided{
-      border-top:1px solid rgba(0,0,0,0.1);
+    .divided {
+      margin-top: 1.75rem;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
       padding-top: 1rem;
     }
   }
