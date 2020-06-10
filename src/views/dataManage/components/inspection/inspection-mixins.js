@@ -106,9 +106,10 @@ const InspectionMixins = {
                             id: item.pkId,
                             ruleStatus: item.unCheck === "0" ? "启用" : "未启用",
                             ruleStatusCode: item.unCheck,
-                            path:item.dataPath&&item.dataPath.split(',')||[]
+                            path: item.dataPath && item.dataPath.split(',') || [],
+                            rdIdentify : JSON.parse(item.rdIdentify)
                         }
-
+                        // 值域规范性处理
                         if (this.$route.query.id == 3) {
                             newData.rdIdentify = JSON.parse(item.rdIdentify) || { 'rulesFitObj': '' }
                             newData.rulesFitObj = newData.rdIdentify.rulesFitObj || '-'

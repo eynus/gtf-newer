@@ -425,8 +425,11 @@ export default {
           this.$set(this.modalForm, "pathChildNodeId", this.activeRow.id);
           this.modalForm = {
             ...this.modalForm,
-            ...this.activeRow.rdIdentify
+            ...this.activeRow.rdIdentify,
+            path:this.activeRow.path
           };
+          console.log('?',this.modalForm,this.activeRow);
+          
         } else {
           this.$Message.info("修改操作只针对单个规则！请重新选择。");
         }
