@@ -123,24 +123,24 @@ export default {
         { name: "正常", id: "0" },
         { name: "停止", id: "1" }
       ],
-      typeList: [
-        {
-          typeId: "0",
-          typeName: "矢量"
-        },
-        {
-          typeId: "1",
-          typeName: "栅格"
-        },
-        {
-          typeId: "2",
-          typeName: "表格"
-        },
-        {
-          typeId: "3",
-          typeName: "其他"
-        }
-      ],
+      // typeList: [
+      //   {
+      //     typeId: "0",
+      //     typeName: "矢量"
+      //   },
+      //   {
+      //     typeId: "1",
+      //     typeName: "栅格"
+      //   },
+      //   {
+      //     typeId: "2",
+      //     typeName: "表格"
+      //   },
+      //   {
+      //     typeId: "3",
+      //     typeName: "其他"
+      //   }
+      // ],
 
       formInline: {
         serviceName: "",
@@ -187,7 +187,7 @@ export default {
         },
         {
           title: "指标分类",
-          key: "class",
+          key: "classname",
           align: "center"
           // width: remToPx(8)
         },
@@ -268,21 +268,25 @@ export default {
         if (code === 1000) {
           this.page.total = data.total;
           if (data.records.length) {
+            console.log(this.unitList, data.records[0].zbmxZbdw);
+            console.log(this.typeList, data.records[0].zbmxType);
+
             data.records.forEach(it2 => {
               this.dataPutIn.push({
                 // ...it2,
                 name: it2.zbmxName,
                 code: it2.zbmxCode,
-                unit: this.unitList.find(it => it.id === it2.zbmxZbdw).name,
+                unit: this.unitList.find(it => it.id === Number(it2.zbmxZbdw))
+                  .name,
                 class: it2.pkZbflId,
+                classname:it2.pkZbflName,
                 valrange: it2.zbmxZyfw,
                 max: it2.zbmxYz,
-                fitrange: this.fitRangeList.find(it => it.id === it2.zbmxZbfw).name,
-                type:
-                  (it2.dataType &&
-                    this.typeList.find(it => it.id === it2.zbmxType)
-                      .typeName) ||
-                  "-",
+                fitrange: this.fitRangeList.find(
+                  it => it.id === Number(it2.zbmxZbfw)
+                ).name,
+                type: this.typeList.find(it => it.id === Number(it2.zbmxType))
+                  .name,
                 source: it2.zbmxZbly,
                 content: it2.zbmxZbhy,
                 id: it2.pkId

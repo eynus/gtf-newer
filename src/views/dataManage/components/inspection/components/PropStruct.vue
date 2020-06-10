@@ -231,18 +231,18 @@ export default {
           },
           {
             title: "字段名称",
-            key: "FiledName",
+            key: "FieldName",
             align: "center",
             width: remToPx(10)
           },
           {
             title: "字段代码",
-            key: "FiledCode",
+            key: "FieldCode",
             align: "center"
           },
           {
             title: "字段类型",
-            key: "FiledType",
+            key: "FieldType",
             align: "center"
           },
           {
@@ -355,9 +355,9 @@ export default {
           // 赋值
           this.modalKeyFormItem = {
             id: this.activeKeyRow.id,
-            keyName: this.activeKeyRow.FiledName,
-            keyType: this.activeKeyRow.FiledType,
-            keyCode: this.activeKeyRow.FiledCode,
+            keyName: this.activeKeyRow.FieldName,
+            keyType: this.activeKeyRow.FieldType,
+            keyCode: this.activeKeyRow.FieldCode,
             keyLength: this.activeKeyRow.FieldLength,
             keyDigit: this.activeKeyRow.DecimalLength
           };
@@ -447,24 +447,21 @@ export default {
             );
             this.$set(this.modalForm.dataPropDefine, targetIdx, {
               id: this.modalKeyFormItem.id,
-              FiledName: this.modalKeyFormItem.keyName,
-              FiledCode: this.modalKeyFormItem.keyCode,
-              FiledType: this.modalKeyFormItem.keyType,
+              FieldName: this.modalKeyFormItem.keyName,
+              FieldCode: this.modalKeyFormItem.keyCode,
+              FieldType: this.modalKeyFormItem.keyType,
               FieldLength: this.modalKeyFormItem.keyLength,
               DecimalLength: this.modalKeyFormItem.keyDigit
             });
 
-            console.log(
-              this.modalKeyFormItem,
-              this.modalForm.dataPropDefine[targetIdx]
-            );
+         
           } else {
             // 新增-插入
             this.modalForm.dataPropDefine.push({
               id: this.modalForm.dataPropDefine.length + 1,
-              FiledName: this.modalKeyFormItem.keyName,
-              FiledCode: this.modalKeyFormItem.keyCode,
-              FiledType: this.modalKeyFormItem.keyType,
+              FieldName: this.modalKeyFormItem.keyName,
+              FieldCode: this.modalKeyFormItem.keyCode,
+              FieldType: this.modalKeyFormItem.keyType,
               FieldLength: this.modalKeyFormItem.keyLength,
               DecimalLength: this.modalKeyFormItem.keyDigit
             });

@@ -44,7 +44,7 @@ export default {
    
       buttonSize: "large",
       gData: [],
-      selectedId: -1
+      selectedId: 2
     };
   },
   created() {

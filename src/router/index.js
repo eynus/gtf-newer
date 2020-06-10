@@ -270,7 +270,6 @@ const routes = [
       },
       {
         path: '/pic',
-        // name: 'pic',
         component: () => import('../views/picVisualization'),
         meta: {
           title: '一张图',
@@ -279,7 +278,7 @@ const routes = [
         children: [
           {
             path: '',
-            name: 'pic',
+            name: 'pic-firstview',
             component: () => import('../views/picVisualization/components/firstview/index.vue'),
             meta: {
               title: '一张图首页',
@@ -336,7 +335,6 @@ const routes = [
       },
       {
         path: '/modelConfig',
-        // name: 'pic',
         component: () => import('../views/modelConfig'),
         meta: {
           title: '模型指标配置管理',
@@ -345,7 +343,7 @@ const routes = [
         children: [
           {
             path: '',
-            name: 'pic',
+            name: 'model-firstview',
             component: () => import('../views/modelConfig/components/firstview/index.vue'),
             meta: {
               title: '模型指标配置管理首页',
@@ -363,7 +361,7 @@ const routes = [
           },
           {
             path: 'data',
-            name: 'data',
+            name: 'model-data',
             component: () => import('../views/modelConfig/components/data/Data.vue'),
             meta: {
               title: '数据管理',
