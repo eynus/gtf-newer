@@ -6,6 +6,9 @@
           <FormItem>
             <Button v-auth="['page_5_4_1']" type="success" @click="handleStartRule">默认启用</Button>
           </FormItem>
+            <FormItem>
+          <Button v-auth="['page_5_4_5']" type="primary" @click="handleStopRule">停止启用</Button>
+        </FormItem>
           <FormItem>
             <Button v-auth="['page_5_4_2']" type="info" @click="handleAddRule">添加规则</Button>
           </FormItem>
@@ -263,7 +266,7 @@ export default {
         {
           title: "规则描述",
           key: "rulesName",
-          align: "center"
+          // align: "center"
         },
         {
           title: "默认启用",
@@ -425,8 +428,11 @@ export default {
           this.$set(this.modalForm, "pathChildNodeId", this.activeRow.id);
           this.modalForm = {
             ...this.modalForm,
-            ...this.activeRow.rdIdentify
+            ...this.activeRow.rdIdentify,
+            path:this.activeRow.path
           };
+          console.log('?',this.modalForm,this.activeRow);
+          
         } else {
           this.$Message.info("修改操作只针对单个规则！请重新选择。");
         }

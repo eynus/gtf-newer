@@ -6,6 +6,9 @@
           <Button v-auth="['page_5_4_1']" type="success" @click="handleStartRule">默认启用</Button>
         </FormItem>
         <FormItem>
+          <Button v-auth="['page_5_4_5']" type="primary" @click="handleStopRule">停止启用</Button>
+        </FormItem>
+        <FormItem>
           <Button v-auth="['page_5_4_2']" type="info" @click="handleAddRule">添加规则</Button>
         </FormItem>
         <FormItem>
@@ -28,7 +31,7 @@
       @on-select-all-cancel="handleCancelRowAll"
     >
       <template slot="ruleStatusSlot" slot-scope="{row,index}">
-      <span :class="`${row.ruleStatus==='启用'?'text-blue':'text-normal'}`">{{row.ruleStatus}}</span>
+        <span :class="`${row.ruleStatus==='启用'?'text-blue':'text-normal'}`">{{row.ruleStatus}}</span>
       </template>
     </Table>
     <div class="text-right mr-lg mt">
@@ -49,8 +52,8 @@
       :width="remToPx(45)"
     >
       <div slot="footer">
-        <Button @click="cancel">取消</Button>
         <Button type="primary" @click="ok">确定</Button>
+        <Button @click="cancel">取消</Button>
       </div>
       <div class="modal-item">
         <div class="title mb">规则适用对象</div>
@@ -82,7 +85,7 @@
             </FormItem>
           </Form>
         </div>
-        <div class="overflow-hidden">
+        <div class="overflow-hidden-x zt-scroll-y">
           <div
             class="flex flex-nowrap transition"
             :style="{ width: `${remToPx(90)}px`,'margin-left':`${positionLeft}px `}"
@@ -112,27 +115,33 @@
                 <FormItem label="字段名称：" prop="keyName">
                   <Input v-model.trim="modalKeyFormItem.keyName" />
                 </FormItem>
-                <FormItem label="字段类型：" prop="keyType">
-                  <Select v-model="modalKeyFormItem.keyType" style="width:10.25rem">
-                    <Option value="Char">Char</Option>
-                    <Option value="Int">Int</Option>
-                    <Option value="String">String</Option>
-                  </Select>
-                </FormItem>
                 <FormItem label="字段代码：" prop="keyCode">
                   <Input v-model="modalKeyFormItem.keyCode" />
                 </FormItem>
-                <FormItem label="小数位数：" prop="keyDigit">
-                  <Input v-model.number="modalKeyFormItem.keyDigit" />
+                <FormItem label="字段类型：" prop="keyType">
+                  <Select
+                    v-model="modalKeyFormItem.keyType"
+                    style="width:10.25rem"
+                    @on-change="handleKeyTypechange"
+                  >
+                    <Option value="Char">Char</Option>
+                    <Option value="VarChar">VarChar</Option>
+                    <Option value="Int">Int</Option>
+                    <Option value="Float">Float</Option>
+                    <Option value="Date">Date</Option>
+                  </Select>
                 </FormItem>
                 <FormItem label="字段长度：" prop="keyLength">
                   <Input v-model.trim="modalKeyFormItem.keyLength" />
                 </FormItem>
-                <FormItem>
-                  <Button type="primary" @click="handleKeySubmit">提交</Button>
-                  <Button style="margin-left: 8px" @click="handleKeyQuit">取消</Button>
+                <FormItem label="小数位数：" prop="keyDigit" v-if="modalKeyFormItem.keyType==='Float'">
+                  <Input v-model.number="modalKeyFormItem.keyDigit" />
                 </FormItem>
               </Form>
+              <div class="text-right divided">
+                <Button type="primary" @click="handleKeySubmit">提交</Button>
+                <Button style="margin-left: 8px" @click="handleKeyQuit">取消</Button>
+              </div>
             </div>
           </div>
         </div>
@@ -222,28 +231,28 @@ export default {
           },
           {
             title: "字段名称",
-            key: "name",
+            key: "FieldName",
             align: "center",
             width: remToPx(10)
           },
           {
             title: "字段代码",
-            key: "code",
+            key: "FieldCode",
             align: "center"
           },
           {
             title: "字段类型",
-            key: "type",
+            key: "FieldType",
             align: "center"
           },
           {
             title: "字段长度",
-            key: "length",
+            key: "FieldLength",
             align: "center"
           },
           {
             title: "小数位数",
-            key: "digit",
+            key: "DecimalLength",
             align: "center"
           }
         ],
@@ -255,7 +264,6 @@ export default {
           //   length: 18,
           //   digit: ""
           // },
-
         ]
       },
       modalKeyFormItem: {
@@ -275,8 +283,8 @@ export default {
         },
         {
           title: "规则描述",
-          key: "rulesName",
-          align: "center"
+          key: "rulesName"
+          // align: "center"
         },
         {
           title: "默认启用",
@@ -302,15 +310,15 @@ export default {
           this.activeRow = this.tableData.find(
             item => String(item.pkId) === this.selectedRowIds[0]
           );
-          this.$set(this.modalForm,'pathChildNodeId',this.activeRow.id)
-          let rdIdentify = JSON.parse(this.activeRow.rdIdentify);
+          this.$set(this.modalForm, "pathChildNodeId", this.activeRow.id);
+          // let rdIdentify = JSON.parse(this.activeRow.rdIdentify);
+          console.log("?", this.activeRow);
           this.$set(
             this.modalForm,
             "dataPropDefine",
-            rdIdentify.dataPropDefine
+            this.activeRow.rdIdentify
           );
-          this.$set(this.modalForm, "path", rdIdentify.path);
-
+          this.$set(this.modalForm, "path", this.activeRow.path);
         } else {
           this.$Message.info("修改操作只针对单个规则！请重新选择。");
         }
@@ -347,14 +355,15 @@ export default {
           // 赋值
           this.modalKeyFormItem = {
             id: this.activeKeyRow.id,
-            keyName: this.activeKeyRow.name,
-            keyType: this.activeKeyRow.type,
-            keyCode: this.activeKeyRow.code,
-            keyLength: this.activeKeyRow.length,
-            keyDigit: this.activeKeyRow.digit
+            keyName: this.activeKeyRow.FieldName,
+            keyType: this.activeKeyRow.FieldType,
+            keyCode: this.activeKeyRow.FieldCode,
+            keyLength: this.activeKeyRow.FieldLength,
+            keyDigit: this.activeKeyRow.DecimalLength
           };
           this.isKeyFormUpdate = true;
         } else {
+          console.log(this.selectedKeyRowIds.length);
           this.$Message.info("修改操作只针对单个字段！请重新选择。");
         }
       } else {
@@ -389,7 +398,6 @@ export default {
     handlePathChange(a, b) {
       this.modalForm.path = a;
       this.modalForm.pathChildNodeId = b[b.length - 1].pkId;
-
     },
     //获取数据路径列表
     getPaths() {
@@ -399,7 +407,6 @@ export default {
           let raw = (data && data.data) || [];
           let result = handleRawData(raw);
           this.dataPaths = result;
-
         }
       });
     },
@@ -409,7 +416,7 @@ export default {
       this.selectedKeyRowIds.push(row.id + "");
     },
     handleSelectKeyRowAll(selection) {
-      this.selectedKeyRowIds = selection.map((item, index) => item.id);
+      this.selectedKeyRowIds = selection.map((item, index) => item.id + "");
     },
     handleCancelKeyRow(selection, row) {
       for (let i = 0; i < this.selectedKeyRowIds.length; i++) {
@@ -422,7 +429,7 @@ export default {
       this.selectedKeyRowIds = [];
     },
 
-    // 添加字段-提交
+    // 添加修改字段-提交
     handleKeySubmit() {
       this.$refs.modalKeyFormItem.validate(valid => {
         if (valid) {
@@ -440,21 +447,23 @@ export default {
             );
             this.$set(this.modalForm.dataPropDefine, targetIdx, {
               id: this.modalKeyFormItem.id,
-              name: this.modalKeyFormItem.keyName,
-              code: this.modalKeyFormItem.keyCode,
-              type: this.modalKeyFormItem.keyType,
-              length: this.modalKeyFormItem.keyLength,
-              digit: this.modalKeyFormItem.keyDigit
+              FieldName: this.modalKeyFormItem.keyName,
+              FieldCode: this.modalKeyFormItem.keyCode,
+              FieldType: this.modalKeyFormItem.keyType,
+              FieldLength: this.modalKeyFormItem.keyLength,
+              DecimalLength: this.modalKeyFormItem.keyDigit
             });
+
+         
           } else {
             // 新增-插入
             this.modalForm.dataPropDefine.push({
               id: this.modalForm.dataPropDefine.length + 1,
-              name: this.modalKeyFormItem.keyName,
-              code: this.modalKeyFormItem.keyCode,
-              type: this.modalKeyFormItem.keyType,
-              length: this.modalKeyFormItem.keyLength,
-              digit: this.modalKeyFormItem.keyDigit
+              FieldName: this.modalKeyFormItem.keyName,
+              FieldCode: this.modalKeyFormItem.keyCode,
+              FieldType: this.modalKeyFormItem.keyType,
+              FieldLength: this.modalKeyFormItem.keyLength,
+              DecimalLength: this.modalKeyFormItem.keyDigit
             });
           }
           this.clearFormItem();
@@ -472,6 +481,8 @@ export default {
       this.modalForm.dataPropDefine = this.modalForm.dataPropDefine.filter(
         item => this.selectedKeyRowIds.findIndex(it => it === item.id + "") < 0
       );
+      this.selectedKeyRowIds = []; //selectedKeyRowIds删除对应id
+
       this.$Message.info("删除成功！");
       // 删除规则
       this.delModalKeyFlag = false;
@@ -489,22 +500,24 @@ export default {
         this.$Message.info("请添加字段");
         return;
       } else {
-        let newData = {
-          dataPropDefine: this.modalForm.dataPropDefine,
-          path: this.modalForm.path
-        };
-        let rulesNameConcat = `${this.modalForm.path[this.modalForm.path.length-1]}属性结构符合要求，包括数量、名称、类型、长度、小数位数均符合要求`
+        console.log("??", this.modalForm.dataPropDefine);
+
+        // let newData = this.modalForm.dataPropDefine
+        let rulesNameConcat = `${
+          this.modalForm.path[this.modalForm.path.length - 1]
+        }属性结构符合要求，包括数量、名称、类型、长度、小数位数均符合要求`;
         // 请求addRules接口
-        let postData ={
+        let postData = {
           createdBy: this.activeRow.createdBy,
           createdTime: "",
           dataName: this.activeRow.dataName,
           dsPkid: String(this.modalForm.pathChildNodeId),
           pkId: this.activeRow.id,
-          rdIdentify: JSON.stringify(newData),
+          dataPath: this.modalForm.path.join(","),
+          rdIdentify: JSON.stringify(this.modalForm.dataPropDefine),
           rulesCode: this.activeRow.rulesCode,
           rulesMlId: this.$route.query.id,
-          rulesName: rulesNameConcat,//自己拼接
+          rulesName: rulesNameConcat, //自己拼接
           unCheck: this.activeRow.unCheck,
           unRead: this.activeRow.unRead,
           unUpdate: this.activeRow.unUpdate,
@@ -526,8 +539,6 @@ export default {
           this.clearFormItem();
           this.clearPathAndKeys();
         } else {
-
-
           addRules(postData).then(res => {
             const { data, code } = res.data;
             if (code === 1000) {
@@ -548,6 +559,12 @@ export default {
       this.modalFlag = false;
       this.clearFormItem();
       this.clearPathAndKeys();
+    },
+    handleKeyTypechange(e) {
+      // console.log(e);
+      if (e !== "Float") {
+        this.modalKeyFormItem.keyDigit = "";
+      }
     }
   }
 };
@@ -576,7 +593,18 @@ export default {
     }
   }
   .right-box {
-    padding-left: 32px;
+    min-height: 15rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 1.25rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    .divided {
+      margin-top: 1.75rem;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      padding-top: 1rem;
+    }
   }
 }
 </style>

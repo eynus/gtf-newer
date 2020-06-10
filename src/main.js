@@ -12,6 +12,7 @@ import * as _ from 'lodash'
 import ArcgisMap from '@/components/arcgis/ArcgisMap'
 import MyFooter from "@/components/MyFooter";
 import MySideBar from "@/components/mySideBar";
+import CardTitle from "@/components/cardTitle/CardTitle";
 import { Tree } from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import './assets/css/reset.scss'
@@ -27,6 +28,7 @@ Vue.use(Tree);
 Vue.component('ArcgisMap',ArcgisMap)
 Vue.component('MySideBar',MySideBar)
 Vue.component('MyFooter',MyFooter)
+Vue.component('CardTitle',CardTitle)
 new Vue({
   router,
   store,

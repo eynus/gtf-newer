@@ -38,6 +38,7 @@ module.exports = {
 
     // 这里写你调用接口的基础路径，来解决跨域，如果设置了代理，那你本地开发环境的axios的baseUrl要写为 '' ，即空字符串
     // devServer: {
+
     //   proxy: 'localhost:3000'
     // },
     devServer: {
@@ -46,7 +47,7 @@ module.exports = {
         proxy: {
             '/*': {
                 // target: 'http://192.168.6.30:9992/',
-                target: 'http://192.168.6.26:8081/',
+                target: 'http://192.168.6.26:9992/',
                 ws: false,
                 changeOrigin: true
             }

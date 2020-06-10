@@ -63,7 +63,7 @@ export default {
           to: "pic"
         },
         { name: "实施监督管理", color: "#F76110", show: false, to: "data" },
-        { name: "模型指标配置管理", color: "#F0B800", show: false, to: "data" },
+        { name: "模型指标配置管理", color: "#F0B800", show: false, to: "modelConfig" },
         {
           name: "数据管理",
           color: "#00C6FF",

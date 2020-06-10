@@ -51,7 +51,7 @@ export default {
         {
           title: "规则描述",
           key: "status",
-          align: "center"
+          // align: "center"
         },
         {
           title: "默认启用",
