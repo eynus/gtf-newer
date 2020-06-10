@@ -6,6 +6,9 @@
           <Button v-auth="['page_5_4_1']" type="success" @click="handleStartRule">默认启用</Button>
         </FormItem>
         <FormItem>
+          <Button v-auth="['page_5_4_5']" type="primary" @click="handleStopRule">停止启用</Button>
+        </FormItem>
+        <FormItem>
           <Button v-auth="['page_5_4_2']" type="info" @click="handleAddRule">添加规则</Button>
         </FormItem>
         <FormItem>
@@ -82,7 +85,7 @@
             </FormItem>
           </Form>
         </div>
-        <div class="overflow-hidden-x ">
+        <div class="overflow-hidden-x zt-scroll-y">
           <div
             class="flex flex-nowrap transition"
             :style="{ width: `${remToPx(90)}px`,'margin-left':`${positionLeft}px `}"
@@ -122,15 +125,16 @@
                     @on-change="handleKeyTypechange"
                   >
                     <Option value="Char">Char</Option>
-                    <Option value="Int">Int</Option>
                     <Option value="VarChar">VarChar</Option>
+                    <Option value="Int">Int</Option>
                     <Option value="Float">Float</Option>
+                    <Option value="Date">Date</Option>
                   </Select>
                 </FormItem>
                 <FormItem label="字段长度：" prop="keyLength">
                   <Input v-model.trim="modalKeyFormItem.keyLength" />
                 </FormItem>
-                <FormItem label="小数位数：" prop="keyDigit" v-if="modalKeyFormItem.keyType==='Int'">
+                <FormItem label="小数位数：" prop="keyDigit" v-if="modalKeyFormItem.keyType==='Float'">
                   <Input v-model.number="modalKeyFormItem.keyDigit" />
                 </FormItem>
               </Form>
@@ -593,7 +597,8 @@ export default {
   }
   .right-box {
     min-height: 15rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 4px;
     padding: 1.25rem;
     margin-left: 2rem;

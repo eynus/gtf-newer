@@ -91,7 +91,7 @@ export default {
     },
     // 退出登录
     handleLogOut({ commit }) {
-      return new Promise(resolve => {
+      return new Promise((resolve, reject)  => {
 
         loginOut()
           .then(res => {

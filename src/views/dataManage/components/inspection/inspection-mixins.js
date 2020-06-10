@@ -1,4 +1,4 @@
-import { getZJListPageById, startRules, deleteRules } from "@/api/dataManage/inspection";
+import { getZJListPageById, startRules, deleteRules, stopRules } from "@/api/dataManage/inspection";
 
 const InspectionMixins = {
     data() {
@@ -34,6 +34,8 @@ const InspectionMixins = {
         },
         // 确认启用
         handleStartRule() {
+            console.log('this.startedArr', this.startedArr);
+            console.log('this.unstartedArr', this.unstartedArr);
             if (this.selectedRowIds.length) {
                 if (_.intersection(this.selectedRowIds, this.startedArr).length) {
                     this.$Message.info("您选择的规则中包含已启用项！");
@@ -42,6 +44,26 @@ const InspectionMixins = {
                         const { data, code } = res.data;
                         if (code === 1000) {
                             this.$Message.info('启用成功！')
+                            this.getZJListPageById()
+                        }
+                    })
+                }
+            } else {
+                this.$Message.info("请选择规则");
+            }
+        },
+        // 确认停止启用
+        handleStopRule() {
+            console.log('this.startedArr', this.startedArr);
+            console.log('this.unstartedArr', this.unstartedArr);
+            if (this.selectedRowIds.length) {
+                if (_.intersection(this.selectedRowIds, this.unstartedArr).length) {
+                    this.$Message.info("您选择的规则中包含未启用项！");
+                } else {
+                    stopRules({ ids: this.selectedRowIds.join(',') }).then(res => {
+                        const { data, code } = res.data;
+                        if (code === 1000) {
+                            this.$Message.info('停止启用成功！')
                             this.getZJListPageById()
                         }
                     })
@@ -97,6 +119,8 @@ const InspectionMixins = {
             getZJListPageById(postData).then(res => {
                 this.tableData = []
                 this.selectedRowIds = []
+                this.startedArr=[]
+                this.unstartedArr=[]
                 const { data, code } = res.data;
                 if (code === 1000) {
                     this.page.total = data.total
@@ -107,8 +131,9 @@ const InspectionMixins = {
                             ruleStatus: item.unCheck === "0" ? "启用" : "未启用",
                             ruleStatusCode: item.unCheck,
                             path: item.dataPath && item.dataPath.split(',') || [],
-                            rdIdentify : JSON.parse(item.rdIdentify)
+                            rdIdentify: JSON.parse(item.rdIdentify)
                         }
+                        
                         // 值域规范性处理
                         if (this.$route.query.id == 3) {
                             newData.rdIdentify = JSON.parse(item.rdIdentify) || { 'rulesFitObj': '' }
