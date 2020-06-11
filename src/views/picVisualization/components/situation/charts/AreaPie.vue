@@ -22,19 +22,14 @@
     { value: 0, name: '重点面积', itemStyle: {  color: '#0b89fe' }},
     { value: 0, name: '限制面积', itemStyle: {  color: '#fe8e0b' }},
     { value: 0, name: '禁止面积', itemStyle: {  color: '#ff4d4f' }},
-    { value: 11287, name: '全市面积', itemStyle: { color: '#cfe7ff' }, tooltip: {show: false },},
+    { value: 0, name: '全市面积', itemStyle: { color: '#cfe7ff' }, tooltip: {show: false },},
   ]
   const v_color = ['#cff3e8', '#cfe7ff', '#ffe7cf', '#FDE2E2']
   export default {
     name: "AreaPie",
     props: {
-      dataTotal: {
-        type: Number,
-        default: 0
-      },
-      data: {
-        type: Object
-      }
+      town: Object,
+      data: Object
     },
     components: {
       ChartRosePie
@@ -79,8 +74,9 @@
                   show: true,
                   formatter: function (pargram) {
                     if (pargram.name === '全市面积') {
-                      return `${pargram.name}\n11287km²`
+                      return `${pargram.name}\n0km²`
                     }
+                    console.log(pargram)
                     return `${pargram.name}\n${pargram.value.value}km²`
                   },
                   position: 'outside',
@@ -107,13 +103,15 @@
       color() {
         return this.$store.state.color.pic_area
       },
+      // 半圆的数据处理
       value() {
+        this.total = this.town.area
         let key = this.data.key
         let check = item[key]
         check.value = this.data.value
         check.itemStyle.color = this.color[key]
 
-        this.percent = (check.value / 11287 * 100).toFixed(2)
+        this.percent = (check.value / this.total * 100).toFixed(2)
 
         let empty = { value:201, name:'_hidden', itemStyle: { opacity: 0 }, tooltip: {show: false }, label: { show: false }, labelLine: { show: false }}
 
@@ -122,18 +120,25 @@
 
         let sum = 0
         let data = [check, all]
-        // TODO 全市面积11287替换
-        data[1].value = 11287 - data[0].value
+        data[1].value = this.total - data[0].value
         data.map(item => sum += item.value)
         empty.value = sum
         data.push(empty)
-        // data[1].value = data[1].value - data[0].value
+
         return data
       }
     },
     created() {
       this.$nextTick(()=>{
         this.height=this.chartssize(this.$refs.rosewrap)
+        let total = this.town.area
+        // 更改配置中的全市面积显示
+        this.option.series[0].label.normal.formatter = function (param) {
+          if (param.name === '全市面积') {
+            return `${param.name}\n${total}km²`
+          }
+          return `${param.name}\n${param.value.value}km²`
+        }
       })
     },
     methods: {

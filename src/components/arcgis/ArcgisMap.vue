@@ -8,7 +8,7 @@
         <Button
           :type="type=='point'?'primary':'default'"
           @click="clickToolbar('point')"
-          style="padding:5px 5px 0px"
+          style="width: 32Px;height: 32Px;padding:5Px 5Px 0Px;"
         >
            <Icon custom="iconfont icon-dingwei" :size="20"  />
         </Button>
@@ -17,7 +17,7 @@
         <Button
           :type="type=='distance'?'primary':'default'"
           @click="clickToolbar('distance')"
-          style="padding:5px 5px 0px"
+          style="width: 32Px;height: 32Px;padding:5Px 5Px 0Px;"
         >
           <img src="@/assets/map_images/length.png" alt style="width: 20px;height: 20px;" />
         </Button>
@@ -26,9 +26,17 @@
         <Button
           :type="type=='area'?'primary':'default'"
           @click="clickToolbar('area')"
-          style="padding:5px 5px 0px"
+          style="width: 32Px;height: 32Px;padding:5Px 5Px 0Px;"
         >
           <img src="@/assets/map_images/area.png" alt style="width: 20px;height: 20px;" />
+        </Button>
+      </Tooltip>
+      <Tooltip content="清除工具" placement="right">
+        <Button
+            @click="clearWidget"
+            style="width: 32Px;height: 32Px;padding:5Px 5Px 0Px;"
+        >
+          <img src="@/assets/map_images/clear.png" alt style="width: 20Px;height: 20Px;" />
         </Button>
       </Tooltip>
     </ButtonGroup>
@@ -178,6 +186,9 @@ export default {
         // autoResize: true
       });
       this.view.ui.add(this.fullscreen, "top-left");
+      this.$emit('map', this.map, this.view)
+      // 添加工具框
+      this.view.ui.add(document.getElementById("toolbar"), "top-left");
       // 增加底图切换插件
       // let basemapToggle = new BasemapToggle({
       //   view: this.view,
@@ -423,7 +434,7 @@ export default {
       this.view.graphics.add(graphic);
       this.drawGeometry = point;
       if (evt.type === "draw-complete") {
-        this.drawComplete(point);
+        this.drawComplete(point)
       }
     },
     /**
@@ -536,6 +547,12 @@ export default {
         });
         this.map.layers.addMany(layerarr);
       }
+    },
+    clearWidget() {
+      this.type = ''
+      this.activeWidget && this.activeWidget.destroy()
+      this.view.graphics.removeAll()
+      this.activeWidget = null
     }
   },
   mounted() {

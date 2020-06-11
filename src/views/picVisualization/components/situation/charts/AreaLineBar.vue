@@ -8,107 +8,109 @@
 </template>
 
 <script>
+  import Storage from "@/utils/storage"
   import echarts from "echarts"
   import tdTheme from '@/components/charts/theme.json'
   echarts.registerTheme("tdTheme", tdTheme)
+  const option = {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+        crossStyle: {
+          color: '#999'
+        }
+      }
+    },
+    legend: {
+      data: ['区/县面积', '优化', '重点', '限制', '禁止']
+    },
+    grid: {
+      left: '10%',
+      right: '7%',
+      top: '20%',
+      bottom: '25%'
+    },
+    barWidth: '65%',
+    xAxis: [
+      {
+        type: 'category',
+        data: ['', '', '', '', '', '', '', '', '', '', ''],
+        axisLabel: {
+          interval: 0,
+          fontSize: 11
+        },
+        axisPointer: {
+          type: 'line'
+        }
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        name: '面积(km²)',
+        min: 0,
+        max: 4000,
+        interval: 500,
+        axisLabel: {
+          formatter: '{value}'
+        }
+      },
+      {
+        type: 'value',
+        name: '温度',
+        min: 0,
+        max: 25,
+        interval: 5,
+        axisLabel: {
+          formatter: '{value}'
+        }
+      }
+    ],
+    series: [
+      {
+        name: '区/县面积',
+        type: 'bar',
+        itemStyle: {
+          color: '#7c63ea',
+        },
+        data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4]
+      },
+      {
+        name: '优化',
+        type: 'line',
+        yAxisIndex: 1,
+        itemStyle: {},
+        data: [18,18,18,18,18,18,18,18,18,18,18]
+      },
+      {
+        name: '重点',
+        type: 'line',
+        yAxisIndex: 1,
+        itemStyle: {},
+        data: [23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23]
+      },
+      {
+        name: '限制',
+        type: 'line',
+        yAxisIndex: 1,
+        itemStyle: {},
+        data: [6.3, 6.3, 6.3, 6.3,6.3,6.3,6.3,6.3,6.3,6.3,6.3]
+      },
+      {
+        name: '禁止',
+        type: 'line',
+        yAxisIndex: 1,
+        itemStyle: {},
+        data: [10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2]
+      }
+    ]
+  }
   export default {
     name: "AreaLineBar",
     data() {
       return {
-        option: {
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-              type: 'cross',
-              crossStyle: {
-                color: '#999'
-              }
-            }
-          },
-          legend: {
-            data: ['市、区/县面积', '优化', '重点', '限制', '禁止']
-          },
-          grid: {
-            left: '7%',
-            right: '7%',
-            top: '20%',
-            bottom: '25%'
-          },
-          barWidth: '65%',
-          xAxis: [
-            {
-              type: 'category',
-              data: ['昭通市', '昭通市', '昭通市', '昭通市', '昭通市', '昭通市', '昭通市', '昭通市', '昭通市', '昭通市', '昭通市'],
-              axisLabel: {
-                interval: 0,
-                fontSize: 11
-              },
-              axisPointer: {
-                type: 'line'
-              }
-            }
-          ],
-          yAxis: [
-            {
-              type: 'value',
-              name: '水量',
-              min: 0,
-              max: 250,
-              interval: 50,
-              axisLabel: {
-                formatter: '{value}'
-              }
-            },
-            {
-              type: 'value',
-              name: '温度',
-              min: 0,
-              max: 25,
-              interval: 5,
-              axisLabel: {
-                formatter: '{value}'
-              }
-            }
-          ],
-          series: [
-            {
-              name: '市、区/县面积',
-              type: 'bar',
-              itemStyle: {
-                color: '#7c63ea',
-              },
-              data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4]
-            },
-            {
-              name: '优化',
-              type: 'line',
-              yAxisIndex: 1,
-              itemStyle: {},
-              data: [18,18,18,18,18,18,18,18,18,18,18]
-            },
-            {
-              name: '重点',
-              type: 'line',
-              yAxisIndex: 1,
-              itemStyle: {},
-              data: [23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23]
-            },
-            {
-              name: '限制',
-              type: 'line',
-              yAxisIndex: 1,
-              itemStyle: {},
-              data: [6.3, 6.3, 6.3, 6.3,6.3,6.3,6.3,6.3,6.3,6.3,6.3]
-            },
-            {
-              name: '禁止',
-              type: 'line',
-              yAxisIndex: 1,
-              itemStyle: {},
-              data: [10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2]
-            }
-          ]
-        }
+        bar: []
       }
     },
     computed: {
@@ -119,32 +121,36 @@
     methods: {
       init() {
         this.charts = echarts.init(this.$refs.charts, "tdTheme")
-        console.log(this.color)
-        this.option.series.forEach((item, index) => {
+
+        option.series.forEach((item, index) => {
           if (item.type === 'line') {
             item['itemStyle']['color'] = this.color[index - 1]
           }
         })
-        this.charts.setOption(this.option)
-
-        setTimeout(()=> {
-          let option = {
-            series: [
-              {
-                data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4]
-              },
-              {
-                data: [15.6,15.6,15.6,15.6,15.6,15.6,15.6,15.6,15.6,15.6,15.6]
-              }
-            ]
+        this.charts.setOption(option)
+      },
+      getAreaList() {
+        let data = Storage.getArea()
+        let axis = []
+        let bar = []
+        data.forEach(item => {
+          if (item.pkId !== 1) {
+            axis.push(item.placeName)
+            bar.push(item.area)
           }
-          this.charts.setOption(option)
-        }, 3000)
+        })
+        let option = {
+          xAxis: { data: axis },
+          // yAxis: [{ max: data[0].area }],
+          series: [{ data: bar }]
+        }
+        this.charts.setOption(option)
       }
     },
     mounted() {
       this.$nextTick(() => {
         this.init()
+        this.getAreaList()
       })
     }
   }

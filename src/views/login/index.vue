@@ -127,6 +127,8 @@
 <script>
 import MyFooter from "@/components/MyFooter";
 import { getPublicKey, updateUserPwd } from "@/api/user/user";
+import { areaList } from '@/api/common'
+import Storage from "@/utils/storage"
 import { JSEncrypt } from "jsencrypt";
 import config from "@/config";
 import { mapActions } from "vuex";
@@ -292,6 +294,12 @@ export default {
               } else {
                 this.$router.push({ path: `/home` });
               }
+              // 获取行政区划
+              areaList({}).then(res => {
+                if (res.data.code === 1000) {
+                  Storage.setArea(res.data.data)
+                }
+              })
             })
             .catch(err => {
               this.loginLoading = false;
