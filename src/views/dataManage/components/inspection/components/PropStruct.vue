@@ -328,11 +328,7 @@ export default {
           this.activeRow = this.tableData.find(
             item => String(item.pkId) === this.selectedRowIds[0]
           );
-          console.log(this.activeRow);
-
           this.$set(this.modalForm, "pathChildNodeId", this.activeRow.dsPkid);
-          // let rdIdentify = JSON.parse(this.activeRow.rdIdentify);
-          console.log("?", this.activeRow);
           this.$set(
             this.modalForm,
             "dataPropDefine",

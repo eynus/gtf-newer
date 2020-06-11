@@ -119,8 +119,8 @@ const InspectionMixins = {
             getZJListPageById(postData).then(res => {
                 this.tableData = []
                 this.selectedRowIds = []
-                this.startedArr=[]
-                this.unstartedArr=[]
+                this.startedArr = []
+                this.unstartedArr = []
                 const { data, code } = res.data;
                 if (code === 1000) {
                     this.page.total = data.total
@@ -133,12 +133,8 @@ const InspectionMixins = {
                             path: item.dataPath && item.dataPath.split(',') || [],
                             rdIdentify: JSON.parse(item.rdIdentify)
                         }
-                        
-                        // 值域规范性处理
-                        if (this.$route.query.id == 3) {
-                            newData.rdIdentify = JSON.parse(item.rdIdentify) || { 'rulesFitObj': '' }
-                            newData.rulesFitObj = newData.rdIdentify.rulesFitObj || '-'
-                        }
+
+
                         this.tableData.push(newData);
                         if (item.unCheck === "0") {
                             this.startedArr.push(item.pkId + "");
@@ -150,7 +146,6 @@ const InspectionMixins = {
             })
 
         },
-
         // 选择某一行-规则
         handleSelectRow(selection, row) {
 
