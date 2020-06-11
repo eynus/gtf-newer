@@ -169,9 +169,10 @@
                     </Select>
                     <template v-if="item.controlChangedDetail.TypeOperator===1">
                       <Select
-                        v-model="item.controlChangedDetail.range"
+                        v-model="item.controlChangedDetail.CodeListID"
                         style="width:6rem"
                         class="ml"
+                        @on-change="handleCodeListIDChange"
                       >
                         <Option
                           :value="item3.id"
@@ -474,7 +475,7 @@ export default {
         }
         return index === 0
           ? item.FieldName + TypeOperatorName + range
-          : ` ${relationArr[2 * index - 1]}` +
+          : ` ${relationArr[2 * index - 1]==='and'?'且':'或'}` +
               item.FieldName +
               TypeOperatorName +
               range;
@@ -673,6 +674,20 @@ export default {
       // ); //第二项默认项
       // console.log(this.modalForm, temp);
     },
+    // 找到对应代码表中文名字
+    handleCodeListIDChange(e) {
+      console.log(e, this.activeRuleItemId);
+      let targetIdx = this.modalForm.ruleDefineData.findIndex(
+        item => item.id === this.activeRuleItemId
+      );
+      let name = this.keyCRFromTableListDemo.find(item => item.id === e).name;
+      // TODO
+      this.$set(
+        this.modalForm.ruleDefineData[targetIdx]["controlChangedDetail"],
+        "CodeListName",
+        name
+      );
+    },
     // 获取字段代码表
     getVRRKeyListById() {
       getVRRKeyListById({ pkId: this.modalForm.pathChildNodeId }).then(res => {
@@ -769,6 +784,8 @@ export default {
           this.$set(this.modalForm, "ruleDesc", this.activeRow.rulesName); //描述
           this.$set(this.modalForm, "path", this.activeRow.path); //规则路径对应
           this.getVRRKeyListWhenModify(this.activeRow.dsPkid);
+          console.log('?');
+          
         } else {
           this.$Message.info("修改操作只针对单个规则！请重新选择。");
         }
