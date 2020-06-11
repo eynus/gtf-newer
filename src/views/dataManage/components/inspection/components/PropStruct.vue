@@ -49,7 +49,7 @@
       v-model="modalFlag"
       class-name="vertical-center-modal"
       title="属性结构规范性规则添加"
-      :width="remToPx(45)"
+      :width="remToPx(50)"
     >
       <div slot="footer">
         <Button type="primary" @click="ok">确定</Button>
@@ -86,9 +86,10 @@
           </Form>
         </div>
         <div class="overflow-hidden-x zt-scroll-y">
+        <!-- <div> -->
           <div
             class="flex flex-nowrap transition"
-            :style="{ width: `${remToPx(90)}px`,'margin-left':`${positionLeft}px `}"
+            :style="{ width: `${remToPx(98)}px`,'margin-left':`${positionLeft}px `}"
           >
             <div>
               <Table
@@ -101,44 +102,60 @@
                 @on-select-cancel="handleCancelKeyRow"
                 @on-select-all="handleSelectKeyRowAll"
                 @on-select-all-cancel="handleCancelKeyRowAll"
-                :width="remToPx(43)"
+                :width="remToPx(48)"
               ></Table>
             </div>
             <div class="right-box">
-              <Form
-                :model="modalKeyFormItem"
-                ref="modalKeyFormItem"
-                :rules="modalKeyFormRuleValidate"
-                :label-width="remToPx(7.5)"
-                inline
-              >
-                <FormItem label="字段名称：" prop="keyName">
-                  <Input v-model.trim="modalKeyFormItem.keyName" />
-                </FormItem>
-                <FormItem label="字段代码：" prop="keyCode">
-                  <Input v-model="modalKeyFormItem.keyCode" />
-                </FormItem>
-                <FormItem label="字段类型：" prop="keyType">
-                  <Select
-                    v-model="modalKeyFormItem.keyType"
-                    style="width:10.25rem"
-                    @on-change="handleKeyTypechange"
-                  >
-                    <Option value="Char">Char</Option>
-                    <Option value="VarChar">VarChar</Option>
-                    <Option value="Int">Int</Option>
-                    <Option value="Float">Float</Option>
-                    <Option value="Date">Date</Option>
-                  </Select>
-                </FormItem>
-                <FormItem label="字段长度：" prop="keyLength">
-                  <Input v-model.trim="modalKeyFormItem.keyLength" />
-                </FormItem>
-                <FormItem label="小数位数：" prop="keyDigit" v-if="modalKeyFormItem.keyType==='Float'">
-                  <Input v-model.number="modalKeyFormItem.keyDigit" />
-                </FormItem>
-              </Form>
-              <div class="text-right divided">
+              <Row>
+                <Form
+                  :model="modalKeyFormItem"
+                  ref="modalKeyFormItem"
+                  :rules="modalKeyFormRuleValidate"
+                  :label-width="remToPx(7.5)"
+                  inline
+                >
+                  <i-col span="12">
+                    <FormItem label="字段名称：" prop="keyName">
+                      <Input v-model.trim="modalKeyFormItem.keyName" />
+                    </FormItem>
+                  </i-col>
+                  <i-col span="12">
+                    <FormItem label="字段代码：" prop="keyCode">
+                      <Input v-model="modalKeyFormItem.keyCode" />
+                    </FormItem>
+                  </i-col>
+                  <i-col span="12">
+                    <FormItem label="字段类型：" prop="keyType">
+                      <Select
+                        v-model="modalKeyFormItem.keyType"
+                        style="width:10.25rem"
+                        @on-change="handleKeyTypechange"
+                      >
+                        <Option value="Char">Char</Option>
+                        <Option value="VarChar">VarChar</Option>
+                        <Option value="Int">Int</Option>
+                        <Option value="Float">Float</Option>
+                        <Option value="Date">Date</Option>
+                      </Select>
+                    </FormItem>
+                  </i-col>
+                  <i-col span="12">
+                    <FormItem label="字段长度：" prop="keyLength">
+                      <Input v-model.trim="modalKeyFormItem.keyLength" />
+                    </FormItem>
+                  </i-col>
+                  <i-col span="12">
+                    <FormItem
+                      label="小数位数："
+                      prop="keyDigit"
+                      v-if="modalKeyFormItem.keyType==='Float'"
+                    >
+                      <Input v-model.number="modalKeyFormItem.keyDigit" />
+                    </FormItem>
+                  </i-col>
+                </Form>
+              </Row>
+              <div class="text-right divided mr-lg">
                 <Button type="primary" @click="handleKeySubmit">提交</Button>
                 <Button style="margin-left: 8px" @click="handleKeyQuit">取消</Button>
               </div>
@@ -298,6 +315,7 @@ export default {
   },
   created() {
     this.getPaths();
+    this.activeRow.rulesCode = this.$route.query.rules_code;
   },
   methods: {
     // 修改规则
@@ -311,7 +329,7 @@ export default {
             item => String(item.pkId) === this.selectedRowIds[0]
           );
           console.log(this.activeRow);
-          
+
           this.$set(this.modalForm, "pathChildNodeId", this.activeRow.dsPkid);
           // let rdIdentify = JSON.parse(this.activeRow.rdIdentify);
           console.log("?", this.activeRow);
@@ -331,7 +349,7 @@ export default {
     // 添加字段
     handleAddKey() {
       this.isKeyFormUpdate = false;
-      let pxNumber = this.remToPx(45);
+      let pxNumber = this.remToPx(50);
       this.positionLeft = -pxNumber;
       this.handleDisableBtn();
     },
@@ -351,7 +369,7 @@ export default {
     handleUpdateKey() {
       if (this.selectedKeyRowIds.length) {
         if (this.selectedKeyRowIds.length === 1) {
-          let pxNumber = this.remToPx(45);
+          let pxNumber = this.remToPx(50);
           this.positionLeft = -pxNumber;
           this.handleDisableBtn();
           // 赋值
@@ -398,6 +416,7 @@ export default {
     },
     //选中路径变化
     handlePathChange(a, b) {
+      //  console.log("??2", this.modalForm, this.modalForm.dataPropDefine,b);
       this.modalForm.path = a;
       this.modalForm.pathChildNodeId = b[b.length - 1].pkId;
     },
@@ -409,6 +428,7 @@ export default {
           let raw = (data && data.data) || [];
           let result = handleRawData(raw);
           this.dataPaths = result;
+          console.log(this.dataPaths, "????");
         }
       });
     },
@@ -443,6 +463,7 @@ export default {
           }
           this.positionLeft = 0;
           if (this.isKeyFormUpdate) {
+            this.selectedKeyRowIds = [];
             // 更新
             let targetIdx = this.modalForm.dataPropDefine.findIndex(
               item => item.id === this.modalKeyFormItem.id
@@ -455,9 +476,8 @@ export default {
               FieldLength: this.modalKeyFormItem.keyLength,
               DecimalLength: this.modalKeyFormItem.keyDigit
             });
-
-         
           } else {
+            this.selectedKeyRowIds = [];
             // 新增-插入
             this.modalForm.dataPropDefine.push({
               id: this.modalForm.dataPropDefine.length + 1,
@@ -502,7 +522,7 @@ export default {
         this.$Message.info("请添加字段");
         return;
       } else {
-        console.log("??", this.modalForm.dataPropDefine);
+        // console.log("??2", this.modalForm, this.modalForm.dataPropDefine);
 
         // let newData = this.modalForm.dataPropDefine
         let rulesNameConcat = `${
@@ -540,6 +560,7 @@ export default {
           this.modalFlag = false;
           this.clearFormItem();
           this.clearPathAndKeys();
+          this.selectedRowIds = [];
         } else {
           addRules(postData).then(res => {
             const { data, code } = res.data;
@@ -553,6 +574,7 @@ export default {
           this.modalFlag = false;
           this.clearFormItem();
           this.clearPathAndKeys();
+          this.selectedRowIds = [];
         }
       }
     },
@@ -596,12 +618,13 @@ export default {
   }
   .right-box {
     min-height: 15rem;
+    width: 48rem;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    padding: 1.25rem;
+    // border-radius: 4px;
+    padding: 1.25rem 0;
     margin-left: 2rem;
-    margin-right: 2rem;
+    // margin-right: 2rem;
     .divided {
       margin-top: 1.75rem;
       border-top: 1px solid rgba(0, 0, 0, 0.1);
