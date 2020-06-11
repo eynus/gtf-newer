@@ -365,11 +365,7 @@ export default {
           id: 1,
           selectedValFirst: 1,
           selectedValSecond: 2,
-          // selectedValRelation: "",
-          activated: true,
-
-          // valRangeSecondArr: [],
-          types: ["Float", "Int"],
+          types: this.valRangeType,
           controlChangedDetail: {
             TypeOperator: ">",
             Range: "0",
@@ -378,7 +374,7 @@ export default {
             StartIndex: "",
             EndIndex: ""
           },
-          keyList: [{ id: 2, name: "222" }]
+          keyList: []
         }
       ],
 
@@ -386,7 +382,6 @@ export default {
       pathChildNodeId: "",
       dataPropDefine: []
     };
-    console.log(this.modalForm.ruleDefineExpression);
   },
   methods: {
     // 请求list
@@ -454,6 +449,7 @@ export default {
       let relationArr = rdIdentify.Expression.split(" ");
       let arr = rdIdentify.Conditions.map((item, index) => {
         let range = "";
+        let codeName = "";
         let TypeOperatorName;
         if (item.ConType === "数值范围约束") {
           range = item.Range;
@@ -472,19 +468,21 @@ export default {
           TypeOperatorName = this.keyCodeRangeListDemo.find(
             it => it.id === item.TypeOperator
           ).name;
+          codeName = item.CodeListName;
         }
         return index === 0
           ? item.FieldName + TypeOperatorName + range
-          : ` ${relationArr[2 * index - 1]==='and'?'且':'或'}` +
+          : ` ${relationArr[2 * index - 1] === "and" ? "且" : "或"}` +
               item.FieldName +
               TypeOperatorName +
-              range;
+              range +
+              codeName;
       });
       return `${path}中 ` + arr;
     },
     // 添加规则
     handleAddRule() {
-      // this.clearFormItem();
+      this.clearFormItem();
 
       this.isRuleUpdate = false;
       this.modalFlag = true;
@@ -784,8 +782,7 @@ export default {
           this.$set(this.modalForm, "ruleDesc", this.activeRow.rulesName); //描述
           this.$set(this.modalForm, "path", this.activeRow.path); //规则路径对应
           this.getVRRKeyListWhenModify(this.activeRow.dsPkid);
-          console.log('?');
-          
+          console.log("?");
         } else {
           this.$Message.info("修改操作只针对单个规则！请重新选择。");
         }
@@ -842,7 +839,25 @@ export default {
         path: [""],
         ruleDesc: "",
         ruleDescArr: [],
-        ruleDefineData: [],
+        ruleDefineData: [
+          {
+            id: 1,
+            selectedValFirst: 1,
+            selectedValSecond: 2,
+            types: this.valRangeType,
+            controlChangedDetail: {
+              TypeOperator: ">",
+              Range: "0",
+              CodeListName: "",
+              CodeListID: "",
+              StartIndex: "",
+              EndIndex: ""
+            },
+            keyList: []
+          }
+        ],
+
+        ruleDefineExpression: [],
         pathChildNodeId: "",
         dataPropDefine: []
       };
@@ -902,7 +917,7 @@ export default {
             TypeOperator: item.controlChangedDetail.TypeOperator,
             Range: item.controlChangedDetail.Range,
             CodeListName: item.controlChangedDetail.CodeListName,
-            CodeListID:  item.controlChangedDetail.CodeListID,
+            CodeListID: item.controlChangedDetail.CodeListID,
             StartIndex: "",
             EndIndex: ""
           })),
