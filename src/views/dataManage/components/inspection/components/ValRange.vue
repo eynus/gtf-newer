@@ -901,8 +901,8 @@ export default {
             FieldName: item.selectedValSecond,
             TypeOperator: item.controlChangedDetail.TypeOperator,
             Range: item.controlChangedDetail.Range,
-            CodeListName: "",
-            CodeListID: "",
+            CodeListName: item.controlChangedDetail.CodeListName,
+            CodeListID:  item.controlChangedDetail.CodeListID,
             StartIndex: "",
             EndIndex: ""
           })),
