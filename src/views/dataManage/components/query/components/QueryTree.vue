@@ -113,7 +113,8 @@ export default {
           resolve();
           return;
         }
-        getLeavesById({ identification: treeNode.dataRef.key }).then(res => {
+        getLeavesById({ dataName: treeNode.dataRef.key }).then(res => {
+        // getLeavesById({ identification: treeNode.dataRef.key }).then(res => {
           const { code, data } = res.data;
           if (code === 1000) {
             if (data.length) {

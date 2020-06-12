@@ -350,6 +350,17 @@ export default {
       tableData: []
     };
   },
+  watch: {
+    modalForm: {
+      handler(newName, oldName) {
+        console.log("newVal", newName, "????watch");
+        // 重新生成concat
+        this.$set(this.modalForm, "ruleDesc", this.concatRuleDescWhenChange());
+        console.log(this.modalForm.ruleDesc);
+      },
+      deep: true
+    }
+  },
   created() {
     this.getPaths();
     this.getValRangeRuleCodeList();
@@ -425,7 +436,6 @@ export default {
             };
 
             // 值域规范性处理
-            // if (this.$route.query.id == 3) {
             newData.rdIdentify = JSON.parse(item.rdIdentify) || {
               rulesFitObj: ""
             };
@@ -434,7 +444,6 @@ export default {
               newData.rdIdentify,
               newData.rulesFitObj
             );
-            // }
             this.tableData.push(newData);
             if (item.unCheck === "0") {
               this.startedArr.push(item.pkId + "");
@@ -444,6 +453,43 @@ export default {
           });
         }
       });
+    },
+    concatRuleDescWhenChange() {
+      let relationArr = this.modalForm.ruleDefineExpression;
+      let arr = this.modalForm.ruleDefineData.map((item, index) => {
+        let control = item.controlChangedDetail;
+        let range = "";
+        let codeName = "";
+        let TypeOperatorName;
+        if (item.selectedValFirst === 1) {
+          //数值范围约束
+          range = control.Range;
+          TypeOperatorName = this.keyRangeRelListDemo.find(
+            it => it.id === control.TypeOperator
+          ).name;
+        } else if (item.selectedValFirst === 2) {
+          //空值约束
+          TypeOperatorName = this.keyNullListDemo.find(
+            it => it.id === control.TypeOperator
+          ).name;
+        } else if (item.selectedValFirst === 3) {
+          //代码范围约束
+          range = control.Range;
+          TypeOperatorName = this.keyCodeRangeListDemo.find(
+            it => it.id === control.TypeOperator
+          ).name;
+          codeName = control.CodeListName;
+        }
+        return index === 0
+          ? item.selectedValSecond + TypeOperatorName + range
+          : ` ${relationArr[index - 1].value === "and" ? "且" : "或"}` +
+              item.selectedValSecond +
+              TypeOperatorName +
+              range +
+              codeName;
+      });
+
+      return `${this.modalForm.path[this.modalForm.path.length - 1]}中 ` + arr;
     },
     concatRuleDesc(rdIdentify, path) {
       let relationArr = rdIdentify.Expression.split(" ");
