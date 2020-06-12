@@ -978,12 +978,6 @@ export default {
             )
             .join("") //"{0} and {1} and {2}"
         };
-        // let newData = {
-        //   ruleDefineData: this.modalForm.ruleDefineData,
-        //   path: this.modalForm.path,
-        //   ruleDesc: this.modalForm.ruleDesc,
-        //   rulesFitObj: this.modalForm.rulesFitObj
-        // };
 
         // 请求addRules接口
         let postData = {
@@ -1004,14 +998,10 @@ export default {
           updatedTime: this.activeRow.updatedTime,
           validity: this.activeRow.validity
         };
+        console.log(this.isRuleUpdate, "?");
 
         if (this.isRuleUpdate) {
-          console.log("postData", postData);
-
-          console.log(
-            "this.modalForm.ruleDefineData",
-            this.modalForm.ruleDefineData
-          );
+          // 修改规则
 
           updateRules(postData).then(res => {
             const { data, code } = res.data;
@@ -1025,23 +1015,21 @@ export default {
           this.modalFlag = false;
           this.clearFormItem();
         } else {
-          console.log("postData", postData);
-          console.log("newData", newData);
-          console.log(
-            "this.modalForm.ruleDefineData",
-            this.modalForm.ruleDefineData
-          );
+          // 添加规则
+
           addRules(postData).then(res => {
-            const { data, code } = res.data;
+            const { data, code, message } = res.data;
             if (code === 1000) {
               this.$Message.info("添加成功");
               this.getZJListPageById();
+              this.modalFlag = false;
+              this.clearFormItem();
+            } else if (code === 2001) {
+              this.$Message.warning(message);
             } else {
-              this.$Message.info("服务异常，请稍后再试。");
+              this.$Message.warning("服务异常，请稍后再试。");
             }
           });
-          this.modalFlag = false;
-          this.clearFormItem();
         }
       }
     },

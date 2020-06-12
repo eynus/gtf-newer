@@ -86,7 +86,7 @@
           </Form>
         </div>
         <div class="overflow-hidden-x zt-scroll-y">
-        <!-- <div> -->
+          <!-- <div> -->
           <div
             class="flex flex-nowrap transition"
             :style="{ width: `${remToPx(98)}px`,'margin-left':`${positionLeft}px `}"
@@ -559,18 +559,20 @@ export default {
           this.selectedRowIds = [];
         } else {
           addRules(postData).then(res => {
-            const { data, code } = res.data;
+            const { data, code,message } = res.data;
             if (code === 1000) {
               this.$Message.info("添加成功");
               this.getZJListPageById();
+              this.modalFlag = false;
+              this.clearFormItem();
+              this.clearPathAndKeys();
+              this.selectedRowIds = [];
+            } else if (code === 2001) {
+              this.$Message.warning(message);
             } else {
               this.$Message.info("服务异常，请稍后再试。");
             }
           });
-          this.modalFlag = false;
-          this.clearFormItem();
-          this.clearPathAndKeys();
-          this.selectedRowIds = [];
         }
       }
     },
