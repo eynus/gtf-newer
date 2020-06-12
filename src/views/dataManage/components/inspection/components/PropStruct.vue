@@ -59,7 +59,12 @@
         <div class="title mb">规则适用对象</div>
         <div>
           <!-- <Input v-model.trim="modalForm.obj" placeholder="请输入" clearable /> -->
-          <Cascader :disabled="isRuleUpdate" :data="dataPaths" v-model="modalForm.path" @on-change="handlePathChange"></Cascader>
+          <Cascader
+            :disabled="isRuleUpdate"
+            :data="dataPaths"
+            v-model="modalForm.path"
+            @on-change="handlePathChange"
+          ></Cascader>
         </div>
       </div>
       <div class="modal-item mt position-r">
@@ -169,7 +174,11 @@
   </div>
 </template>
 <script>
-import { addRules, updateRules } from "@/api/dataManage/inspection";
+import {
+  addRules,
+  updateRules,
+  getVRRKeyListById
+} from "@/api/dataManage/inspection";
 import { remToPx } from "@/utils/common";
 import { getPaths } from "@/api/dataManage/overview";
 import MyDelete from "_c/delete";
@@ -194,6 +203,7 @@ export default {
   components: { MyDelete },
   data() {
     return {
+      canISelect: true,
       activeRow: {},
       activeKeyRow: {},
       delModalKeyFlag: false,
@@ -318,6 +328,21 @@ export default {
     this.activeRow.rulesCode = this.$route.query.rules_code;
   },
   methods: {
+    // 获取字段代码表-判断能否选择该适用对象
+    getVRRKeyListById() {
+      getVRRKeyListById({ pkId: this.modalForm.pathChildNodeId }).then(res => {
+        const { data, code } = res.data;
+        if (code === 1000) {
+          if (data.length) {
+            // 有数据说明不可选择
+            this.canISelect = false;
+               this.$Message.warning("该适用对象规则已存在，不能重复添加。");
+          } else {
+            this.canISelect = true;
+          }
+        }
+      });
+    },
     // 修改规则
     handleUpdateRule() {
       // 判断是否只选了一个
@@ -415,6 +440,7 @@ export default {
       //  console.log("??2", this.modalForm, this.modalForm.dataPropDefine,b);
       this.modalForm.path = a;
       this.modalForm.pathChildNodeId = b[b.length - 1].pkId;
+      this.getVRRKeyListById();
     },
     //获取数据路径列表
     getPaths() {
@@ -558,21 +584,25 @@ export default {
           this.clearPathAndKeys();
           this.selectedRowIds = [];
         } else {
-          addRules(postData).then(res => {
-            const { data, code,message } = res.data;
-            if (code === 1000) {
-              this.$Message.info("添加成功");
-              this.getZJListPageById();
-              this.modalFlag = false;
-              this.clearFormItem();
-              this.clearPathAndKeys();
-              this.selectedRowIds = [];
-            } else if (code === 2001) {
-              this.$Message.warning(message);
-            } else {
-              this.$Message.info("服务异常，请稍后再试。");
-            }
-          });
+          if (this.canISelect) {
+            addRules(postData).then(res => {
+              const { data, code, message } = res.data;
+              if (code === 1000) {
+                this.$Message.info("添加成功");
+                this.getZJListPageById();
+                this.modalFlag = false;
+                this.clearFormItem();
+                this.clearPathAndKeys();
+                this.selectedRowIds = [];
+              } else if (code === 2001) {
+                this.$Message.warning(message);
+              } else {
+                this.$Message.info("服务异常，请稍后再试。");
+              }
+            });
+          } else {
+            this.$Message.warning("该适用对象规则已存在，不能重复添加。");
+          }
         }
       }
     },

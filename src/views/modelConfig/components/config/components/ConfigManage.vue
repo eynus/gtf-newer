@@ -17,7 +17,7 @@
       />
       <Button v-auth="['page_3_1_1']" type="primary" @click="handleAdd" class="btn-margin">添加指标</Button>
       <Button v-auth="['page_3_1_2']" type="primary" @click="handleUpdate" class="btn-margin">修改指标</Button>
-      <Button v-auth="['page_3_1-3']" type="primary" @click="handleDelete" class="btn-margin">删除指标</Button>
+      <Button v-auth="['page_3_1_3']" type="primary" @click="handleDelete" class="btn-margin">删除指标</Button>
     </div>
     <div class="mt">
       <Table
@@ -88,7 +88,7 @@ export default {
         unit: "",
         fitrange: "",
         type: "",
-        valrange: ["", ""],
+        valrange: [0, 0],
         source: "",
         content: ""
       },
@@ -137,16 +137,16 @@ export default {
         },
         {
           type: "index",
-          // key: "",
+          title: "序号",
           align: "center",
-          width: remToPx(4)
+          width: remToPx(5)
         },
 
         {
           title: "指标名称",
           key: "name",
           align: "center",
-          // width: remToPx(18),
+          width: remToPx(10),
           tooltip: true,
           sortable: true
         },
@@ -159,8 +159,8 @@ export default {
         {
           title: "指标单位",
           key: "unitName",
-          align: "center"
-          // width: remToPx(8)
+          align: "center",
+            tooltip: true,
         },
         {
           title: "指标分类",
@@ -184,7 +184,8 @@ export default {
           title: "指标内涵",
           key: "content",
           align: "center",
-          // width: remToPx(14),
+          width: remToPx(10),
+            tooltip: true,
           sortable: true
         },
         {
@@ -196,7 +197,7 @@ export default {
         },
         {
           title: "值域范围",
-          key: "valrange",
+          key: "valrangeString",
           align: "center",
           tooltip: true
           // width: remToPx(12)
@@ -244,6 +245,7 @@ export default {
         const { code, data } = res.data;
         if (code === 1000) {
           this.page.total = data.total;
+          this.dataPutIn = [];
           if (data.records.length) {
             data.records.forEach(it2 => {
               this.dataPutIn.push({
@@ -257,6 +259,7 @@ export default {
                 class: it2.pkZbflId,
                 classname: it2.pkZbflName,
                 valrange: it2.zbmxZyfw.split("~"),
+                valrangeString: it2.zbmxZyfw,
                 max: it2.zbmxYz,
                 fitrange: Number(it2.zbmxZbfw),
                 fitrangeName: this.fitRangeList.find(
@@ -316,7 +319,7 @@ export default {
         unit: 0,
         fitrange: 0,
         type: 0,
-        valrange: ["", ""],
+        valrange: [0, 0],
         source: "",
         content: ""
       };
@@ -344,7 +347,7 @@ export default {
     confirmDel() {
       // 判断是否只选了一个
 
-      deleteZB({ pkid: this.selectedRowIds[0] }).then(res => {
+      deleteZB({ pkId: this.selectedRowIds[0] }).then(res => {
         const { data, code } = res.data;
         if (code === 1000) {
           this.delModalFlag = false;
@@ -359,8 +362,8 @@ export default {
       if (this.selectedRowIds.length) {
         if (this.selectedRowIds.length === 1) {
           this.delModalFlag = true;
-        }else{
-            this.$Message.warning("删除操作只针对单个规则！请重新选择。");
+        } else {
+          this.$Message.warning("删除操作只针对单个规则！请重新选择。");
         }
       } else {
         this.$Message.warning("请选择服务");
