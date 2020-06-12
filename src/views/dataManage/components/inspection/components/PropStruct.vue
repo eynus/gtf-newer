@@ -155,7 +155,7 @@
                       prop="keyDigit"
                       v-if="modalKeyFormItem.keyType==='Float'"
                     >
-                      <Input v-model.number="modalKeyFormItem.keyDigit" />
+                      <Input v-model="modalKeyFormItem.keyDigit" />
                     </FormItem>
                   </i-col>
                 </Form>
