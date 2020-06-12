@@ -291,8 +291,8 @@ export default {
       //四级分类-取值对应代码表-代码范围约束对应的代码表
       keyCRFromTableListDemo: [{ id: 1, name: "" }],
       valRangeType: ["Float", "Int"],
-      isNullType: ["Char", "VarChar"],
-      codeRangeType: ["VarChar", "Char", "Float", "Int", "Date"],
+      codeRangeType: ["Char", "VarChar"],
+      isNullType: ["VarChar", "Char", "Float", "Int", "Date"],
       activeRow: {},
       activeKeyRow: {},
       delModalKeyFlag: false,
