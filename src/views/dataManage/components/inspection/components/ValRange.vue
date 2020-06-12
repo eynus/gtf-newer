@@ -92,7 +92,7 @@
         <div class="zt-scroll-y pd rule-define-wrap">
           <div class="position-r">
             <!-- 约束 -->
-            <div class="rule-control-wrap">
+            <div class="rule-control-wrap w100">
               <div
                 class="rule-define-row flex flex-sb"
                 v-for="(item,index) in modalForm.ruleDefineData"
@@ -103,7 +103,7 @@
                   <!-- 一级 -->
                   <Select
                     v-model="item.selectedValFirst"
-                    style="width:8rem"
+                    style="width:10rem"
                     @on-change="handleValRangeFirstChange"
                   >
                     <Option
@@ -116,7 +116,7 @@
                   <Select
                     v-model="item.selectedValSecond"
                     @on-change="handleValRangeSecondChange"
-                    style="width:6rem"
+                    style="width:8rem"
                     class="ml"
                   >
                     <Option
@@ -129,7 +129,7 @@
                   <template v-if="item.selectedValFirst===1">
                     <Select
                       v-model="item.controlChangedDetail.TypeOperator"
-                      style="width:6rem"
+                     style="width:8rem"
                       class="ml"
                     >
                       <Option
@@ -141,7 +141,7 @@
                     <Input
                       class="ml"
                       v-model="item.controlChangedDetail.Range"
-                      style="width:100px"
+                       style="width:8rem"
                       clearable
                     />
                   </template>
@@ -149,7 +149,7 @@
                   <template v-else-if="item.selectedValFirst===2">
                     <Select
                       v-model="item.controlChangedDetail.TypeOperator"
-                      style="width:6rem"
+                   style="width:8rem"
                       class="ml"
                     >
                       <Option
@@ -163,7 +163,7 @@
                   <template v-if="item.selectedValFirst===3">
                     <Select
                       v-model="item.controlChangedDetail.TypeOperator"
-                      style="width:6rem"
+                     style="width:8rem"
                       class="ml"
                     >
                       <Option
@@ -175,7 +175,7 @@
                     <template v-if="item.controlChangedDetail.TypeOperator===1">
                       <Select
                         v-model="item.controlChangedDetail.CodeListID"
-                        style="width:6rem"
+                        style="width:8rem"
                         class="ml"
                         @on-change="handleCodeListIDChange"
                       >
@@ -189,7 +189,7 @@
                     <template v-else>
                       <Input
                         class="ml"
-                        style="width:100px"
+                       style="width:8rem"
                         v-model="item.controlChangedDetail.Range"
                         clearable
                       />
@@ -358,10 +358,8 @@ export default {
   watch: {
     modalForm: {
       handler(newName, oldName) {
-        console.log("newVal", newName, "????watch");
         // 重新生成concat
         this.$set(this.modalForm, "ruleDesc", this.concatRuleDescWhenChange());
-        console.log(this.modalForm.ruleDesc);
       },
       deep: true
     }
@@ -460,8 +458,8 @@ export default {
       });
     },
     concatRuleDescWhenChange() {
-      if(!this.modalForm.path[0]){
-        return ''
+      if (!this.modalForm.path[0]) {
+        return "";
       }
       let relationArr = this.modalForm.ruleDefineExpression;
       let arr = this.modalForm.ruleDefineData.map((item, index) => {
@@ -541,50 +539,6 @@ export default {
       this.isRuleUpdate = false;
       this.modalFlag = true;
     },
-    // 重新生成arr和规则描述
-    handleRefreshRuleDesc() {
-      // console.log(this.modalForm.ruleDefineData, this.activeRuleItemId);
-      // // 拼接字符串
-      // this.$set(this.modalForm, "ruleDescArr", []);
-      // this.modalForm.ruleDefineData.forEach((item, index) => {
-      //   if (index > 0) {
-      //     this.modalForm.ruleDescArr.push(
-      //       item.selectedValRelation === "1" ? "并且" : "或者"
-      //     );
-      //   }
-      //   let target = this.valRangeRuleCodeList.find(
-      //     i => i.domainName === item.selectedValFirst
-      //   ).children;
-      //   let desc = target.find(it => it.code === item.selectedValSecond)
-      //     .codeDes;
-      //   this.modalForm.ruleDescArr.push(item.selectedValFirst + desc);
-      // });
-      // this.$set(
-      //   this.modalForm,
-      //   "ruleDesc",
-      //   this.modalForm.ruleDescArr.join("")
-      // );
-    },
-    // // 编辑规则定义
-    // handleEditRuleDefine(id) {
-    //   this.modalForm.ruleDefineData = this.modalForm.ruleDefineData.map(
-    //     item => ({
-    //       ...item,
-    //       activated: item.id !== id ? false : true
-    //     })
-    //   );
-    //   this.activeRuleItemId = id;
-    // },
-    // // 保存规则定义
-    // handleSaveRuleDefine(id) {
-    //   let targetIdx = this.modalForm.ruleDefineData.findIndex(
-    //     item => item.id === id
-    //   );
-    //   this.$set(this.modalForm.ruleDefineData[targetIdx], "activated", false);
-
-    //   this.activeRuleItemId = id;
-    //   this.handleRefreshRuleDesc();
-    // },
     // 点击删除icon
     handleAskDeleteDefine(id) {
       this.activeRuleItemId = id;
@@ -593,16 +547,19 @@ export default {
     // 新建规则
     handleModalAddRule() {
       this.activeRuleItemId = this.modalForm.ruleDefineData.length + 1;
+      if (this.modalForm.ruleDefineData.length) {
+        this.modalForm.ruleDefineExpression.push({ value: "and" });
+      }
       this.modalForm.ruleDefineData.push({
         id: this.modalForm.ruleDefineData.length + 1,
         selectedValFirst: 1,
-        selectedValSecond: '未知',
+        selectedValSecond: "未知",
         // selectedValRelation: "",
         activated: true,
         // valRangeSecondArr: [],
-        types: ["Float", "Int"],
+        types: this.valRangeType,
         keyList: this.keyListDemo.filter(it =>
-          ["Float", "Int"].includes(it.type)
+          this.valRangeType.includes(it.type)
         ),
         controlChangedDetail: {
           TypeOperator: ">",
@@ -613,8 +570,7 @@ export default {
           EndIndex: ""
         }
       });
-      this.modalForm.ruleDefineExpression.push({ value: "and" });
-      this.handleRefreshRuleDesc();
+
     },
     // 查询
     handleQuery() {
@@ -708,23 +664,6 @@ export default {
         default:
           break;
       }
-
-      // let temp = this.valRangeRuleCodeList.find(
-      //   item =>
-      //     item.domainName ===
-      //     this.modalForm.ruleDefineData[targetIdx].selectedValFirst //相应选择项
-      // ).children;
-      // this.$set(
-      //   this.modalForm.ruleDefineData[targetIdx],
-      //   "valRangeSecondArr",
-      //   temp
-      // );
-      // this.$set(
-      //   this.modalForm.ruleDefineData[targetIdx],
-      //   "selectedValSecond",
-      //   temp[0].code
-      // ); //第二项默认项
-      // console.log(this.modalForm, temp);
     },
     // 找到对应代码表中文名字
     handleCodeListIDChange(e) {
@@ -836,7 +775,6 @@ export default {
           this.$set(this.modalForm, "ruleDesc", this.activeRow.rulesName); //描述
           this.$set(this.modalForm, "path", this.activeRow.path); //规则路径对应
           this.getVRRKeyListWhenModify(this.activeRow.dsPkid);
-          console.log("?");
         } else {
           this.$Message.info("修改操作只针对单个规则！请重新选择。");
         }
@@ -896,7 +834,7 @@ export default {
           {
             id: 1,
             selectedValFirst: 1,
-            selectedValSecond: '未知',
+            selectedValSecond: "未知",
             types: this.valRangeType,
             controlChangedDetail: {
               TypeOperator: ">",
@@ -943,7 +881,6 @@ export default {
       );
       this.modalForm.ruleDefineExpression.splice(-1);
       this.$Message.info("删除成功！");
-      this.handleRefreshRuleDesc();
       // 删除规则
       this.delModalKeyFlag = false;
     },
@@ -1007,8 +944,6 @@ export default {
           updatedTime: this.activeRow.updatedTime,
           validity: this.activeRow.validity
         };
-        console.log(this.isRuleUpdate, "?");
-
         if (this.isRuleUpdate) {
           // 修改规则
 
@@ -1077,7 +1012,10 @@ export default {
     border: 1px solid rgba(0, 0, 0, 0.2);
   }
   .rule-define-row {
-    margin-bottom: 3rem;
+    width: 100%;
+    margin-bottom: 3.25rem;
+    // padding: 0.5rem;
+    height: 3.25rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   }
 }
@@ -1087,7 +1025,22 @@ export default {
   left: 0;
   top: 0;
 }
+.rule-express-wrap{
+
+  height: 3.25rem;
+  line-height: 3.25rem;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
 .rule-express {
-  margin: 2.8rem 0;
+  // padding-left: 0.5rem;
+  margin: 3.25rem 0;
+}
+}
+::v-deep .ivu-select-single .ivu-select-selection .ivu-select-placeholder, .ivu-select-single .ivu-select-selection .ivu-select-selected-value{
+  text-align: center;
+}
+::v-deep .ivu-input{
+  text-align: center;
 }
 </style>
