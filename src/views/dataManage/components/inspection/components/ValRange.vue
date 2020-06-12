@@ -625,7 +625,7 @@ export default {
           this.$set(
             this.modalForm.ruleDefineData[targetIdx],
             "keyList",
-            this.keyListDemo.filter(it => ["Float", "Int"].includes(it.type))
+            this.keyListDemo.filter(it => this.valRangeType.includes(it.type))
           );
           break;
         case 2: //空值约束
@@ -674,7 +674,7 @@ export default {
             this.modalForm.ruleDefineData[targetIdx],
             "keyList",
             this.keyListDemo.filter(it =>
-              ["VarChar", "Char", "Float", "Int", "Date"].includes(it.type)
+              this.isNullType.includes(it.type)
             )
           );
           break;
