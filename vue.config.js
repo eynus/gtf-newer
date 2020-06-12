@@ -47,7 +47,7 @@ module.exports = {
         proxy: {
             '/*': {
                 // target: 'http://192.168.6.30:9992/',
-                target: 'http://192.168.6.26:9992/',
+                target: 'http://192.168.6.26:8081/',
                 ws: false,
                 changeOrigin: true
             }

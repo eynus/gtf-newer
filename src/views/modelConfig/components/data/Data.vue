@@ -2,20 +2,20 @@
   <div class="h100 bg-white">
     <card-title icon="iconfont  icon-type" title="指标数据查看"></card-title>
     <div class="pd">
-      <div class="search-box">
-        <div class="top">
-          <div class="flex flex-sb">
+      <div class="search-box position-r">
+        <div class="top flex flex-sb">
+          <div class="top-left">
             <span>地区：</span>
-            <span>昭阳区</span>
+            <span  class="mr-lg">昭阳区</span>
             <span>指标分类：</span>
             <span>底线管控</span>
           </div>
-          <div>
+          <div class="top-right">
             <Button type="primary" class="btn-margin">导出表格</Button>
             <Button type="normal" class="btn-margin ml" @click="handleShowSearchBox">显示筛选条件</Button>
           </div>
         </div>
-        <div class="bottom"></div>
+        <div class="bottom" v-if="showSearchBox">222</div>
       </div>
 
       <div class="mt">
@@ -43,6 +43,7 @@ export default {
     return {
       tableLoading: false,
       selectedRowIds: [],
+      showSearchBox: false,
       columnsPutIn: [
         {
           title: "选中",
@@ -53,7 +54,7 @@ export default {
         },
         {
           type: "index",
-          key: "序号",
+          title: "序号",
           align: "center",
           width: remToPx(4)
         },
@@ -135,7 +136,9 @@ export default {
   beforeDestroy() {},
   methods: {
     // 显示筛选条件
-    handleShowSearchBox() {},
+    handleShowSearchBox() {
+      this.showSearchBox = !this.showSearchBox;
+    },
     // 选择某一行
     handleSelectRow(selection, row) {
       this.selectedRowIds.push(row.id + "");
@@ -160,5 +163,14 @@ export default {
 .search-box {
   padding: 1rem;
   border-bottom: 1px solid $text-normal;
+  .bottom{
+    position: absolute;
+    left: 0;
+    top: 3rem;
+    width: 100%;
+    height: 20rem;
+    z-index: 9;
+    background-color: rgba(0,0,0,0.4);
+  }
 }
 </style>

@@ -120,16 +120,16 @@
                     class="ml"
                   >
                     <Option
-                      :value="item2.name"
+                      :value="item2.code"
                       v-for="(item2,index2) in item.keyList"
                       :key="`vfs_${index2}`"
-                    >{{item2.name}}</Option>
+                    >{{item2.namecode}}</Option>
                   </Select>
                   <!-- 名称 -->
                   <template v-if="item.selectedValFirst===1">
                     <Select
                       v-model="item.controlChangedDetail.TypeOperator"
-                     style="width:8rem"
+                      style="width:8rem"
                       class="ml"
                     >
                       <Option
@@ -141,7 +141,7 @@
                     <Input
                       class="ml"
                       v-model="item.controlChangedDetail.Range"
-                       style="width:8rem"
+                      style="width:8rem"
                       clearable
                     />
                   </template>
@@ -149,7 +149,7 @@
                   <template v-else-if="item.selectedValFirst===2">
                     <Select
                       v-model="item.controlChangedDetail.TypeOperator"
-                   style="width:8rem"
+                      style="width:8rem"
                       class="ml"
                     >
                       <Option
@@ -163,7 +163,7 @@
                   <template v-if="item.selectedValFirst===3">
                     <Select
                       v-model="item.controlChangedDetail.TypeOperator"
-                     style="width:8rem"
+                      style="width:8rem"
                       class="ml"
                     >
                       <Option
@@ -189,7 +189,7 @@
                     <template v-else>
                       <Input
                         class="ml"
-                       style="width:8rem"
+                        style="width:8rem"
                         v-model="item.controlChangedDetail.Range"
                         clearable
                       />
@@ -267,7 +267,7 @@ export default {
         { id: 3, name: "代码范围约束" }
       ],
       // 二级分类
-      keyListDemo: [{ id: 1, name: "" }],
+      keyListDemo: [],
       // 三级分类-数值约束
       keyRangeRelListDemo: [
         { id: "=", name: "等于" },
@@ -443,10 +443,10 @@ export default {
               rulesFitObj: ""
             };
             newData.rulesFitObj = newData.path[newData.path.length - 1];
-            newData.rulesName = this.concatRuleDesc(
-              newData.rdIdentify,
-              newData.rulesFitObj
-            );
+            // newData.rulesName = this.concatRuleDesc(
+            //   newData.rdIdentify,
+            //   newData.rulesFitObj
+            // );
             this.tableData.push(newData);
             if (item.unCheck === "0") {
               this.startedArr.push(item.pkId + "");
@@ -458,15 +458,29 @@ export default {
       });
     },
     concatRuleDescWhenChange() {
+      // console.log(this.modalForm.ruleDefineData);
+
       if (!this.modalForm.path[0]) {
         return "";
       }
       let relationArr = this.modalForm.ruleDefineExpression;
+
       let arr = this.modalForm.ruleDefineData.map((item, index) => {
+        // console.log(
+        //   item.selectedValSecond,
+        //   "item.selectedValSecond",
+        //   item.keyList
+        // );
+
         let control = item.controlChangedDetail;
         let range = "";
         let codeName = "";
         let TypeOperatorName;
+        let selectedKeyNameCode =
+          (item.keyList.find(it => it.code === item.selectedValSecond) &&
+            item.keyList.find(it => it.code === item.selectedValSecond)
+              .namecode) ||
+          "";
         if (item.selectedValFirst === 1) {
           //数值范围约束
           range = control.Range;
@@ -486,8 +500,9 @@ export default {
           ).name;
           codeName = control.CodeListName;
         }
+
         return index === 0
-          ? item.selectedValSecond + TypeOperatorName + range
+          ? selectedKeyNameCode + TypeOperatorName + range
           : ` ${relationArr[index - 1].value === "and" ? "且" : "或"}` +
               item.selectedValSecond +
               TypeOperatorName +
@@ -498,7 +513,10 @@ export default {
       return `${this.modalForm.path[this.modalForm.path.length - 1]}中 ` + arr;
     },
     concatRuleDesc(rdIdentify, path) {
+      // console.log(rdIdentify);
+
       let relationArr = rdIdentify.Expression.split(" ");
+      //  let selectedKeyNameCode = item.keyList.find(it=>it.code===item.selectedValSecond).namecode
       let arr = rdIdentify.Conditions.map((item, index) => {
         let range = "";
         let codeName = "";
@@ -570,7 +588,6 @@ export default {
           EndIndex: ""
         }
       });
-
     },
     // 查询
     handleQuery() {
@@ -667,7 +684,7 @@ export default {
     },
     // 找到对应代码表中文名字
     handleCodeListIDChange(e) {
-      console.log(e, this.activeRuleItemId);
+      // console.log(e, this.activeRuleItemId);
       let targetIdx = this.modalForm.ruleDefineData.findIndex(
         item => item.id === this.activeRuleItemId
       );
@@ -687,17 +704,26 @@ export default {
           this.keyListDemo = data.map(item => ({
             id: item.pkId,
             name: item.fieldName,
+            code: item.fieldCode,
+            namecode: item.fieldName + "(" + item.fieldCode + ")",
             type: item.fieldType
           }));
           this.modalForm.ruleDefineData = this.modalForm.ruleDefineData.map(
-            item => ({
-              ...item,
-              keyList: this.keyListDemo.filter(it =>
+            item => {
+              let list = this.keyListDemo.filter(it =>
                 item.types.includes(it.type)
-              )
-            })
+              );
+              return {
+                ...item,
+                keyList: list,
+                // 设置第一个item的selecedSecond
+                selectedValSecond: (list && list[0].code) || ""
+              };
+            }
           );
-          console.log(this.modalForm.ruleDefineData);
+          //
+          // if( this.modalForm.ruleDefineData)
+          // console.log(this.modalForm.ruleDefineData);
         }
       });
     },
@@ -721,6 +747,8 @@ export default {
           this.keyListDemo = data.map(item => ({
             id: item.pkId,
             name: item.fieldName,
+            code: item.fieldCode,
+            namecode: item.fieldName + "(" + item.fieldCode + ")",
             type: item.fieldType
           }));
 
@@ -757,7 +785,7 @@ export default {
             });
           }
           this.$set(this.modalForm, "ruleDefineExpression", arr);
-          console.log(this.modalForm.ruleDefineData, this.activeRow.rdIdentify);
+          // console.log(this.modalForm.ruleDefineData, this.activeRow.rdIdentify);
         }
       });
     },
@@ -1025,22 +1053,22 @@ export default {
   left: 0;
   top: 0;
 }
-.rule-express-wrap{
-
+.rule-express-wrap {
   height: 3.25rem;
   line-height: 3.25rem;
   // display: flex;
   // justify-content: center;
   // align-items: center;
-.rule-express {
-  // padding-left: 0.5rem;
-  margin: 3.25rem 0;
+  .rule-express {
+    // padding-left: 0.5rem;
+    margin: 3.25rem 0;
+  }
 }
-}
-::v-deep .ivu-select-single .ivu-select-selection .ivu-select-placeholder, .ivu-select-single .ivu-select-selection .ivu-select-selected-value{
+::v-deep .ivu-select-single .ivu-select-selection .ivu-select-placeholder,
+.ivu-select-single .ivu-select-selection .ivu-select-selected-value {
   text-align: center;
 }
-::v-deep .ivu-input{
+::v-deep .ivu-input {
   text-align: center;
 }
 </style>
