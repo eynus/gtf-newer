@@ -172,7 +172,7 @@
                         :key="`vfr_${index3}`"
                       >{{item3.name}}</Option>
                     </Select>
-                    <template v-if="item.controlChangedDetail.TypeOperator===1">
+                    <template v-if="item.controlChangedDetail.CodeListID">
                       <Select
                         v-model="item.controlChangedDetail.CodeListID"
                         style="width:8rem"
@@ -934,7 +934,7 @@ export default {
                 ? "空值约束"
                 : "代码范围约束",
             FieldName: item.selectedValSecond,
-            TypeOperator: item.controlChangedDetail.TypeOperator,
+            TypeOperator: item.selectedValFirst === 3?'in':item.controlChangedDetail.TypeOperator,
             Range: item.controlChangedDetail.Range,
             CodeListName: item.controlChangedDetail.CodeListName,
             CodeListID: item.controlChangedDetail.CodeListID,
