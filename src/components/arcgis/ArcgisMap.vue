@@ -169,8 +169,6 @@ export default {
           vector: customBasemap,
           image: customBasemap1
         }[this.baseMapType]
-        // basemap: "streets",
-        // layers: [sketchlayer]
       });
       this.view = new MapView({
         map: this.map,
@@ -178,30 +176,31 @@ export default {
         center: config.centerPoint,
         zoom: 11
       });
+      this.$emit('created', this.map, this.view)
       // 添加工具框
       this.view.ui.add(document.getElementById("toolbar"), "top-left");
       // 添加全屏
       this.fullscreen = new Fullscreen({
         view: this.view,
-        // autoResize: true
       });
       this.view.ui.add(this.fullscreen, "top-left");
       this.$emit('map', this.map, this.view)
       // 添加工具框
       this.view.ui.add(document.getElementById("toolbar"), "top-left");
+
       // 增加底图切换插件
-      // let basemapToggle = new BasemapToggle({
-      //   view: this.view,
-      //   nextBasemap: {
-      //     vector: customBasemap1,
-      //     image: customBasemap
-      //   }[this.baseMapType]
-      // });
+      let basemapToggle = new BasemapToggle({
+        view: this.view,
+        nextBasemap: {
+          vector: customBasemap1,
+          image: customBasemap
+        }[this.baseMapType]
+      })
+      this.view.ui.add(basemapToggle, "bottom-right")
+
       this.view.on("pointer-move", ["Shift"], e => {
         let point = this.view.toMap({ x: e.x, y: e.y });
-        console.log(point);
-      });
-      // this.view.ui.add(basemapToggle, "top-bottom");
+      })
       /* 将图层加载至地图上 */
       this.addLayers(this.layers);
       /* 判断是否需要创建图+形编辑工具sketch */

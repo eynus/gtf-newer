@@ -103,6 +103,7 @@
             width: remToPx(5)
           },
           {
+            title: '序号',
             type: 'index',
             width: remToPx(5),
             align: 'center'

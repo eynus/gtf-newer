@@ -58,10 +58,10 @@
       },
       {
         type: 'value',
-        name: '温度',
+        name: '面积(km²)',
         min: 0,
-        max: 25,
-        interval: 5,
+        max: 105,
+        interval: 15,
         axisLabel: {
           formatter: '{value}'
         }
@@ -74,40 +74,43 @@
         itemStyle: {
           color: '#7c63ea',
         },
-        data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4]
+        data: []
       },
       {
         name: '优化',
         type: 'line',
         yAxisIndex: 1,
         itemStyle: {},
-        data: [18,18,18,18,18,18,18,18,18,18,18]
+        data: []
       },
       {
         name: '重点',
         type: 'line',
         yAxisIndex: 1,
         itemStyle: {},
-        data: [23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23]
+        data: []
       },
       {
         name: '限制',
         type: 'line',
         yAxisIndex: 1,
         itemStyle: {},
-        data: [6.3, 6.3, 6.3, 6.3,6.3,6.3,6.3,6.3,6.3,6.3,6.3]
+        data: []
       },
       {
         name: '禁止',
         type: 'line',
         yAxisIndex: 1,
         itemStyle: {},
-        data: [10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2]
+        data: []
       }
     ]
   }
   export default {
     name: "AreaLineBar",
+    props: {
+      func: Array
+    },
     data() {
       return {
         bar: []
@@ -117,6 +120,11 @@
       color() {
         return this.$store.state.color.pic_area
       },
+    },
+    watch: {
+      func() {
+        this.getFuncList()
+      }
     },
     methods: {
       init() {
@@ -141,16 +149,54 @@
         })
         let option = {
           xAxis: { data: axis },
-          // yAxis: [{ max: data[0].area }],
           series: [{ data: bar }]
         }
         this.charts.setOption(option)
+        return option
+      },
+      getFuncList() {
+        let a = [], b=[], c = [],d = []
+        this.func.forEach(item => {
+          if (item.level) {
+            switch (item.functionType) {
+              case '优化开发区域':
+                a.push(item)
+                break
+              case '重点开发区域':
+                b.push(item)
+                break
+              case '限制开发区域':
+                c.push(item)
+                break
+              case '禁止开发区域':
+                d.push(item)
+                break
+            }
+          }
+        })
+        a.sort(this.sort)
+        b.sort(this.sort)
+        c.sort(this.sort)
+        d.sort(this.sort)
+        a = a.map(item => item.sumArea)
+        b = b.map(item => item.sumArea)
+        c = c.map(item => item.sumArea)
+        d = d.map(item => item.sumArea)
+        let option = this.getAreaList()
+        option.series.push({data: a})
+        option.series.push({data: b})
+        option.series.push({data: c})
+        option.series.push({data: d})
+        this.charts.setOption(option)
+      },
+      sort(a, b) {
+        return a.code - b.code
       }
     },
     mounted() {
       this.$nextTick(() => {
         this.init()
-        this.getAreaList()
+        this.getFuncList()
       })
     }
   }
