@@ -733,7 +733,7 @@ export default {
         const { data, code } = res.data;
         if (code === 1000) {
           this.keyCRFromTableListDemo = data.map(item => ({
-            id: item.pkId,
+            id: item.children.map(it=>it.code).join(','),
             name: item.domainName
           }));
         }
