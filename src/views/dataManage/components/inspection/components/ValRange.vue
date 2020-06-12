@@ -649,7 +649,7 @@ export default {
           this.$set(
             this.modalForm.ruleDefineData[targetIdx],
             "keyList",
-            this.keyListDemo.filter(it => ["VarChar", "Char"].includes(it.type))
+            this.keyListDemo.filter(it => this.isNullType.includes(it.type))
           );
           break;
         case 3:
@@ -674,7 +674,7 @@ export default {
             this.modalForm.ruleDefineData[targetIdx],
             "keyList",
             this.keyListDemo.filter(it =>
-              this.isNullType.includes(it.type)
+              this.codeRangeType.includes(it.type)
             )
           );
           break;
