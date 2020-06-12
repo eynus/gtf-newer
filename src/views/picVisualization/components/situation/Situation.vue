@@ -2,21 +2,21 @@
   <Layout class="h100 pd-lg container">
       <Row type="flex" justify="space-between" style="margin: 0">
         <Col span="4" class="bg-white chart" v-for="item in radios" :key="item.value">
-          <AreaPie :data="area[item.value]" :town="town">{{item.label}}面积占全市面积比重</AreaPie>
+          <AreaPie :func="area[item.value]" :town="town">{{item.label}}面积占全市面积比重</AreaPie>
         </Col>
         <Col span="7" class="bg-white chart">
-          <AreaLineBar>区县面积同开发区域面积对比</AreaLineBar>
+          <AreaLineBar :func="func">区县面积同开发区域面积对比</AreaLineBar>
         </Col>
       </Row>
       <Content class="content">
-        <arcMap></arcMap>
+        <arcMap :funcname="funcname" @mapCreated="mapCreated"></arcMap>
         <div class="tool">
-          <RadioGroup v-model="radio" vertical @on-change="radioChange">
-            <Radio :label="item.value" v-for="item in radios" :key="item.value">
+          <CheckboxGroup v-model="radio" vertical @on-change="radioChange">
+            <Checkbox :label="item.value" v-for="item in radios" :key="item.value">
               <Icon type="social-apple"></Icon>
               <span>{{item.label}}</span>
-            </Radio>
-          </RadioGroup>
+            </Checkbox>
+          </CheckboxGroup>
         </div>
       </Content>
   </Layout>
@@ -26,11 +26,12 @@ import arcMap from './map'
 import AreaPie from "./charts/AreaPie"
 import AreaLineBar from "./charts/AreaLineBar"
 import Storage from "@/utils/storage";
+import { funcList } from "@/api/pic/situation"
 export default {
   name: "situation",
   data() {
     return{
-      radio: 0,
+      radio: [0 , 1, 2, 3],
       radios: [
         {
           label: '优化开发区域',
@@ -71,7 +72,9 @@ export default {
           key: 3
         }
       ],
+      funcname: [],
       town: {},
+      func: [],
     }
   },
   components: {
@@ -81,21 +84,52 @@ export default {
   },
   mounted() {
     this.init()
-    setTimeout(() => {
-      this.area.forEach(item => {
-        item.value = Math.floor(Math.random()*(0 - 20000) + 20000);
-      })
-    }, 2000)
   },
   methods: {
     radioChange() {
-      console.log(this.radio)
+      let funcname = []
+      this.radios.map(item => {
+        this.radio.forEach(radio => {
+          if (item.value === radio) {
+            funcname.push(item)
+          }
+        })
+      })
+      this.funcname = funcname
     },
     getTown() {
       this.town = Storage.getArea()[0]
     },
+    mapCreated() {
+      this.radioChange()
+    },
+    getFuncList() {
+      funcList({}).then(res => {
+        if (res.data.code === 1000) {
+          this.func = res.data.data
+          let city = this.func.filter(item => item.code == 1)
+          city.forEach(item => {
+            switch (item.functionType) {
+              case '优化开发区域':
+                this.area[0].value = parseInt(item.sumArea)
+                break
+              case '重点开发区域':
+                this.area[1].value = parseInt(item.sumArea)
+                break
+              case '限制开发区域':
+                this.area[2].value = parseInt(item.sumArea)
+                break
+              case '禁止开发区域':
+                this.area[3].value = parseInt(item.sumArea)
+                break
+            }
+          })
+        }
+      })
+    },
     init() {
       this.getTown()
+      this.getFuncList()
     }
   }
 };
@@ -115,8 +149,11 @@ export default {
       top: 2rem;
       right: 30px;
       padding: 0.8rem;
-      border: 1px solid #000;
       background: #fff;
+      ::v-deep .ivu-checkbox-group-item {
+        display: block;
+        padding: 0.2rem;
+      }
     }
   }
 }

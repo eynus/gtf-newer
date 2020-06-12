@@ -6,7 +6,7 @@
         :value="value"
         :height="height"
     ></chart-rose-pie>
-    <div class="percent" :style="{color: color[data.key]}">
+    <div class="percent" :style="{color: color[func.key]}">
       {{ percent }}%
     </div>
     <div class="text-wrap">
@@ -29,7 +29,7 @@
     name: "AreaPie",
     props: {
       town: Object,
-      data: Object
+      func: Object
     },
     components: {
       ChartRosePie
@@ -76,7 +76,6 @@
                     if (pargram.name === '全市面积') {
                       return `${pargram.name}\n0km²`
                     }
-                    console.log(pargram)
                     return `${pargram.name}\n${pargram.value.value}km²`
                   },
                   position: 'outside',
@@ -106,9 +105,9 @@
       // 半圆的数据处理
       value() {
         this.total = this.town.area
-        let key = this.data.key
+        let key = this.func.key
         let check = item[key]
-        check.value = this.data.value
+        check.value = this.func.value
         check.itemStyle.color = this.color[key]
 
         this.percent = (check.value / this.total * 100).toFixed(2)
@@ -121,10 +120,12 @@
         let sum = 0
         let data = [check, all]
         data[1].value = this.total - data[0].value
-        data.map(item => sum += item.value)
+        data.forEach(item => {
+          let value = item.value
+          sum += value
+        })
         empty.value = sum
         data.push(empty)
-
         return data
       }
     },

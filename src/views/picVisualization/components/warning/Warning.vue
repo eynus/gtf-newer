@@ -15,19 +15,9 @@
         </div>
       </div>
       <Layout class="layout">
-        <Row class="h100" style="height: 100%">
+        <Row>
           <Col :span="`${sider ? 10 : 0}`" style="height: 100%;background: #fff;">
-            <Tabs class="tab">
-              <TabPane label="总览" icon="ios-aperture-outline">
-                <div class="">
-                  <span>生态保护红线范围内建设用地面积</span>
-                  <span>800</span>
-                  <span>平方千米</span>
-                </div>
-              </TabPane>
-              <TabPane label="年份统计" icon="ios-calendar-outline">">年份统计</TabPane>
-              <TabPane label="行政区划统计" icon="ios-barcode-outline">行政区划统计</TabPane>
-            </Tabs>
+            <LineCtrl></LineCtrl>
           </Col>
           <Col :span="`${sider ? 14 : 24}`" style="height: 100%">
             <Map></Map>
@@ -38,10 +28,12 @@
 </template>
 <script>
 import Map from './Map'
+import LineCtrl from './LineCtrl'
 export default {
   name: "warning",
   components: {
-    Map
+    Map,
+    LineCtrl
   },
   data() {
     return {
@@ -136,6 +128,12 @@ export default {
         color: #0083ff;
         background: #d0e3ff;
       }
+    }
+  }
+  .layout {
+    height: calc(100% - 4.8rem);
+    ::v-deep .ivu-row {
+      height: 100%;
     }
   }
   .tab {

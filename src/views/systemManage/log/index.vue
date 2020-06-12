@@ -159,6 +159,7 @@
         log: 'log',
         columns: [
           {
+            title: '序号',
             type: 'index',
             width: remToPx(5),
             align: 'center'
