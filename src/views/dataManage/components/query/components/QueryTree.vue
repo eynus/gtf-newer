@@ -113,7 +113,8 @@ export default {
           resolve();
           return;
         }
-        getLeavesById({ identification: treeNode.dataRef.key }).then(res => {
+        getLeavesById({ dataName: treeNode.dataRef.key }).then(res => {
+        // getLeavesById({ identification: treeNode.dataRef.key }).then(res => {
           const { code, data } = res.data;
           if (code === 1000) {
             if (data.length) {
@@ -132,8 +133,10 @@ export default {
     },
 
     onSelect(e, a) {
+      console.log('?',e,a);
+      
       if (e[0]) {
-        this.$emit("handleSelect", e);
+        this.$emit("handleSelect", e,true);
       }
     },
     onExpand(expandedKeys) {

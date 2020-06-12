@@ -90,7 +90,7 @@
 </template>
 <script>
 import { remToPx } from "@/utils/common";
-import { insertZB,updateZB } from "@/api/modelConfig/config";
+import { insertZB, updateZB } from "@/api/modelConfig/config";
 export default {
   name: "add-modal",
   props: {
@@ -102,12 +102,13 @@ export default {
         return {
           id: 0,
           class: "1",
+          // classname: "1",
           code: "1",
           name: "",
           unit: "",
           fitrange: "",
           type: "",
-          valrange: ["", ""],
+          valrange: [0, 0],
           source: "",
           content: ""
         };
@@ -213,8 +214,9 @@ export default {
         name: "",
         unit: "",
         fitrange: "",
+        max: "",
         type: "",
-        valrange: ["", ""],
+        valrange: [0, 0],
         source: "",
         content: ""
       }
@@ -230,8 +232,23 @@ export default {
 
       this.visible = false;
       this.$emit("showModel", this.visible);
-      // this.clearFormItem();
+      this.clearFormItem();
       // this.clearPathAndKeys();
+    },
+    // 清空
+    clearFormItem() {
+      this.modalKeyFormItem = {
+        class: "",
+        code: "1",
+        name: "",
+        unit: "",
+        fitrange: "",
+        max: "",
+        type: "",
+        valrange: [0, 0],
+        source: "",
+        content: ""
+      };
     },
     // modal确认按钮
     ok() {
@@ -240,6 +257,7 @@ export default {
           let postData = {
             pkId: this.modalKeyFormItem.id,
             pkZbflId: this.modalKeyFormItem.class,
+            pkZbflName: this.modalKeyFormItem.classname,
             zbmxCode: this.modalKeyFormItem.code,
             zbmxName: this.modalKeyFormItem.name,
             zbmxType: this.modalKeyFormItem.type,
@@ -256,16 +274,18 @@ export default {
               if (code === 1000) {
                 this.visible = false;
                 this.$Message.info("添加成功");
+                this.clearFormItem();
                 this.$emit("showModel", this.visible);
                 this.$emit("handleAdd");
               }
             });
           } else {
-             updateZB(postData).then(res => {
+            updateZB(postData).then(res => {
               const { code, data } = res.data;
               if (code === 1000) {
                 this.visible = false;
                 this.$Message.info("修改成功");
+                this.clearFormItem();
                 this.$emit("showModel", this.visible);
                 this.$emit("handleAdd");
               }
@@ -273,7 +293,7 @@ export default {
           }
         }
       });
-      // this.clearFormItem();
+
       // this.clearPathAndKeys();
     }
   }

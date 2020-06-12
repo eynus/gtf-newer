@@ -166,8 +166,8 @@ export default {
         }
       });
     },
-    handleSelect(e) {
-      if(this.activeMode==='meta'){
+    handleSelect(e,isLeaf) {
+      if(this.activeMode==='meta'&&isLeaf){
         this.getMetaByName(e[0]);
       }else{
         // 加载地理信息
