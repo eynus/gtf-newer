@@ -70,7 +70,12 @@
       <div class="modal-item">
         <div class="title mb">规则适用对象</div>
         <div>
-          <Cascader :data="dataPaths" v-model="modalForm.path" @on-change="handlePathChange"></Cascader>
+          <Cascader
+            :disabled="isRuleUpdate"
+            :data="dataPaths"
+            v-model="modalForm.path"
+            @on-change="handlePathChange"
+          ></Cascader>
         </div>
       </div>
       <div class="modal-item">
@@ -455,6 +460,9 @@ export default {
       });
     },
     concatRuleDescWhenChange() {
+      if(!this.modalForm.path[0]){
+        return ''
+      }
       let relationArr = this.modalForm.ruleDefineExpression;
       let arr = this.modalForm.ruleDefineData.map((item, index) => {
         let control = item.controlChangedDetail;
@@ -588,7 +596,7 @@ export default {
       this.modalForm.ruleDefineData.push({
         id: this.modalForm.ruleDefineData.length + 1,
         selectedValFirst: 1,
-        selectedValSecond: 2,
+        selectedValSecond: '未知',
         // selectedValRelation: "",
         activated: true,
         // valRangeSecondArr: [],
@@ -879,7 +887,6 @@ export default {
 
     // 清空规则
     clearFormItem() {
-      this.$set(this.modalForm, "path", []);
       this.modalForm = {
         rulesFitObj: "",
         path: [""],
@@ -889,7 +896,7 @@ export default {
           {
             id: 1,
             selectedValFirst: 1,
-            selectedValSecond: 2,
+            selectedValSecond: '未知',
             types: this.valRangeType,
             controlChangedDetail: {
               TypeOperator: ">",
@@ -907,6 +914,8 @@ export default {
         pathChildNodeId: "",
         dataPropDefine: []
       };
+      this.$set(this.modalForm, "path", []);
+      this.$set(this.modalForm, "ruleDesc", "");
     },
     //选中路径变化
     handlePathChange(a, b) {

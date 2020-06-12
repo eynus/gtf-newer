@@ -59,7 +59,7 @@
         <div class="title mb">规则适用对象</div>
         <div>
           <!-- <Input v-model.trim="modalForm.obj" placeholder="请输入" clearable /> -->
-          <Cascader :data="dataPaths" v-model="modalForm.path" @on-change="handlePathChange"></Cascader>
+          <Cascader :disabled="isRuleUpdate" :data="dataPaths" v-model="modalForm.path" @on-change="handlePathChange"></Cascader>
         </div>
       </div>
       <div class="modal-item mt position-r">
