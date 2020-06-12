@@ -132,8 +132,10 @@ export default {
     },
 
     onSelect(e, a) {
+      console.log('?',e,a);
+      
       if (e[0]) {
-        this.$emit("handleSelect", e);
+        this.$emit("handleSelect", e,true);
       }
     },
     onExpand(expandedKeys) {
