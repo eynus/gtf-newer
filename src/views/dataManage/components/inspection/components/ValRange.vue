@@ -6,9 +6,9 @@
           <FormItem>
             <Button v-auth="['page_5_4_1']" type="success" @click="handleStartRule">默认启用</Button>
           </FormItem>
-            <FormItem>
-          <Button v-auth="['page_5_4_5']" type="primary" @click="handleStopRule">停止启用</Button>
-        </FormItem>
+          <FormItem>
+            <Button v-auth="['page_5_4_5']" type="primary" @click="handleStopRule">停止启用</Button>
+          </FormItem>
           <FormItem>
             <Button v-auth="['page_5_4_2']" type="info" @click="handleAddRule">添加规则</Button>
           </FormItem>
@@ -23,7 +23,7 @@
       <div>
         <Form :label-width="200" inline>
           <FormItem label="规则适用对象：">
-            <Input v-model="queryRulesFitObj" clearable/>
+            <Input v-model="queryRulesFitObj" clearable />
           </FormItem>
           <FormItem :label-width="remToPx(2)">
             <Button type="primary" @click="handleQuery">查询</Button>
@@ -61,11 +61,11 @@
       v-model="modalFlag"
       class-name="vertical-center-modal"
       title="值域规范性规则添加"
-      :width="remToPx(45)"
+      :width="remToPx(50)"
     >
       <div slot="footer">
-        <Button @click="cancel">取消</Button>
         <Button type="primary" @click="ok">确定</Button>
+        <Button @click="cancel">取消</Button>
       </div>
       <div class="modal-item">
         <div class="title mb">规则适用对象</div>
@@ -83,92 +83,136 @@
         <div class="title">规则定义</div>
         <div class="mb text-right">
           <Button type="primary" :size="'small'" @click="handleModalAddRule">新建规则项</Button>
-          <!-- <Form inline>
-            <FormItem>
-              <Button type="info" @click="handleAddKey" :disabled="modalForm.addKeyBtnDisabled">添加字段</Button>
-            </FormItem>
-            <FormItem>
-              <Button
-                type="warning"
-                @click="handleUpdateKey"
-                :disabled="modalForm.updateKeyBtnDisabled"
-              >修改字段</Button>
-            </FormItem>
-            <FormItem>
-              <Button
-                type="error"
-                @click="handleDeleteKey"
-                :disabled="modalForm.deleteKeyBtnDisabled"
-              >删除字段</Button>
-            </FormItem>
-          </Form>-->
         </div>
-        <div class="overflow-hidden pd rule-define-wrap">
-          <div
-            class="rule-define-row flex flex-sb mt-lg mb"
-            v-for="(item,index) in modalForm.ruleDefineData"
-            :key="`data_${index}`"
-          >
-            <div>
-              <Select
-                v-model="item.selectedValFirst"
-                style="width:8rem"
-                @on-change="handleValRangeFirstChange"
-                :disabled="!item.activated"
+        <div class="zt-scroll-y pd rule-define-wrap">
+          <div class="position-r">
+            <!-- 约束 -->
+            <div class="rule-control-wrap">
+              <div
+                class="rule-define-row flex flex-sb"
+                v-for="(item,index) in modalForm.ruleDefineData"
+                :key="`data_${index}`"
+                @click="setActiveRowId(item.id)"
               >
-                <Option
-                  :value="item1.domainName"
-                  v-for="(item1,index1) in valRangeFirstArr"
-                  :key="`vrf_${index1}`"
-                >{{item1.domainName}}</Option>
-              </Select>
-              <Select
-                v-model="item.selectedValSecond"
-                @on-change="handleValRangeSecondChange"
-                style="width:6rem"
-                class="ml"
-                :disabled="!item.activated"
-              >
-                <Option
-                  :value="item2.code"
-                  v-for="(item2,index2) in item.valRangeSecondArr"
-                  :key="`vfs_${index2}`"
-                >{{item2.codeDes}}</Option>
-              </Select>
-              <Select
-                v-model="item.selectedValRelation"
-                style="width:6rem"
-                class="ml"
-                :disabled="!item.activated"
-              >
-                <Option
-                  :value="item3.code"
-                  v-for="(item3,index3) in valRangeRelationArr"
-                  :key="`vfr_${index3}`"
-                >{{item3.codeDes}}</Option>
-              </Select>
+                <div>
+                  <!-- 一级 -->
+                  <Select
+                    v-model="item.selectedValFirst"
+                    style="width:8rem"
+                    @on-change="handleValRangeFirstChange"
+                  >
+                    <Option
+                      :value="item1.id"
+                      v-for="(item1,index1) in controlListDemo"
+                      :key="`vrf_${index1}`"
+                    >{{item1.name}}</Option>
+                  </Select>
+                  <!-- 二级 -->
+                  <Select
+                    v-model="item.selectedValSecond"
+                    @on-change="handleValRangeSecondChange"
+                    style="width:6rem"
+                    class="ml"
+                  >
+                    <Option
+                      :value="item2.name"
+                      v-for="(item2,index2) in item.keyList"
+                      :key="`vfs_${index2}`"
+                    >{{item2.name}}</Option>
+                  </Select>
+                  <!-- 名称 -->
+                  <template v-if="item.selectedValFirst===1">
+                    <Select
+                      v-model="item.controlChangedDetail.TypeOperator"
+                      style="width:6rem"
+                      class="ml"
+                    >
+                      <Option
+                        :value="item3.id"
+                        v-for="(item3,index3) in keyRangeRelListDemo"
+                        :key="`vfr_${index3}`"
+                      >{{item3.name}}</Option>
+                    </Select>
+                    <Input
+                      class="ml"
+                      v-model="item.controlChangedDetail.Range"
+                      style="width:100px"
+                      clearable
+                    />
+                  </template>
+                  <!-- 面积 -->
+                  <template v-else-if="item.selectedValFirst===2">
+                    <Select
+                      v-model="item.controlChangedDetail.TypeOperator"
+                      style="width:6rem"
+                      class="ml"
+                    >
+                      <Option
+                        :value="item3.id"
+                        v-for="(item3,index3) in keyNullListDemo"
+                        :key="`vfr_${index3}`"
+                      >{{item3.name}}</Option>
+                    </Select>
+                  </template>
+                  <!-- 代码范围 -->
+                  <template v-if="item.selectedValFirst===3">
+                    <Select
+                      v-model="item.controlChangedDetail.TypeOperator"
+                      style="width:6rem"
+                      class="ml"
+                    >
+                      <Option
+                        :value="item3.id"
+                        v-for="(item3,index3) in keyCodeRangeListDemo"
+                        :key="`vfr_${index3}`"
+                      >{{item3.name}}</Option>
+                    </Select>
+                    <template v-if="item.controlChangedDetail.TypeOperator===1">
+                      <Select
+                        v-model="item.controlChangedDetail.CodeListID"
+                        style="width:6rem"
+                        class="ml"
+                        @on-change="handleCodeListIDChange"
+                      >
+                        <Option
+                          :value="item3.id"
+                          v-for="(item3,index3) in keyCRFromTableListDemo"
+                          :key="`vfr_${index3}`"
+                        >{{item3.name}}</Option>
+                      </Select>
+                    </template>
+                    <template v-else>
+                      <Input
+                        class="ml"
+                        style="width:100px"
+                        v-model="item.controlChangedDetail.Range"
+                        clearable
+                      />
+                    </template>
+                  </template>
+                </div>
+                <div>
+                  <Icon
+                    :size="remToPx(1.25)"
+                    type="md-trash"
+                    class="ml mr cursor-pointer"
+                    @click="handleAskDeleteDefine(item.id)"
+                  />
+                </div>
+              </div>
             </div>
-            <div>
-              <Icon
-                :size="remToPx(1.25)"
-                class="cursor-pointer"
-                type="md-checkmark-circle"
-                v-if="item.activated"
-                @click="handleSaveRuleDefine(item.id)"
-              />
-              <Icon
-                :size="remToPx(1.25)"
-                class="cursor-pointer"
-                type="md-create"
-                v-else
-                @click="handleEditRuleDefine(item.id)"
-              />
-              <Icon
-                :size="remToPx(1.25)"
-                type="md-trash"
-                class="ml mr cursor-pointer"
-                @click="handleAskDeleteDefine(item.id)"
-              />
+            <!-- 关系 -->
+            <div class="rule-express-wrap">
+              <div
+                v-for="(express,index) in modalForm.ruleDefineExpression"
+                :key="`express_${index}_${express.value}`"
+                class="rule-express"
+              >
+                <Select v-model="express.value" style="width:6rem" class="rule-express-item">
+                  <Option value="and">并且</Option>
+                  <Option value="or">或者</Option>
+                </Select>
+              </div>
             </div>
           </div>
         </div>
@@ -182,7 +226,9 @@
 import {
   addRules,
   updateRules,
-  getValRangeRuleCodeList
+  getValRangeRuleCodeList,
+  getZJListPageById,
+  getVRRKeyListById
 } from "@/api/dataManage/inspection";
 import { remToPx } from "@/utils/common";
 import { getPaths } from "@/api/dataManage/overview";
@@ -209,14 +255,39 @@ export default {
   data() {
     return {
       activeRuleItemId: 0,
-      valRangeRelationArr: [
-        { codeDes: "并且", code: "1" },
-        { codeDes: "或者", code: "0" }
+      // 一级分类
+      controlListDemo: [
+        { id: 1, name: "数值范围约束" },
+        { id: 2, name: "空值约束" },
+        { id: 3, name: "代码范围约束" }
       ],
-      valRangeFirstArr: [],
-      valRangeSecondArr: [],
-      valRangeRuleCodeList: [],
+      // 二级分类
+      keyListDemo: [{ id: 1, name: "" }],
+      // 三级分类-数值约束
+      keyRangeRelListDemo: [
+        { id: "=", name: "等于" },
+        { id: "!=", name: "不等于" },
+        { id: ">", name: "大于" },
+        { id: "<", name: "小于" },
+        { id: ">=", name: "大于等于" },
+        { id: "<=", name: "小于等于" }
+      ],
 
+      // 三级分类-空值约束
+      keyNullListDemo: [
+        { id: "not null", name: "不能为空" },
+        { id: "be null", name: "必须为空" }
+      ],
+      //三级分类-代码范围约束
+      keyCodeRangeListDemo: [
+        { id: 1, name: "取值对应代码表" },
+        { id: 2, name: "取值范围自定义" }
+      ],
+      //四级分类-取值对应代码表-代码范围约束对应的代码表
+      keyCRFromTableListDemo: [{ id: 1, name: "" }],
+      valRangeType: ["Float", "Int"],
+      isNullType: ["Char", "VarChar"],
+      codeRangeType: ["VarChar", "Char", "Float", "Int", "Date"],
       activeRow: {},
       activeKeyRow: {},
       delModalKeyFlag: false,
@@ -230,7 +301,7 @@ export default {
       ruleDefineDataDemo: {
         selectedValFirst: "",
         selectedValSecond: "",
-        selectedValRelation: "",
+        // selectedValRelation: "",
         activated: true
       },
       modalForm: {
@@ -239,6 +310,7 @@ export default {
         ruleDesc: "",
         ruleDescArr: [],
         ruleDefineData: [],
+        ruleDefineExpression: [],
         pathChildNodeId: "",
         dataPropDefine: []
       },
@@ -265,7 +337,7 @@ export default {
         },
         {
           title: "规则描述",
-          key: "rulesName",
+          key: "rulesName"
           // align: "center"
         },
         {
@@ -281,8 +353,133 @@ export default {
   created() {
     this.getPaths();
     this.getValRangeRuleCodeList();
+
+    this.activeRow.rulesCode = this.$route.query.rules_code;
+    this.modalForm = {
+      rulesFitObj: "",
+      path: [""],
+      ruleDesc: "",
+      ruleDescArr: [],
+      ruleDefineData: [
+        {
+          id: 1,
+          selectedValFirst: 1,
+          selectedValSecond: 2,
+          types: this.valRangeType,
+          controlChangedDetail: {
+            TypeOperator: ">",
+            Range: "0",
+            CodeListName: "",
+            CodeListID: "",
+            StartIndex: "",
+            EndIndex: ""
+          },
+          keyList: []
+        }
+      ],
+
+      ruleDefineExpression: [],
+      pathChildNodeId: "",
+      dataPropDefine: []
+    };
   },
   methods: {
+    // 请求list
+    getZJListPageById() {
+      let postData = {
+        dataName: this.queryRulesFitObj,
+        pageNum: this.page.current,
+        pageSize: this.page.pageSize,
+        queryTerms: {
+          createdBy: "",
+          createdTime: "",
+          pkId: 0,
+          rdIdentify: "",
+          rulesCode: "",
+          rulesMlId: this.$route.query.id,
+          rulesName: "",
+          unCheck: "",
+          unRead: "",
+          unUpdate: "",
+          updatedBy: "",
+          updatedTime: "",
+          validity: ""
+        }
+      };
+      getZJListPageById(postData).then(res => {
+        this.tableData = [];
+        this.selectedRowIds = [];
+        this.startedArr = [];
+        this.unstartedArr = [];
+        const { data, code } = res.data;
+        if (code === 1000) {
+          this.page.total = data.total;
+          data.list.forEach(item => {
+            let newData = {
+              ...item,
+              id: item.pkId,
+              ruleStatus: item.unCheck === "0" ? "启用" : "未启用",
+              ruleStatusCode: item.unCheck,
+              path: (item.dataPath && item.dataPath.split(",")) || [],
+              rdIdentify: JSON.parse(item.rdIdentify)
+            };
+
+            // 值域规范性处理
+            // if (this.$route.query.id == 3) {
+            newData.rdIdentify = JSON.parse(item.rdIdentify) || {
+              rulesFitObj: ""
+            };
+            newData.rulesFitObj = newData.path[newData.path.length - 1];
+            newData.rulesName = this.concatRuleDesc(
+              newData.rdIdentify,
+              newData.rulesFitObj
+            );
+            // }
+            this.tableData.push(newData);
+            if (item.unCheck === "0") {
+              this.startedArr.push(item.pkId + "");
+            } else {
+              this.unstartedArr.push(item.pkId + "");
+            }
+          });
+        }
+      });
+    },
+    concatRuleDesc(rdIdentify, path) {
+      let relationArr = rdIdentify.Expression.split(" ");
+      let arr = rdIdentify.Conditions.map((item, index) => {
+        let range = "";
+        let codeName = "";
+        let TypeOperatorName;
+        if (item.ConType === "数值范围约束") {
+          range = item.Range;
+          TypeOperatorName = this.keyRangeRelListDemo.find(
+            it => it.id === item.TypeOperator
+          ).name;
+        }
+
+        if (item.ConType === "空值约束") {
+          TypeOperatorName = this.keyNullListDemo.find(
+            it => it.id === item.TypeOperator
+          ).name;
+        }
+        if (item.ConType === "代码范围约束") {
+          range = item.Range;
+          TypeOperatorName = this.keyCodeRangeListDemo.find(
+            it => it.id === item.TypeOperator
+          ).name;
+          codeName = item.CodeListName;
+        }
+        return index === 0
+          ? item.FieldName + TypeOperatorName + range
+          : ` ${relationArr[2 * index - 1] === "and" ? "且" : "或"}` +
+              item.FieldName +
+              TypeOperatorName +
+              range +
+              codeName;
+      });
+      return `${path}中 ` + arr;
+    },
     // 添加规则
     handleAddRule() {
       this.clearFormItem();
@@ -292,52 +489,48 @@ export default {
     },
     // 重新生成arr和规则描述
     handleRefreshRuleDesc() {
-      console.log(this.modalForm.ruleDefineData, this.activeRuleItemId);
-
-      // 拼接字符串
-      this.$set(this.modalForm, "ruleDescArr", []);
-      this.modalForm.ruleDefineData.forEach((item, index) => {
-        if (index > 0) {
-          this.modalForm.ruleDescArr.push(
-            item.selectedValRelation === "1" ? "并且" : "或者"
-          );
-        }
-
-        let target = this.valRangeRuleCodeList.find(
-          i => i.domainName === item.selectedValFirst
-        ).children;
-        let desc = target.find(it => it.code === item.selectedValSecond)
-          .codeDes;
-
-        this.modalForm.ruleDescArr.push(item.selectedValFirst + desc);
-      });
-      this.$set(
-        this.modalForm,
-        "ruleDesc",
-        this.modalForm.ruleDescArr.join("")
-      );
-      // }
+      // console.log(this.modalForm.ruleDefineData, this.activeRuleItemId);
+      // // 拼接字符串
+      // this.$set(this.modalForm, "ruleDescArr", []);
+      // this.modalForm.ruleDefineData.forEach((item, index) => {
+      //   if (index > 0) {
+      //     this.modalForm.ruleDescArr.push(
+      //       item.selectedValRelation === "1" ? "并且" : "或者"
+      //     );
+      //   }
+      //   let target = this.valRangeRuleCodeList.find(
+      //     i => i.domainName === item.selectedValFirst
+      //   ).children;
+      //   let desc = target.find(it => it.code === item.selectedValSecond)
+      //     .codeDes;
+      //   this.modalForm.ruleDescArr.push(item.selectedValFirst + desc);
+      // });
+      // this.$set(
+      //   this.modalForm,
+      //   "ruleDesc",
+      //   this.modalForm.ruleDescArr.join("")
+      // );
     },
-    // 编辑规则定义
-    handleEditRuleDefine(id) {
-      this.modalForm.ruleDefineData = this.modalForm.ruleDefineData.map(
-        item => ({
-          ...item,
-          activated: item.id !== id ? false : true
-        })
-      );
-      this.activeRuleItemId = id;
-    },
-    // 保存规则定义
-    handleSaveRuleDefine(id) {
-      let targetIdx = this.modalForm.ruleDefineData.findIndex(
-        item => item.id === id
-      );
-      this.$set(this.modalForm.ruleDefineData[targetIdx], "activated", false);
+    // // 编辑规则定义
+    // handleEditRuleDefine(id) {
+    //   this.modalForm.ruleDefineData = this.modalForm.ruleDefineData.map(
+    //     item => ({
+    //       ...item,
+    //       activated: item.id !== id ? false : true
+    //     })
+    //   );
+    //   this.activeRuleItemId = id;
+    // },
+    // // 保存规则定义
+    // handleSaveRuleDefine(id) {
+    //   let targetIdx = this.modalForm.ruleDefineData.findIndex(
+    //     item => item.id === id
+    //   );
+    //   this.$set(this.modalForm.ruleDefineData[targetIdx], "activated", false);
 
-      this.activeRuleItemId = id;
-      this.handleRefreshRuleDesc();
-    },
+    //   this.activeRuleItemId = id;
+    //   this.handleRefreshRuleDesc();
+    // },
     // 点击删除icon
     handleAskDeleteDefine(id) {
       this.activeRuleItemId = id;
@@ -346,17 +539,27 @@ export default {
     // 新建规则
     handleModalAddRule() {
       this.activeRuleItemId = this.modalForm.ruleDefineData.length + 1;
-      this.modalForm.ruleDefineData.push(
-        Object.assign({
-          id: this.modalForm.ruleDefineData.length + 1,
-          ...this.ruleDefineDataDemo,
-          //第二个optionList
-          valRangeSecondArr:
-            this.valRangeRuleCodeList.length &&
-            this.valRangeRuleCodeList[0].children,
-          activated: false
-        })
-      );
+      this.modalForm.ruleDefineData.push({
+        id: this.modalForm.ruleDefineData.length + 1,
+        selectedValFirst: 1,
+        selectedValSecond: 2,
+        // selectedValRelation: "",
+        activated: true,
+        // valRangeSecondArr: [],
+        types: ["Float", "Int"],
+        keyList: this.keyListDemo.filter(it =>
+          ["Float", "Int"].includes(it.type)
+        ),
+        controlChangedDetail: {
+          TypeOperator: ">",
+          Range: "0",
+          CodeListName: "",
+          CodeListID: "",
+          StartIndex: "",
+          EndIndex: ""
+        }
+      });
+      this.modalForm.ruleDefineExpression.push({ value: "and" });
       this.handleRefreshRuleDesc();
     },
     // 查询
@@ -365,53 +568,203 @@ export default {
       this.getZJListPageById();
     },
     handleValRangeSecondChange(e, b) {},
+    setActiveRowId(id) {
+      this.activeRuleItemId = id;
+    },
     // 二级联动
     handleValRangeFirstChange(e, b) {
-      // 找到改的哪一行：id
       let targetIdx = this.modalForm.ruleDefineData.findIndex(
         item => item.id === this.activeRuleItemId
       );
-      let temp = this.valRangeRuleCodeList.find(
-        item =>
-          item.domainName ===
-          this.modalForm.ruleDefineData[targetIdx].selectedValFirst //相应选择项
-      ).children;
-      // console.log(
-      //   this.modalForm.ruleDefineData[targetIdx].selectedValFirst,
-      //   this.modalForm.ruleDefineData[targetIdx].selectedValSecond
-      // );
+      switch (e) {
+        case 1: //数值范围约束
+          this.$set(
+            this.modalForm.ruleDefineData[targetIdx],
+            "controlChangedDetail",
+            {
+              TypeOperator: "equal",
+              Range: "0",
+              CodeListName: "",
+              CodeListID: "",
+              StartIndex: "",
+              EndIndex: ""
+            }
+          );
+          this.$set(
+            this.modalForm.ruleDefineData[targetIdx],
+            "types",
+            this.valRangeType
+          );
+          this.$set(
+            this.modalForm.ruleDefineData[targetIdx],
+            "keyList",
+            this.keyListDemo.filter(it => ["Float", "Int"].includes(it.type))
+          );
+          break;
+        case 2: //空值约束
+          this.$set(
+            this.modalForm.ruleDefineData[targetIdx],
+            "controlChangedDetail",
+            {
+              TypeOperator: "is not",
+              Range: "null",
+              CodeListName: "",
+              CodeListID: "",
+              StartIndex: "",
+              EndIndex: ""
+            }
+          );
+          this.$set(
+            this.modalForm.ruleDefineData[targetIdx],
+            "types",
+            this.isNullType
+          );
+          this.$set(
+            this.modalForm.ruleDefineData[targetIdx],
+            "keyList",
+            this.keyListDemo.filter(it => ["VarChar", "Char"].includes(it.type))
+          );
+          break;
+        case 3:
+          this.$set(
+            this.modalForm.ruleDefineData[targetIdx],
+            "controlChangedDetail",
+            {
+              TypeOperator: "1",
+              Range: "",
+              CodeListName: "",
+              CodeListID: "",
+              StartIndex: "",
+              EndIndex: ""
+            }
+          );
+          this.$set(
+            this.modalForm.ruleDefineData[targetIdx],
+            "types",
+            this.codeRangeType
+          );
+          this.$set(
+            this.modalForm.ruleDefineData[targetIdx],
+            "keyList",
+            this.keyListDemo.filter(it =>
+              ["VarChar", "Char", "Float", "Int", "Date"].includes(it.type)
+            )
+          );
+          break;
+        default:
+          break;
+      }
 
-      this.$set(
-        this.modalForm.ruleDefineData[targetIdx],
-        "valRangeSecondArr",
-        temp
-      );
-      this.$set(
-        this.modalForm.ruleDefineData[targetIdx],
-        "selectedValSecond",
-        temp[0].code
-      ); //第二项默认项
+      // let temp = this.valRangeRuleCodeList.find(
+      //   item =>
+      //     item.domainName ===
+      //     this.modalForm.ruleDefineData[targetIdx].selectedValFirst //相应选择项
+      // ).children;
+      // this.$set(
+      //   this.modalForm.ruleDefineData[targetIdx],
+      //   "valRangeSecondArr",
+      //   temp
+      // );
+      // this.$set(
+      //   this.modalForm.ruleDefineData[targetIdx],
+      //   "selectedValSecond",
+      //   temp[0].code
+      // ); //第二项默认项
       // console.log(this.modalForm, temp);
     },
-    // 获取属性域代码表
+    // 找到对应代码表中文名字
+    handleCodeListIDChange(e) {
+      console.log(e, this.activeRuleItemId);
+      let targetIdx = this.modalForm.ruleDefineData.findIndex(
+        item => item.id === this.activeRuleItemId
+      );
+      let name = this.keyCRFromTableListDemo.find(item => item.id === e).name;
+      // TODO
+      this.$set(
+        this.modalForm.ruleDefineData[targetIdx]["controlChangedDetail"],
+        "CodeListName",
+        name
+      );
+    },
+    // 获取字段代码表
+    getVRRKeyListById() {
+      getVRRKeyListById({ pkId: this.modalForm.pathChildNodeId }).then(res => {
+        const { data, code } = res.data;
+        if (code === 1000) {
+          this.keyListDemo = data.map(item => ({
+            id: item.pkId,
+            name: item.fieldName,
+            type: item.fieldType
+          }));
+          this.modalForm.ruleDefineData = this.modalForm.ruleDefineData.map(
+            item => ({
+              ...item,
+              keyList: this.keyListDemo.filter(it =>
+                item.types.includes(it.type)
+              )
+            })
+          );
+          console.log(this.modalForm.ruleDefineData);
+        }
+      });
+    },
+    // 获取代码范围代码表
     getValRangeRuleCodeList() {
       getValRangeRuleCodeList().then(res => {
         const { data, code } = res.data;
         if (code === 1000) {
-          this.valRangeRuleCodeList = data;
-          //第一个optionList是公用的
-          this.valRangeFirstArr = this.valRangeRuleCodeList;
-          //第二个optionList
-          this.valRangeSecondArr =
-            this.valRangeRuleCodeList.length &&
-            this.valRangeRuleCodeList[0].children;
+          this.keyCRFromTableListDemo = data.map(item => ({
+            id: item.pkId,
+            name: item.domainName
+          }));
+        }
+      });
+    },
+    // 点击修改重新请求keylist
+    getVRRKeyListWhenModify(id) {
+      getVRRKeyListById({ pkId: id }).then(res => {
+        const { data, code } = res.data;
+        if (code === 1000) {
+          this.keyListDemo = data.map(item => ({
+            id: item.pkId,
+            name: item.fieldName,
+            type: item.fieldType
+          }));
 
-          // 设置默认选中项
-          this.ruleDefineDataDemo = {
-            selectedValFirst: this.valRangeFirstArr[0].domainName,
-            selectedValSecond: this.valRangeSecondArr[0].code,
-            selectedValRelation: "1"
-          };
+          this.$set(
+            this.modalForm,
+            "ruleDefineData",
+            this.activeRow.rdIdentify.Conditions.map((item, index) => {
+              let ID = this.controlListDemo.find(it => it.name === item.ConType)
+                .id;
+              let types =
+                ID === 1
+                  ? this.valRangeType
+                  : ID === 2
+                  ? this.isNullType
+                  : this.codeRangeType;
+
+              return {
+                id: index + 1,
+                selectedValFirst: ID,
+                selectedValSecond: item.FieldName,
+                types: types,
+                controlChangedDetail: item,
+                keyList: this.keyListDemo.filter(it => types.includes(it.type))
+              };
+            })
+          );
+          let relationArr = this.activeRow.rdIdentify.Expression.split(" ");
+          let arr = [];
+          if (relationArr.length > 1) {
+            relationArr.forEach((it, idx) => {
+              if (idx % 2) {
+                arr.push({ value: it });
+              }
+            });
+          }
+          this.$set(this.modalForm, "ruleDefineExpression", arr);
+          console.log(this.modalForm.ruleDefineData, this.activeRow.rdIdentify);
         }
       });
     },
@@ -425,14 +778,11 @@ export default {
           this.activeRow = this.tableData.find(
             item => String(item.pkId) === this.selectedRowIds[0]
           );
-          this.$set(this.modalForm, "pathChildNodeId", this.activeRow.id);
-          this.modalForm = {
-            ...this.modalForm,
-            ...this.activeRow.rdIdentify,
-            path:this.activeRow.path
-          };
-          console.log('?',this.modalForm,this.activeRow);
-          
+          this.$set(this.modalForm, "pathChildNodeId", this.activeRow.dsPkid);
+          this.$set(this.modalForm, "ruleDesc", this.activeRow.rulesName); //描述
+          this.$set(this.modalForm, "path", this.activeRow.path); //规则路径对应
+          this.getVRRKeyListWhenModify(this.activeRow.dsPkid);
+          console.log("?");
         } else {
           this.$Message.info("修改操作只针对单个规则！请重新选择。");
         }
@@ -481,7 +831,6 @@ export default {
       }
     },
 
-
     // 清空规则
     clearFormItem() {
       this.$set(this.modalForm, "path", []);
@@ -490,7 +839,25 @@ export default {
         path: [""],
         ruleDesc: "",
         ruleDescArr: [],
-        ruleDefineData: [],
+        ruleDefineData: [
+          {
+            id: 1,
+            selectedValFirst: 1,
+            selectedValSecond: 2,
+            types: this.valRangeType,
+            controlChangedDetail: {
+              TypeOperator: ">",
+              Range: "0",
+              CodeListName: "",
+              CodeListID: "",
+              StartIndex: "",
+              EndIndex: ""
+            },
+            keyList: []
+          }
+        ],
+
+        ruleDefineExpression: [],
         pathChildNodeId: "",
         dataPropDefine: []
       };
@@ -500,6 +867,7 @@ export default {
       this.modalForm.path = a;
       this.modalForm.rulesFitObj = b[b.length - 1].label;
       this.modalForm.pathChildNodeId = b[b.length - 1].pkId;
+      this.getVRRKeyListById();
     },
     //获取数据路径列表
     getPaths() {
@@ -518,7 +886,7 @@ export default {
       this.modalForm.ruleDefineData = this.modalForm.ruleDefineData.filter(
         item => this.activeRuleItemId !== item.id
       );
-
+      this.modalForm.ruleDefineExpression.splice(-1);
       this.$Message.info("删除成功！");
       this.handleRefreshRuleDesc();
       // 删除规则
@@ -538,11 +906,38 @@ export default {
         return;
       } else {
         let newData = {
-          ruleDefineData: this.modalForm.ruleDefineData,
-          path: this.modalForm.path,
-          ruleDesc: this.modalForm.ruleDesc,
-          rulesFitObj: this.modalForm.rulesFitObj
+          Conditions: this.modalForm.ruleDefineData.map((item, index) => ({
+            ConType:
+              item.selectedValFirst === 1
+                ? "数值范围约束"
+                : item.selectedValFirst === 2
+                ? "空值约束"
+                : "代码范围约束",
+            FieldName: item.selectedValSecond,
+            TypeOperator: item.controlChangedDetail.TypeOperator,
+            Range: item.controlChangedDetail.Range,
+            CodeListName: item.controlChangedDetail.CodeListName,
+            CodeListID: item.controlChangedDetail.CodeListID,
+            StartIndex: "",
+            EndIndex: ""
+          })),
+
+          Expression: this.modalForm.ruleDefineData
+            .map((item, index) =>
+              index === 0
+                ? `{${index}}`
+                : ` ${
+                    this.modalForm.ruleDefineExpression[index - 1].value
+                  } {${index}}`
+            )
+            .join("") //"{0} and {1} and {2}"
         };
+        // let newData = {
+        //   ruleDefineData: this.modalForm.ruleDefineData,
+        //   path: this.modalForm.path,
+        //   ruleDesc: this.modalForm.ruleDesc,
+        //   rulesFitObj: this.modalForm.rulesFitObj
+        // };
 
         // 请求addRules接口
         let postData = {
@@ -551,6 +946,7 @@ export default {
           dataName: this.activeRow.dataName,
           dsPkid: String(this.modalForm.pathChildNodeId),
           pkId: this.activeRow.id,
+          dataPath: this.modalForm.path.join(","),
           rdIdentify: JSON.stringify(newData),
           rulesCode: this.activeRow.rulesCode,
           rulesMlId: this.$route.query.id,
@@ -564,6 +960,13 @@ export default {
         };
 
         if (this.isRuleUpdate) {
+          console.log("postData", postData);
+
+          console.log(
+            "this.modalForm.ruleDefineData",
+            this.modalForm.ruleDefineData
+          );
+
           updateRules(postData).then(res => {
             const { data, code } = res.data;
             if (code === 1000) {
@@ -576,6 +979,12 @@ export default {
           this.modalFlag = false;
           this.clearFormItem();
         } else {
+          console.log("postData", postData);
+          console.log("newData", newData);
+          console.log(
+            "this.modalForm.ruleDefineData",
+            this.modalForm.ruleDefineData
+          );
           addRules(postData).then(res => {
             const { data, code } = res.data;
             if (code === 1000) {
@@ -621,12 +1030,21 @@ export default {
     }
   }
   .rule-define-wrap {
-    height: 12.5rem;
+    height: 18rem;
     border: 1px solid rgba(0, 0, 0, 0.2);
   }
   .rule-define-row {
-    padding-bottom: 0.25rem;
+    margin-bottom: 3rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   }
+}
+.rule-express-wrap,
+.rule-control-wrap {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.rule-express {
+  margin: 2.8rem 0;
 }
 </style>

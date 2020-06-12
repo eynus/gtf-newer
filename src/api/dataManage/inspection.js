@@ -19,3 +19,5 @@ export const updateRules = data => request({ url: baseUrl_data + 'api/data/updat
 
 // 值域规范性-代码表
 export const getValRangeRuleCodeList = data => request({ url: baseUrl_data + 'api/data/list', method: 'get', data })
+// 值域规范性-字段代码表
+export const getVRRKeyListById = data => request({ url: baseUrl_data + 'api/data/listSxjg', method: 'post', data })
