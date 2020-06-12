@@ -280,8 +280,8 @@ export default {
 
       // 三级分类-空值约束
       keyNullListDemo: [
-        { id: "not null", name: "不能为空" },
-        { id: "be null", name: "必须为空" }
+        { id: "is not", name: "不能为空" },
+        { id: "is", name: "必须为空" }
       ],
       //三级分类-代码范围约束
       keyCodeRangeListDemo: [
