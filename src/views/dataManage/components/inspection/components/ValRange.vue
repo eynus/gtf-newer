@@ -458,7 +458,7 @@ export default {
       });
     },
     concatRuleDescWhenChange() {
-      // console.log(this.modalForm.ruleDefineData);
+      console.log(this.modalForm.ruleDefineData);
 
       if (!this.modalForm.path[0]) {
         return "";
@@ -489,9 +489,13 @@ export default {
           ).name;
         } else if (item.selectedValFirst === 2) {
           //空值约束
-          TypeOperatorName = this.keyNullListDemo.find(
-            it => it.id === control.TypeOperator
-          ).name;
+          console.log("空值约束 ,", control.TypeOperator, this.keyNullListDemo);
+
+          TypeOperatorName =
+            (this.keyNullListDemo.find(it => it.id === control.TypeOperator) &&
+              this.keyNullListDemo.find(it => it.id === control.TypeOperator)
+                .name) ||
+            "";
         } else if (item.selectedValFirst === 3) {
           //代码范围约束
           // range = control.Range;
@@ -517,7 +521,7 @@ export default {
         return index === 0
           ? selectedKeyNameCode + TypeOperatorName + range + codeName
           : ` ${relationArr[index - 1].value === "and" ? "且" : "或"}` +
-              item.selectedValSecond +
+              selectedKeyNameCode +
               TypeOperatorName +
               range +
               codeName;
@@ -768,7 +772,7 @@ export default {
         }
       });
     },
-    // 点击修改重新请求keylist
+    // 点击修改重新请求keylist 赋值ruleDefineData
     getVRRKeyListWhenModify(id) {
       getVRRKeyListById({ pkId: id }).then(res => {
         const { data, code } = res.data;
@@ -793,7 +797,19 @@ export default {
                   : ID === 2
                   ? this.isNullType
                   : this.codeRangeType;
-
+              let typeoperator;
+              switch (item.ConType) {
+                case "代码范围约束":
+                  typeoperator = item.CodeListID ? 1 : 2;
+                  break;
+                // case '数值范围约束':
+                //   typeoperator = item.TypeOperator
+                //   break;
+                // case '空值约束':break;
+                default:
+                  typeoperator = item.TypeOperator;
+                  break;
+              }
               return {
                 id: index + 1,
                 selectedValFirst: ID,
@@ -801,7 +817,7 @@ export default {
                 types: types,
                 controlChangedDetail: {
                   ...item,
-                  TypeOperator: item.CodeListID ? 1 : 2
+                  TypeOperator: typeoperator
                 },
                 keyList: this.keyListDemo.filter(it => types.includes(it.type))
               };
