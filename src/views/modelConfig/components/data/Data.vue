@@ -11,20 +11,8 @@
             <span class="mr-lg text-blue top-left-value">{{selectedTypeName}}</span>
           </div>
           <div class="top-right flex">
-            <!-- <Button class="" @click="handleUpload">上传</Button> -->
-            <Upload
-              :action="'lsp-model/api/model/importData'"
-              :before-upload="handleUpload"
-              :format="['xls', 'xlsx']"
-              accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-              :show-upload-list="false"
-              :on-success="handleSuccess"
-              :on-error="handleError"
-              :on-format-error="handleFormatError"
-              ref="upload"
-            >
-              <i-button type="primary">上传</i-button>
-            </Upload>
+            <Button class @click="showUploadModal">上传</Button>
+
             <Button type="primary" class="ml">
               <a :href="exportUrlTpl" target="_blank">导出模板</a>
             </Button>
@@ -80,31 +68,88 @@
         ></Table>
       </div>
     </div>
+
+    <Modal v-model="modalFlag" class-name="vertical-center-modal" title="上传" :width="remToPx(30)">
+      <div slot="footer">
+        <Button type="primary" @click="ok">确定</Button>
+        <Button @click="cancel">取消</Button>
+      </div>
+      <Form ref="modalForm" :model="modalForm" :label-width="remToPx(12)" :rules="ruleInline">
+        <FormItem label="指标分类：" prop="type">
+          <Select v-model="modalForm.type" style="width:10.25rem">
+            <Option
+              :value="item.id"
+              v-for="(item,index) in typeList"
+              :key="`typemodal_${index}`"
+            >{{item.name}}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="上传文件：" prop="file">
+          <div class="flex">
+            <Upload
+              :action="'lsp-model/api/model/importData'"
+              :before-upload="handleBeforeUpload"
+              :format="['xls', 'xlsx']"
+              accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+              :show-upload-list="true"
+              :on-success="handleSuccess"
+              :on-error="handleError"
+              :on-format-error="handleFormatError"
+              ref="upload"
+            >
+              <i-button type="primary">上传</i-button>
+            </Upload>
+            <span class="ml">{{modalFileName}}</span>
+          </div>
+        </FormItem>
+      </Form>
+    </Modal>
   </div>
 </template>
 <script>
 import { remToPx } from "@/utils/common";
 import Storage from "@/utils/storage";
-import { getList, getByLevel } from "@/api/modelConfig/data";
+import { getList, getByLevel, importData } from "@/api/modelConfig/data";
 export default {
   name: "plan",
   data() {
     return {
+      modalFileName: "",
+      modalForm: { type: "", file: "" },
+      ruleInline: {
+        type: [
+          {
+            required: true,
+            message: "指标类型不能为空.",
+            trigger: "change",
+            type: "number"
+          }
+        ],
+        file: [
+          {
+            required: true,
+            message: "附件不能为空",
+            trigger: "change",
+            validator: (rule, value, callback) => {
+              if (!value) {
+                callback(new Error("附件不能为空"));
+              } else {
+                callback();
+              }
+            }
+          }
+        ]
+      },
+      modalFlag: false,
       tableLoading: false,
       selectedRowIds: [],
       showSearchBox: false,
-      selectedAreaId: 1,
-      selectedAreaName: "",
+      selectedAreaId: 0,
+      selectedAreaName: "昭通市",
       selectedTypeId: 1,
       selectedTypeName: "",
-      areaList: [
-        { name: "昭阳区", id: 1 },
-        { name: "昭阳2区", id: 2 }
-      ],
-      typeList: [
-        { name: "底线管控", id: 1 },
-        { name: "结构效率", id: 2 }
-      ],
+      areaList: [],
+      typeList: [],
       columnsPutIn: [],
 
       dataPutIn: []
@@ -124,17 +169,47 @@ export default {
       name: item.placeName,
       id: item.pkId
     }));
-    this.selectedAreaId = "";
-    this.selectedAreaName = "";
-    // this.selectedAreaId = this.areaList[0].id;
-    // this.selectedAreaName = this.areaList[0].name;
+    // this.selectedAreaId = "";
+    // this.selectedAreaName = "";
+    this.selectedAreaId = this.areaList[0].id;
+    this.selectedAreaName = this.areaList[0].name;
     this.getByLevel();
   },
   mounted() {},
   beforeDestroy() {},
   methods: {
     // 上传按钮
-    handleUpload(file) {},
+    handleBeforeUpload(file) {
+      console.log(file);
+      this.modalFileName = file.name;
+      this.modalForm.file = file;
+      let fileSize = file.size / 1024 / 1024;
+      if (fileSize > 100) {
+        this.$Message.warning({
+          title: "文件大小超限",
+          desc: "文件 " + file.name + " 太大，上传文件大小不能超过100M."
+        });
+        return false;
+      }
+      this.$refs.modalForm.validateField("file", res => {}); // 重新校验
+      return false;
+    },
+    handleUpload() {
+      let formData = new FormData();
+      formData.append("pkId", this.modalForm.type);
+      // for (var i = 0; i < this.picFiles.length; i++) {
+      formData.append("file", this.modalForm.file); // 文件对象
+      // imgArr.push(this.picFiles[i].src)
+      // }
+      importData(formData).then(res => {
+        const { data, code } = res.data;
+        if (code === 1000) {
+          this.modalFlag = false;
+          this.$Message.info("上传成功。");
+          this.getList();
+        }
+      });
+    },
     handleSuccess() {
       this.$Message.info("上传成功。");
       this.getList();
@@ -143,8 +218,6 @@ export default {
       this.$Message.warning(e);
     },
     handleFormatError() {
-      console.log("???????????????");
-
       this.$Message.warning("文件格式错误，请上传xls、xlsx格式的文件");
       return false;
     },
@@ -246,7 +319,7 @@ export default {
       if (id === this.selectedAreaId) {
         // 取消选择
         this.selectedAreaId = 0;
-        this.selectedAreaName = "";
+        this.selectedAreaName = "昭通市";
       } else {
         this.selectedAreaId = id;
         this.selectedAreaName = this.areaList.find(item => item.id === id).name;
@@ -276,6 +349,21 @@ export default {
     },
     handleCancelRowAll(selection) {
       this.selectedRowIds = [];
+    },
+    showUploadModal() {
+      this.modalFlag = true;
+    },
+    // modal框确定按钮
+    ok() {
+      this.$refs["modalForm"].validate(valid => {
+        if (valid) {
+          this.handleUpload();
+        }
+      });
+    },
+    // modal取消按钮
+    cancel() {
+      this.modalFlag = false;
     }
   }
 };
