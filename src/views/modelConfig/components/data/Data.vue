@@ -6,16 +6,48 @@
         <div class="top flex flex-sb">
           <div class="top-left">
             <span>地区：</span>
-            <span  class="mr-lg">昭阳区</span>
+            <span class="mr-lg text-red">{{selectedAreaName}}</span>
             <span>指标分类：</span>
-            <span>底线管控</span>
+            <span class="mr-lg text-red">{{selectedTypeName}}</span>
           </div>
           <div class="top-right">
             <Button type="primary" class="btn-margin">导出表格</Button>
-            <Button type="normal" class="btn-margin ml" @click="handleShowSearchBox">显示筛选条件</Button>
+            <Button
+              type="normal"
+              class="btn-margin ml"
+              @click="handleShowSearchBox"
+            >{{showSearchBox?'收起筛选条件':"显示筛选条件"}}</Button>
           </div>
         </div>
-        <div class="bottom" v-if="showSearchBox">222</div>
+        <div class="bottom" v-if="showSearchBox">
+          <div class="area-card card">
+            <div class="card-label">地区：</div>
+            <div class="card-list flex">
+              <div
+                class="card-list-item cursor-pointer"
+                v-for="(item,index) in areaList"
+                :key="`area_${index}`"
+                :class="{'card-list-item-active':item.id===selectedAreaId}"
+                @click="handleChangeArea(item.id)"
+              >{{item.name}}</div>
+            </div>
+          </div>
+          <div class="type-card card">
+            <div class="card-label">指标分类：</div>
+            <div class="card-list flex">
+              <div
+                class="card-list-item cursor-pointer"
+                v-for="(item,index) in typeList"
+                :class="{'card-list-item-active':item.id===selectedTypeId}"
+                :key="`type_${index}`"
+                @click="handleChangeType(item.id)"
+              >{{item.name}}</div>
+            </div>
+          </div>
+          <div class="btn-card text-right">
+            <Button type="primary" class="btn-margin mr-lg" @click="handleSearch">查询</Button>
+          </div>
+        </div>
       </div>
 
       <div class="mt">
@@ -37,6 +69,8 @@
 </template>
 <script>
 import { remToPx } from "@/utils/common";
+import Storage from "@/utils/storage";
+import { getList } from "@/api/modelConfig/data";
 export default {
   name: "plan",
   data() {
@@ -44,6 +78,18 @@ export default {
       tableLoading: false,
       selectedRowIds: [],
       showSearchBox: false,
+      selectedAreaId: 1,
+      selectedAreaName: "xx",
+      selectedTypeId: 1,
+      selectedTypeName: "xx",
+      areaList: [
+        { name: "昭阳区", id: 1 },
+        { name: "昭阳2区", id: 2 }
+      ],
+      typeList: [
+        { name: "底线管控", id: 1 },
+        { name: "结构效率", id: 2 }
+      ],
       columnsPutIn: [
         {
           title: "选中",
@@ -131,10 +177,37 @@ export default {
   },
   components: {},
   computed: {},
-  created() {},
+  created() {
+    let data = Storage.getArea();
+    console.log(data);
+  },
   mounted() {},
   beforeDestroy() {},
   methods: {
+    // 查詢按鈕
+    handleSearch() {
+      this.getList();
+    },
+
+    getList() {
+      getList({
+        pkId: this.selectedTypeId,
+        zbsjXzqhName: this.selectedAreaName
+      }).then(res => {
+        const { data, code } = res.data;
+        if (code === 1000) {
+          console.log(data);
+        }
+      });
+    },
+    handleChangeArea(id) {
+      this.selectedAreaId = id;
+      this.selectedAreaName = this.areaList.find(item => item.id === id).name;
+    },
+    handleChangeType(id) {
+      this.selectedTypeId = id;
+      this.selectedTypeName = this.typeList.find(item => item.id === id).name;
+    },
     // 显示筛选条件
     handleShowSearchBox() {
       this.showSearchBox = !this.showSearchBox;
@@ -163,14 +236,33 @@ export default {
 .search-box {
   padding: 1rem;
   border-bottom: 1px solid $text-normal;
-  .bottom{
+  .bottom {
     position: absolute;
     left: 0;
     top: 3rem;
     width: 100%;
     height: 20rem;
     z-index: 9;
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 2rem;
+    .card {
+      margin: 2rem;
+      color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      .card-label {
+        font-weight: bold;
+        width: 6rem;
+      }
+      .card-list {
+        .card-list-item {
+          margin: 0 1rem;
+          &-active {
+            background-color: $text-blue;
+            color: #fff;
+          }
+        }
+      }
+    }
   }
 }
 </style>

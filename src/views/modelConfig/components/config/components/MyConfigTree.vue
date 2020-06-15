@@ -112,6 +112,8 @@ export default {
   },
   methods: {
     handleYearChange() {
+      console.log('handleYearChange');
+      
       this.getTreeList();
     },
     getTreeList() {

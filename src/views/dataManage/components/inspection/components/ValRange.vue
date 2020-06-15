@@ -698,6 +698,7 @@ export default {
       let target = this.keyCRFromTableListDemo.find(item => item.id === e);
       // let name = target.name;
       // TODO
+      console.log(target.range);
       this.$set(
         this.modalForm.ruleDefineData[targetIdx]["controlChangedDetail"],
         "CodeListName",
@@ -746,7 +747,8 @@ export default {
         const { data, code } = res.data;
         if (code === 1000) {
           this.keyCRFromTableListDemo = data.map(item => ({
-            range: "(" + item.children.map(it => it.code).join(",") + ")",
+            range: item.children.map(it => it.code).join(","),
+            // range: "(" + item.children.map(it => it.code).join(",") + ")",
             id: item.pkId,
             name: item.domainName
           }));
@@ -779,9 +781,22 @@ export default {
                   ? this.isNullType
                   : this.codeRangeType;
               let typeoperator;
+              let rangeExceptBrace = item.Range;
               switch (item.ConType) {
                 case "代码范围约束":
-                  typeoperator = item.CodeListID ? 1 : 2;
+                  if (item.CodeListID) {
+                    // 取值对应代码表
+                    typeoperator = 1;
+                  } else {
+                    typeoperator = 2;
+                  }
+                  rangeExceptBrace = item.Range.replace(/(^\()|(\))$/g, ""); //去掉收首尾的括号
+                  // console.log(
+                  //   "rangeExceptBrace",
+                  //   rangeExceptBrace,
+                  //   "item",
+                  //   item
+                  // );
                   break;
                 // case '数值范围约束':
                 //   typeoperator = item.TypeOperator
@@ -798,12 +813,15 @@ export default {
                 types: types,
                 controlChangedDetail: {
                   ...item,
+                  Range: rangeExceptBrace,
                   TypeOperator: typeoperator
                 },
                 keyList: this.keyListDemo.filter(it => types.includes(it.type))
               };
             })
           );
+          // console.log(this.modalForm.ruleDefineData,'ruleDefineData');
+
           let relationArr = this.activeRow.rdIdentify.Expression.split(" ");
           let arr = [];
           if (relationArr.length > 1) {
@@ -968,7 +986,10 @@ export default {
               item.selectedValFirst === 3
                 ? "in"
                 : item.controlChangedDetail.TypeOperator,
-            Range: item.controlChangedDetail.Range,
+            Range:
+              item.selectedValFirst === 3
+                ? "(" + item.controlChangedDetail.Range + ")"
+                : item.controlChangedDetail.Range,
             CodeListName: item.controlChangedDetail.CodeListName,
             CodeListID: item.controlChangedDetail.CodeListID,
             StartIndex: "",

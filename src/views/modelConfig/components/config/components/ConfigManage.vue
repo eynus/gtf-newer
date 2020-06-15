@@ -221,6 +221,8 @@ export default {
   watch: {
     selectedId(newVal, oldVal) {
       //重新請求数据 不为空则代表选择了模块
+      console.log(newVal,'selectedId');
+      
       if (newVal) {
         this.page.current = 1;
         this.getData(newVal);
@@ -228,7 +230,7 @@ export default {
     }
   },
   created() {
-    this.getData();
+    // this.getData();
   },
   computed: {},
   components: { MyDelete, ConfigManageAddModal },

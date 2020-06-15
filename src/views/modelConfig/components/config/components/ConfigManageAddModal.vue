@@ -214,7 +214,7 @@ export default {
         name: "",
         unit: "",
         fitrange: "",
-        max: "",
+        max: 0,
         type: "",
         valrange: [0, 0],
         source: "",

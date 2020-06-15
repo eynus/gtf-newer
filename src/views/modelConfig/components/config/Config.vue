@@ -48,9 +48,9 @@ export default {
     return {
       buttonSize: "large",
       gData: [],
-      selectedId: 2,
+      selectedId: 0,
       TreeFlatList: [],
-      selectedName: "基本指标"
+      selectedName: ""
     };
   },
   created() {
@@ -77,9 +77,13 @@ export default {
       ).title;
     },
     handleTreeList(e) {
-      console.log("e0", e);
+      console.log("handleTreeList", e);
       // this.TreeFlatList = e;
-      this.getFlattenList(e)
+      this.getFlattenList(e);
+      // 重新请求datalist
+      this.selectedId = this.TreeFlatList[0] && this.TreeFlatList[0]["key"];
+      this.selectedName = this.TreeFlatList[0] && this.TreeFlatList[0]["title"];
+      console.log('this.selectedId',this.selectedId,this.selectedName);
       
     },
     getFlattenList(data) {
@@ -88,7 +92,7 @@ export default {
         const key = node.key;
         this.TreeFlatList.push({
           key,
-          title: node.title,
+          title: node.title
         });
 
         if (node.children) {
