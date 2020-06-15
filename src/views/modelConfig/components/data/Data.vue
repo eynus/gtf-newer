@@ -5,18 +5,19 @@
       <div class="search-box position-r">
         <div class="top flex flex-sb">
           <div class="top-left">
-            <span>地区：</span>
-            <span class="mr-lg text-red">{{selectedAreaName}}</span>
-            <span>指标分类：</span>
-            <span class="mr-lg text-red">{{selectedTypeName}}</span>
+            <span class="top-left-label">地区：</span>
+            <span class="mr-lg text-blue top-left-value">{{selectedAreaName}}</span>
+            <span class="top-left-label">指标分类：</span>
+            <span class="mr-lg text-blue top-left-value">{{selectedTypeName}}</span>
           </div>
           <div class="top-right">
-            <Button type="primary" class="btn-margin">导出表格</Button>
-            <Button
-              type="normal"
-              class="btn-margin ml"
-              @click="handleShowSearchBox"
-            >{{showSearchBox?'收起筛选条件':"显示筛选条件"}}</Button>
+            <Button type="primary" class>
+              <a :href="exportUrlTpl" target="_blank">导出模板</a>
+            </Button>
+            <Button type="primary" class="ml">
+              <a :href="exportUrlTb" target="_blank">导出表格</a>
+            </Button>
+            <Button class="ml" @click="handleShowSearchBox">{{showSearchBox?'收起筛选条件':"显示筛选条件"}}</Button>
           </div>
         </div>
         <div class="bottom" v-if="showSearchBox">
@@ -70,7 +71,7 @@
 <script>
 import { remToPx } from "@/utils/common";
 import Storage from "@/utils/storage";
-import { getList } from "@/api/modelConfig/data";
+import { getList, getByLevel } from "@/api/modelConfig/data";
 export default {
   name: "plan",
   data() {
@@ -79,9 +80,9 @@ export default {
       selectedRowIds: [],
       showSearchBox: false,
       selectedAreaId: 1,
-      selectedAreaName: "xx",
+      selectedAreaName: "",
       selectedTypeId: 1,
-      selectedTypeName: "xx",
+      selectedTypeName: "",
       areaList: [
         { name: "昭阳区", id: 1 },
         { name: "昭阳2区", id: 2 }
@@ -90,119 +91,122 @@ export default {
         { name: "底线管控", id: 1 },
         { name: "结构效率", id: 2 }
       ],
-      columnsPutIn: [
-        {
-          title: "选中",
-          type: "selection",
-          key: "time",
-          align: "center",
-          width: remToPx(4)
-        },
-        {
-          type: "index",
-          title: "序号",
-          align: "center",
-          width: remToPx(4)
-        },
+      columnsPutIn: [],
 
-        {
-          title: "指标名称",
-          key: "name",
-          align: "center",
-          // width: remToPx(18),
-          tooltip: true,
-          sortable: true
-        },
-        {
-          title: "指标编码",
-          key: "code",
-          align: "center"
-          // width: remToPx(6)
-        },
-        {
-          title: "指标单位",
-          key: "unitName",
-          align: "center"
-          // width: remToPx(8)
-        },
-        {
-          title: "指标分类",
-          key: "classname",
-          align: "center"
-          // width: remToPx(8)
-        },
-        {
-          title: "指标类型",
-          key: "typeName",
-          align: "center"
-          // width: remToPx(8)
-        },
-        {
-          title: "适用范围",
-          key: "fitrangeName",
-          align: "center"
-          // width: remToPx(8)
-        },
-        {
-          title: "指标内涵",
-          key: "content",
-          align: "center",
-          // width: remToPx(14),
-          sortable: true
-        },
-        {
-          title: "指标来源",
-          key: "source",
-          align: "center",
-          tooltip: true
-          // width: remToPx(12)
-        },
-        {
-          title: "值域范围",
-          key: "valrange",
-          align: "center",
-          tooltip: true
-          // width: remToPx(12)
-        },
-        {
-          title: "阈值",
-          key: "max",
-          align: "center",
-          tooltip: true
-          // width: remToPx(12)
-        }
-      ],
       dataPutIn: []
     };
   },
   components: {},
-  computed: {},
+  computed: {
+    exportUrlTpl() {
+      return `lsp-model/api/model/downTemplate`;
+    },
+    exportUrlTb() {
+      return `lsp-model/api/model/export?pkId=${this.selectedTypeId}&zbsjXzqhName=${this.selectedAreaName}`;
+    }
+  },
   created() {
-    let data = Storage.getArea();
-    console.log(data);
+    this.areaList = Storage.getArea().map(item => ({
+      name: item.placeName,
+      id: item.pkId
+    }));
+    this.selectedAreaId = "";
+    this.selectedAreaName = "";
+    // this.selectedAreaId = this.areaList[0].id;
+    // this.selectedAreaName = this.areaList[0].name;
+    this.getByLevel();
   },
   mounted() {},
   beforeDestroy() {},
   methods: {
     // 查詢按鈕
     handleSearch() {
+      this.showSearchBox = false;
       this.getList();
     },
-
+    // 获取所属类型
+    getByLevel() {
+      getByLevel().then(res => {
+        const { data, code } = res.data;
+        if (code === 1000) {
+          this.typeList = data.map(item => ({
+            id: item.pkId,
+            name: item.zbflName
+          }));
+          this.selectedTypeId = this.typeList[0].id;
+          this.selectedTypeName = this.typeList[0].name;
+          this.getList();
+        }
+      });
+    },
+    // 获取数据列表
     getList() {
       getList({
         pkId: this.selectedTypeId,
         zbsjXzqhName: this.selectedAreaName
       }).then(res => {
+        this.dataPutIn = [];
         const { data, code } = res.data;
         if (code === 1000) {
-          console.log(data);
+          let column = [];
+          for (let key in data) {
+            let dataItem = { year: key };
+            column = [
+              {
+                title: "序号",
+                type: "index",
+                align: "center",
+                width: remToPx(4)
+              },
+              {
+                title: "年份",
+                key: "year",
+                align: "center",
+                width: remToPx(8)
+              }
+            ];
+            // 重新设置column
+            if (column.length < data[key].length) {
+              column = [
+                {
+                  title: "序号",
+                  type: "index",
+                  align: "center",
+                  width: remToPx(4)
+                },
+                {
+                  title: "年份",
+                  key: "year",
+                  align: "center",
+                  width: remToPx(8)
+                }
+              ];
+              data[key].forEach(it => {
+                column.push({
+                  title: it.zbmxName,
+                  key: it.zbmxName,
+                  align: "center"
+                });
+              });
+            }
+            data[key].forEach(it => {
+              dataItem[it.zbmxName] = it.zbsjData;
+            });
+            this.dataPutIn.push(dataItem);
+          }
+          this.columnsPutIn = column;
         }
       });
     },
     handleChangeArea(id) {
-      this.selectedAreaId = id;
-      this.selectedAreaName = this.areaList.find(item => item.id === id).name;
+      if (id === this.selectedAreaId) {
+        // 取消选择
+        this.selectedAreaId = 0;
+        this.selectedAreaName = "";
+      } else {
+        this.selectedAreaId = id;
+        this.selectedAreaName = this.areaList.find(item => item.id === id).name;
+      }
     },
     handleChangeType(id) {
       this.selectedTypeId = id;
@@ -233,6 +237,17 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.top-left {
+  &-value {
+    display: inline-block;
+    width: 10rem;
+  }
+}
+.top-right {
+  a {
+    color: #fff;
+  }
+}
 .search-box {
   padding: 1rem;
   border-bottom: 1px solid $text-normal;
@@ -241,9 +256,9 @@ export default {
     left: 0;
     top: 3rem;
     width: 100%;
-    height: 20rem;
+    // height: 20rem;
     z-index: 9;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.6);
     padding: 2rem;
     .card {
       margin: 2rem;
@@ -252,9 +267,12 @@ export default {
       .card-label {
         font-weight: bold;
         width: 6rem;
+        padding: 0.25rem 0.5rem;
       }
       .card-list {
         .card-list-item {
+          color: rgba(255, 255, 255, 0.8);
+          padding: 0.25rem 0.5rem;
           margin: 0 1rem;
           &-active {
             background-color: $text-blue;
