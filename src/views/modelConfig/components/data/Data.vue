@@ -13,9 +13,14 @@
           <div class="top-right flex">
             <!-- <Button class="" @click="handleUpload">上传</Button> -->
             <Upload
-              :action="''"
+              :action="'lsp-model/api/model/importData'"
               :before-upload="handleUpload"
+              :format="['xls', 'xlsx']"
+              accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
               :show-upload-list="false"
+              :on-success="handleSuccess"
+              :on-error="handleError"
+              :on-format-error="handleFormatError"
               ref="upload"
             >
               <i-button type="primary">上传</i-button>
@@ -129,22 +134,19 @@ export default {
   beforeDestroy() {},
   methods: {
     // 上传按钮
-    handleUpload(file) {
-      console.log(file);
+    handleUpload(file) {},
+    handleSuccess() {
+      this.$Message.info("上传成功。");
+      this.getList();
+    },
+    handleError(e) {
+      this.$Message.warning(e);
+    },
+    handleFormatError() {
+      console.log("???????????????");
 
-      // this.file = file
-      // let fileSize = file.size / 1024 / 1024
-      // if (fileSize > 10 && fileSize < 1024) {
-      //   this.$Message.info('上传文件较大，请耐心等待')
-      // } else if (fileSize >= 1024) {
-      //   this.$Notice.warning({
-      //     title: '文件大小超限',
-      //     desc: '文件 ' + file.name + ' 太大，上传文件大小不能超过1G.'
-      //   })
-      //   return false
-      // }
-      // this.handleSubmit()
-      // return false
+      this.$Message.warning("文件格式错误，请上传xls、xlsx格式的文件");
+      return false;
     },
     // 查詢按鈕
     handleSearch() {
@@ -192,6 +194,12 @@ export default {
                 key: "year",
                 align: "center",
                 width: remToPx(8)
+              },
+              {
+                title: "地区",
+                key: "zbsjXzqhName",
+                align: "center",
+                width: remToPx(8)
               }
             ];
             // 重新设置column
@@ -208,6 +216,12 @@ export default {
                   key: "year",
                   align: "center",
                   width: remToPx(8)
+                },
+                {
+                  title: "地区",
+                  key: "zbsjXzqhName",
+                  align: "center",
+                  width: remToPx(8)
                 }
               ];
               data[key].forEach(it => {
@@ -220,6 +234,7 @@ export default {
             }
             data[key].forEach(it => {
               dataItem[it.zbmxName] = it.zbsjData;
+              dataItem["zbsjXzqhName"] = it.zbsjXzqhName;
             });
             this.dataPutIn.push(dataItem);
           }
