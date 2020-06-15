@@ -172,7 +172,7 @@
                         :key="`vfr_${index3}`"
                       >{{item3.name}}</Option>
                     </Select>
-                    <template v-if="item.controlChangedDetail.CodeListID">
+                    <template v-if="item.controlChangedDetail.TypeOperator===1">
                       <Select
                         v-model="item.controlChangedDetail.CodeListID"
                         style="width:8rem"
@@ -466,12 +466,6 @@ export default {
       let relationArr = this.modalForm.ruleDefineExpression;
 
       let arr = this.modalForm.ruleDefineData.map((item, index) => {
-        // console.log(
-        //   item.selectedValSecond,
-        //   "item.selectedValSecond",
-        //   item.keyList
-        // );
-
         let control = item.controlChangedDetail;
         let range = "";
         let codeName = "";
@@ -489,22 +483,36 @@ export default {
           ).name;
         } else if (item.selectedValFirst === 2) {
           //空值约束
-          TypeOperatorName = this.keyNullListDemo.find(
-            it => it.id === control.TypeOperator
-          ).name;
+
+          TypeOperatorName =
+            (this.keyNullListDemo.find(it => it.id === control.TypeOperator) &&
+              this.keyNullListDemo.find(it => it.id === control.TypeOperator)
+                .name) ||
+            "";
         } else if (item.selectedValFirst === 3) {
           //代码范围约束
-          range = control.Range;
-          TypeOperatorName = this.keyCodeRangeListDemo.find(
-            it => it.id === control.TypeOperator
-          ).name;
-          codeName = control.CodeListName;
+
+          TypeOperatorName =
+            (this.keyCodeRangeListDemo.find(
+              it => it.id === control.TypeOperator
+            ) &&
+              this.keyCodeRangeListDemo.find(
+                it => it.id === control.TypeOperator
+              ).name) ||
+            "";
+          if (control.CodeListID) {
+            //取值对应代码表
+            codeName = control.CodeListName;
+          } else {
+            //取值范围自定义
+            codeName = "(" + control.Range + ")";
+          }
         }
 
         return index === 0
-          ? selectedKeyNameCode + TypeOperatorName + range
+          ? selectedKeyNameCode + TypeOperatorName + range + codeName
           : ` ${relationArr[index - 1].value === "and" ? "且" : "或"}` +
-              item.selectedValSecond +
+              selectedKeyNameCode +
               TypeOperatorName +
               range +
               codeName;
@@ -534,14 +542,14 @@ export default {
           ).name;
         }
         if (item.ConType === "代码范围约束") {
-          range = item.Range;
+          // range = item.Range;
           TypeOperatorName = this.keyCodeRangeListDemo.find(
             it => it.id === item.TypeOperator
           ).name;
           codeName = item.CodeListName;
         }
         return index === 0
-          ? item.FieldName + TypeOperatorName + range
+          ? item.FieldName + TypeOperatorName + range + codeName
           : ` ${relationArr[2 * index - 1] === "and" ? "且" : "或"}` +
               item.FieldName +
               TypeOperatorName +
@@ -673,9 +681,7 @@ export default {
           this.$set(
             this.modalForm.ruleDefineData[targetIdx],
             "keyList",
-            this.keyListDemo.filter(it =>
-              this.codeRangeType.includes(it.type)
-            )
+            this.keyListDemo.filter(it => this.codeRangeType.includes(it.type))
           );
           break;
         default:
@@ -688,12 +694,20 @@ export default {
       let targetIdx = this.modalForm.ruleDefineData.findIndex(
         item => item.id === this.activeRuleItemId
       );
-      let name = this.keyCRFromTableListDemo.find(item => item.id === e).name;
+      // item.controlChangedDetail.Range
+      let target = this.keyCRFromTableListDemo.find(item => item.id === e);
+      // let name = target.name;
       // TODO
+      console.log(target.range);
       this.$set(
         this.modalForm.ruleDefineData[targetIdx]["controlChangedDetail"],
         "CodeListName",
-        name
+        target.name
+      );
+      this.$set(
+        this.modalForm.ruleDefineData[targetIdx]["controlChangedDetail"],
+        "Range",
+        target.range
       );
     },
     // 获取字段代码表
@@ -717,7 +731,7 @@ export default {
                 ...item,
                 keyList: list,
                 // 设置第一个item的selecedSecond
-                selectedValSecond: (list && list[0].code) || ""
+                selectedValSecond: (list[0] && list[0].code) || ""
               };
             }
           );
@@ -733,13 +747,15 @@ export default {
         const { data, code } = res.data;
         if (code === 1000) {
           this.keyCRFromTableListDemo = data.map(item => ({
-            id: item.children.map(it=>it.code).join(','),
+            range: item.children.map(it => it.code).join(","),
+            // range: "(" + item.children.map(it => it.code).join(",") + ")",
+            id: item.pkId,
             name: item.domainName
           }));
         }
       });
     },
-    // 点击修改重新请求keylist
+    // 点击修改重新请求keylist 赋值ruleDefineData
     getVRRKeyListWhenModify(id) {
       getVRRKeyListById({ pkId: id }).then(res => {
         const { data, code } = res.data;
@@ -764,17 +780,48 @@ export default {
                   : ID === 2
                   ? this.isNullType
                   : this.codeRangeType;
-
+              let typeoperator;
+              let rangeExceptBrace = item.Range;
+              switch (item.ConType) {
+                case "代码范围约束":
+                  if (item.CodeListID) {
+                    // 取值对应代码表
+                    typeoperator = 1;
+                  } else {
+                    typeoperator = 2;
+                  }
+                  rangeExceptBrace = item.Range.replace(/(^\()|(\))$/g, ""); //去掉收首尾的括号
+                  // console.log(
+                  //   "rangeExceptBrace",
+                  //   rangeExceptBrace,
+                  //   "item",
+                  //   item
+                  // );
+                  break;
+                // case '数值范围约束':
+                //   typeoperator = item.TypeOperator
+                //   break;
+                // case '空值约束':break;
+                default:
+                  typeoperator = item.TypeOperator;
+                  break;
+              }
               return {
                 id: index + 1,
                 selectedValFirst: ID,
                 selectedValSecond: item.FieldName,
                 types: types,
-                controlChangedDetail: item,
+                controlChangedDetail: {
+                  ...item,
+                  Range: rangeExceptBrace,
+                  TypeOperator: typeoperator
+                },
                 keyList: this.keyListDemo.filter(it => types.includes(it.type))
               };
             })
           );
+          // console.log(this.modalForm.ruleDefineData,'ruleDefineData');
+
           let relationArr = this.activeRow.rdIdentify.Expression.split(" ");
           let arr = [];
           if (relationArr.length > 1) {
@@ -799,8 +846,9 @@ export default {
           this.activeRow = this.tableData.find(
             item => String(item.pkId) === this.selectedRowIds[0]
           );
+
           this.$set(this.modalForm, "pathChildNodeId", this.activeRow.dsPkid);
-          this.$set(this.modalForm, "ruleDesc", this.activeRow.rulesName); //描述
+          // this.$set(this.modalForm, "ruleDesc", this.activeRow.rulesName); //描述
           this.$set(this.modalForm, "path", this.activeRow.path); //规则路径对应
           this.getVRRKeyListWhenModify(this.activeRow.dsPkid);
         } else {
@@ -934,8 +982,14 @@ export default {
                 ? "空值约束"
                 : "代码范围约束",
             FieldName: item.selectedValSecond,
-            TypeOperator: item.selectedValFirst === 3?'in':item.controlChangedDetail.TypeOperator,
-            Range: item.controlChangedDetail.Range,
+            TypeOperator:
+              item.selectedValFirst === 3
+                ? "in"
+                : item.controlChangedDetail.TypeOperator,
+            Range:
+              item.selectedValFirst === 3
+                ? "(" + item.controlChangedDetail.Range + ")"
+                : item.controlChangedDetail.Range,
             CodeListName: item.controlChangedDetail.CodeListName,
             CodeListID: item.controlChangedDetail.CodeListID,
             StartIndex: "",
