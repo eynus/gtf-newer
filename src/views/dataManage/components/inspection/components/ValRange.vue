@@ -799,7 +799,10 @@ export default {
                 selectedValFirst: ID,
                 selectedValSecond: item.FieldName,
                 types: types,
-                controlChangedDetail: item,
+                controlChangedDetail: {
+                  ...item,
+                  TypeOperator: item.CodeListID ? 1 : 2
+                },
                 keyList: this.keyListDemo.filter(it => types.includes(it.type))
               };
             })
@@ -831,7 +834,7 @@ export default {
           console.log("activeRow", this.activeRow);
 
           this.$set(this.modalForm, "pathChildNodeId", this.activeRow.dsPkid);
-          this.$set(this.modalForm, "ruleDesc", this.activeRow.rulesName); //描述
+          // this.$set(this.modalForm, "ruleDesc", this.activeRow.rulesName); //描述
           this.$set(this.modalForm, "path", this.activeRow.path); //规则路径对应
           this.getVRRKeyListWhenModify(this.activeRow.dsPkid);
         } else {
