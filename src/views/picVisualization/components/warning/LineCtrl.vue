@@ -2,23 +2,8 @@
   <div class="tab">
     <Tabs :animated="false">
       <TabPane label="总览" icon="ios-aperture-outline">
-        <div class="table">
-          <div class="row" v-for="item in datas">
-            <span class="title" :title="item.name">{{ item.name }}</span>
-            <span class="num">{{ item.value }}</span>
-            <span class="unit">{{ item.unit }}</span>
-          </div>
-          <div class="row" v-for="item in datas">
-            <span class="title" :title="item.name">{{ item.name }}</span>
-            <span class="num">{{ item.value }}</span>
-            <span class="unit">{{ item.unit }}</span>
-          </div>
-        </div>
-        <div class="timeline">
-          <a-steps progress-dot :current="current" @change="onChange">
-            <a-step :sub-title="item" v-for="item in 5"/>
-          </a-steps>
-        </div>
+        <Table :datas="datas"></Table>
+        <TimeLine @change="timeChange"></TimeLine>
       </TabPane>
       <TabPane label="年份统计" icon="ios-calendar-outline">年份统计</TabPane>
       <TabPane label="行政区划统计" icon="ios-barcode-outline">行政区划统计</TabPane>
@@ -27,14 +12,19 @@
 </template>
 
 <script>
-  import Steps from 'ant-design-vue/lib/steps'
-  import Vue from 'vue'
-  Vue.use(Steps)
+  /**
+   * 底线管控
+   */
+  import Table from './Table'
+  import TimeLine from './TimeLine'
   export default {
     name: "LineCtrl",
+    components: {
+      Table,
+      TimeLine,
+    },
     data() {
       return {
-        current: 0,
         datas: [
           {
             label: '',
@@ -105,8 +95,8 @@
       }
     },
     methods: {
-      onChange(current) {
-        this.current = current
+      timeChange(val) {
+        console.log(val)
       },
     }
   }
@@ -161,17 +151,6 @@
         margin-left: 5rem;
       }
     }
-  }
-  .timeline {
-    height: 8rem;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    border: 1px solid #000;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
 }
 

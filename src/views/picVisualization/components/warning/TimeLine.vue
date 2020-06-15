@@ -56,6 +56,7 @@
           this.current = this.current - i
         }
         this.checked = checked
+        this.$emit('change', checked)
       }
     },
     mounted() {
@@ -97,7 +98,7 @@
         this.time = arr
         this.current = center
         this.checked = this.time[center]
-      }, 1000)
+      }, 0)
     }
   }
 </script>

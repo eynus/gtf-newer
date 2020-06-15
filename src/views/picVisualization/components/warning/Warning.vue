@@ -8,8 +8,8 @@
             @click="hClick(item)"
         >
           <Icon
-              custom="iconfont icon-yonghuguanli"
-              :size="remToPx(1.6)"
+              :custom="`iconfont icon-${item.icon}`"
+              :size="remToPx(1.4)"
           />
           <span>{{ item.label }}</span>
         </div>
@@ -17,7 +17,9 @@
       <Layout class="layout">
         <Row>
           <Col :span="`${sider ? 10 : 0}`" style="height: 100%;background: #fff;">
-            <LineCtrl></LineCtrl>
+            <keep-alive>
+              <component :is="cname"></component>
+            </keep-alive>
           </Col>
           <Col :span="`${sider ? 14 : 24}`" style="height: 100%">
             <Map></Map>
@@ -29,56 +31,88 @@
 <script>
 import Map from './Map'
 import LineCtrl from './LineCtrl'
+import Structure from './Structure'
+import LifeQuality from "./LifeQuality"
+import Safe from "./Safe"
+import Innovate from './Innovate'
+import Coordinate from './Coordinate'
+import Green from './Green'
+import Open from './Open'
+import Share from './Share'
+
 export default {
   name: "warning",
   components: {
     Map,
-    LineCtrl
+    LineCtrl,
+    Structure,
+    LifeQuality,
+    Safe,
+    Innovate,
+    Coordinate,
+    Green,
+    Open,
+    Share
   },
   data() {
     return {
       sider: true,
-      active: 2,
+      active: 0,
+      cname: 'LineCtrl',
       menu: [
         {
           label: '底线管控',
+          name: 'LineCtrl',
           value: 0,
-          icon: ''
+          icon: 'kongzhi'
         },
         {
           label: '结构效率',
+          name: 'Structure',
           value: 1,
-          icon: ''
+          icon: 'jiegou'
         },
         {
           label: '生活品质',
+          name: 'LifeQuality',
           value: 2,
-          icon: ''
+          icon: 'shenghuopingzhi'
         },
         {
           label: '安全',
+          name: 'safe',
           value: 3,
-          icon: ''
+          icon: 'anquan'
         },
         {
           label: '创新',
+          name: 'Innovate',
           value: 4,
-          icon: ''
+          icon: 'chuangxin'
         },
         {
           label: '协调',
+          name: 'Coordinate',
           value: 5,
-          icon: ''
+          icon: 'xietiao'
         },
         {
           label: '绿色',
+          name: 'Green',
           value: 6,
-          icon: ''
+          icon: 'lvse'
         },
         {
           label: '开放',
+          name: 'Open',
           value: 7,
-          icon: ''
+          icon: 'kaifang'
+        },
+        {
+          label: '共享',
+          name: 'Share',
+          value: 8,
+          icon: 'gongxiang'
         },
       ]
     }
@@ -96,6 +130,7 @@ export default {
     hClick(item) {
       this.sider = true
       this.active = item.value
+      this.cname = item.name
     }
   }
 };
@@ -115,18 +150,44 @@ export default {
     font-size: 0.875rem;
     background: #fff;
     .h-item {
+      position: relative;
       flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: space-around;
       align-items: center;
       box-sizing: border-box;
-      padding: 0.5rem 0;
+      padding: 0.4rem 0;
       height: 100%;
       cursor: pointer;
-      &.active {
-        color: #0083ff;
-        background: #d0e3ff;
+      &::after {
+        content: " ";
+        position: absolute;
+        left: 0;
+        width: 2px;
+        height: 50%;
+        border-right: 1px solid #ccc;
+      }
+      &:first-child::after {
+        content: " ";
+        border: 0;
+        width: 0;
+      }
+    }
+    .active {
+      color: #0083ff;
+      background: #d0e3ff;
+      &::after {
+        content: " ";
+        width: 0;
+        border: 0;
+      }
+    }
+    .active + .h-item {
+      &::after {
+        content: " ";
+        width: 0;
+        border: 0;
       }
     }
   }
