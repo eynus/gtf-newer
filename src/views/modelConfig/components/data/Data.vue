@@ -10,8 +10,17 @@
             <span class="top-left-label">指标分类：</span>
             <span class="mr-lg text-blue top-left-value">{{selectedTypeName}}</span>
           </div>
-          <div class="top-right">
-            <Button type="primary" class>
+          <div class="top-right flex">
+            <!-- <Button class="" @click="handleUpload">上传</Button> -->
+            <Upload
+              :action="''"
+              :before-upload="handleUpload"
+              :show-upload-list="false"
+              ref="upload"
+            >
+              <i-button type="primary">上传</i-button>
+            </Upload>
+            <Button type="primary" class="ml">
               <a :href="exportUrlTpl" target="_blank">导出模板</a>
             </Button>
             <Button type="primary" class="ml">
@@ -119,6 +128,24 @@ export default {
   mounted() {},
   beforeDestroy() {},
   methods: {
+    // 上传按钮
+    handleUpload(file) {
+      console.log(file);
+
+      // this.file = file
+      // let fileSize = file.size / 1024 / 1024
+      // if (fileSize > 10 && fileSize < 1024) {
+      //   this.$Message.info('上传文件较大，请耐心等待')
+      // } else if (fileSize >= 1024) {
+      //   this.$Notice.warning({
+      //     title: '文件大小超限',
+      //     desc: '文件 ' + file.name + ' 太大，上传文件大小不能超过1G.'
+      //   })
+      //   return false
+      // }
+      // this.handleSubmit()
+      // return false
+    },
     // 查詢按鈕
     handleSearch() {
       this.showSearchBox = false;
@@ -141,6 +168,7 @@ export default {
     },
     // 获取数据列表
     getList() {
+      this.tableLoading = true;
       getList({
         pkId: this.selectedTypeId,
         zbsjXzqhName: this.selectedAreaName
@@ -148,6 +176,7 @@ export default {
         this.dataPutIn = [];
         const { data, code } = res.data;
         if (code === 1000) {
+          this.tableLoading = false;
           let column = [];
           for (let key in data) {
             let dataItem = { year: key };
