@@ -458,7 +458,7 @@ export default {
       });
     },
     concatRuleDescWhenChange() {
-      console.log(this.modalForm.ruleDefineData);
+      // console.log(this.modalForm.ruleDefineData);
 
       if (!this.modalForm.path[0]) {
         return "";
@@ -466,12 +466,6 @@ export default {
       let relationArr = this.modalForm.ruleDefineExpression;
 
       let arr = this.modalForm.ruleDefineData.map((item, index) => {
-        // console.log(
-        //   item.selectedValSecond,
-        //   "item.selectedValSecond",
-        //   item.keyList
-        // );
-
         let control = item.controlChangedDetail;
         let range = "";
         let codeName = "";
@@ -489,7 +483,6 @@ export default {
           ).name;
         } else if (item.selectedValFirst === 2) {
           //空值约束
-          console.log("空值约束 ,", control.TypeOperator, this.keyNullListDemo);
 
           TypeOperatorName =
             (this.keyNullListDemo.find(it => it.id === control.TypeOperator) &&
@@ -498,14 +491,6 @@ export default {
             "";
         } else if (item.selectedValFirst === 3) {
           //代码范围约束
-          // range = control.Range;
-
-          console.log(
-            "?? 1?",
-            this.keyCodeRangeListDemo,
-            control.TypeOperator,
-            control.CodeListName
-          );
 
           TypeOperatorName =
             (this.keyCodeRangeListDemo.find(
@@ -515,7 +500,13 @@ export default {
                 it => it.id === control.TypeOperator
               ).name) ||
             "";
-          codeName = control.CodeListName;
+          if (control.CodeListID) {
+            //取值对应代码表
+            codeName = control.CodeListName;
+          } else {
+            //取值范围自定义
+            codeName = "(" + control.Range + ")";
+          }
         }
 
         return index === 0
@@ -526,7 +517,6 @@ export default {
               range +
               codeName;
       });
-      console.log("arr:", arr);
 
       return `${this.modalForm.path[this.modalForm.path.length - 1]}中 ` + arr;
     },
@@ -565,14 +555,6 @@ export default {
               TypeOperatorName +
               range +
               codeName;
-
-        //      return index === 0
-        // ? selectedKeyNameCode + TypeOperatorName + range + codeName
-        // : ` ${relationArr[index - 1].value === "and" ? "且" : "或"}` +
-        //     item.selectedValSecond +
-        //     TypeOperatorName +
-        //     range +
-        //     codeName;
       });
       return `${path}中 ` + arr;
     },
@@ -763,7 +745,6 @@ export default {
       getValRangeRuleCodeList().then(res => {
         const { data, code } = res.data;
         if (code === 1000) {
-          console.log("???", data);
           this.keyCRFromTableListDemo = data.map(item => ({
             range: "(" + item.children.map(it => it.code).join(",") + ")",
             id: item.pkId,
@@ -847,7 +828,6 @@ export default {
           this.activeRow = this.tableData.find(
             item => String(item.pkId) === this.selectedRowIds[0]
           );
-          console.log("activeRow", this.activeRow);
 
           this.$set(this.modalForm, "pathChildNodeId", this.activeRow.dsPkid);
           // this.$set(this.modalForm, "ruleDesc", this.activeRow.rulesName); //描述
