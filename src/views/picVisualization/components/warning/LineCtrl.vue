@@ -1,30 +1,41 @@
 <template>
-  <div class="tab">
-    <Tabs :animated="false">
-      <TabPane label="总览" icon="ios-aperture-outline">
-        <Table :datas="datas"></Table>
-        <TimeLine @change="timeChange"></TimeLine>
-      </TabPane>
-      <TabPane label="年份统计" icon="ios-calendar-outline">年份统计</TabPane>
-      <TabPane label="行政区划统计" icon="ios-barcode-outline">行政区划统计</TabPane>
-    </Tabs>
-  </div>
+  <Tab :animated="false" @on-click="tabsClick">
+    <template v-slot:table>
+      <Table :datas="datas"></Table>
+      <TimeLine @change="timeChange"></TimeLine>
+    </template>
+    <template v-slot:charty>
+      <LineCtrlY :dk="tab1"></LineCtrlY>
+    </template>
+    <template v-slot:chartx>
+      <LineCtrlX :dk="tab2"></LineCtrlX>
+      <TimeLine @change="timeChange"></TimeLine>
+    </template>
+  </Tab>
 </template>
 
 <script>
   /**
    * 底线管控
    */
-  import Table from './Table'
-  import TimeLine from './TimeLine'
+  import Tab from './components/Tab'
+  import Table from './components/Table'
+  import TimeLine from './components/TimeLine'
+  import LineCtrlY from './LineCtrlY'
+  import LineCtrlX from './LineCtrlX'
   export default {
     name: "LineCtrl",
     components: {
+      Tab,
       Table,
       TimeLine,
+      LineCtrlX,
+      LineCtrlY,
     },
     data() {
       return {
+        tab1: Math.random(),
+        tab2:  Math.random(),
         datas: [
           {
             label: '',
@@ -98,60 +109,20 @@
       timeChange(val) {
         console.log(val)
       },
+      tabsClick(name) {
+        switch (name) {
+          case 1:
+            this.tab1 = Math.random()
+          case 2:
+            this.tab2 = Math.random()
+        }
+      }
+    },
+    mounted() {
     }
   }
 </script>
 
 <style lang="scss" scoped>
-
-.tab {
-  height: 100%;
-  position: relative;
-  ::v-deep .ivu-tabs {
-    height: 100%;
-  }
-  ::v-deep .ivu-tabs-bar {
-    margin-bottom: 1rem;
-  }
-  ::v-deep .ivu-tabs-content {
-    height: calc(100% - 11rem);
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-  .table {
-    font-size: 0.875rem;
-    color: #999db2;
-    .row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-right: 1.5rem;
-      padding-left: 3rem;
-      line-height: 3rem;
-      height: 3rem;
-      &:hover {
-        background: #ebf4ff;
-      }
-      .title {
-        flex: 1;
-        height: 100%;
-        text-align: right;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-      .num {
-        width: 4rem;
-        margin-left: 8rem;
-        font-weight: 800;
-        color: #3c8fff;
-      }
-      .unit {
-        width: 6rem;
-        margin-left: 5rem;
-      }
-    }
-  }
-}
 
 </style>
