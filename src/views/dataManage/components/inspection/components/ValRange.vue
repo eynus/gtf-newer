@@ -583,7 +583,6 @@ export default {
       return `${path}中 ` + arr;
     },
     handleTypeOperatorChange(e) {
-      console.log(e);
       let item = this.modalForm.ruleDefineData.find(
         item => item.id === this.activeRuleItemId
       );
@@ -592,7 +591,7 @@ export default {
           TypeOperator: e,
           Range: "",
           CodeListName: "",
-          CodeListID: "",
+          CodeListID: e===1?-1:'',
           StartIndex: "",
           EndIndex: ""
         };
