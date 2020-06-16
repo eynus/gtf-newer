@@ -276,7 +276,8 @@ export default {
               }
             ];
             // 重新设置column
-            if (column.length < data[key].length) {
+
+            if (column.length < data[key].length + 3) {
               column = [
                 {
                   title: "序号",
@@ -297,6 +298,7 @@ export default {
                   width: remToPx(8)
                 }
               ];
+
               data[key].forEach(it => {
                 column.push({
                   title: it.zbmxName,
@@ -309,6 +311,8 @@ export default {
               dataItem[it.zbmxName] = it.zbsjData;
               dataItem["zbsjXzqhName"] = it.zbsjXzqhName;
             });
+            // console.log(dataItem,column);
+
             this.dataPutIn.push(dataItem);
           }
           this.columnsPutIn = column;

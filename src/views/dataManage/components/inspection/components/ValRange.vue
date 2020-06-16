@@ -722,7 +722,7 @@ export default {
       let target = this.keyCRFromTableListDemo.find(item => item.id === e);
       // let name = target.name;
       // TODO
-      console.log(target.range);
+      // console.log(target.range);
       this.$set(
         this.modalForm.ruleDefineData[targetIdx]["controlChangedDetail"],
         "CodeListName",
@@ -814,15 +814,15 @@ export default {
                   } else {
                     typeoperator = 2;
                   }
-                  console.log(
-                    "处理前的rangeExceptBrace",
-                    item.Range.replace(/(^\()|(\))$/g, "").split(",")
-                  );
+                  // console.log(
+                  //   "处理前的rangeExceptBrace",
+                  //   item.Range.replace(/(^\()|(\))$/g, "").split(",")
+                  // );
                   rangeExceptBrace = item.Range.replace(
                     /(^\()|(\))$/g,
                     ""
                   ).replace(/\'/g, "");
-                  console.log("处理后的rangeExceptBrace", rangeExceptBrace);
+                  // console.log("处理后的rangeExceptBrace", rangeExceptBrace);
 
                   // console.log(
                   //   "rangeExceptBrace",
@@ -1008,15 +1008,15 @@ export default {
       } else {
         let newData = {
           Conditions: this.modalForm.ruleDefineData.map((item, index) => {
-            if (item.selectedValFirst === 3) {
-              console.log(
-                "(" +
-                  item.controlChangedDetail.Range.split(",")
-                    .map(i => "'" + i + "'")
-                    .join(",") +
-                  ")"
-              );
-            }
+            // if (item.selectedValFirst === 3) {
+              // console.log(
+              //   "(" +
+              //     item.controlChangedDetail.Range.split(",")
+              //       .map(i => "'" + i + "'")
+              //       .join(",") +
+              //     ")"
+              // );
+            // }
             return {
               ConType:
                 item.selectedValFirst === 1
