@@ -545,7 +545,6 @@ export default {
         return;
       } else {
         // console.log("??2", this.modalForm, this.modalForm.dataPropDefine);
-
         // let newData = this.modalForm.dataPropDefine
         let rulesNameConcat = `${
           this.modalForm.path[this.modalForm.path.length - 1]

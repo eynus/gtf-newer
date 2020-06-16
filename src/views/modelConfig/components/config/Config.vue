@@ -22,28 +22,9 @@
   </div>
 </template>
 <script>
-import MyConfigTree from "./components/MyConfigTree";
-import EleCustomeTree from "./components/eleCustomeTree";
+import EleCustomeTree from "./components/EleCustomeTree";
 import ConfigManage from "./components/ConfigManage";
-// import { getCatalogue } from "@/api/dataManage/query";
-const handleRawData = data => {
-  let newData = [];
-  for (let i = 0; i < data.length; i++) {
-    newData.push({});
-    if (data[i].children) {
-      newData[i].children = handleRawData(data[i].children);
-    }
-    // if (data[i].childrens) {
-    //   newData[i].children = handleRawData(data[i].childrens);
-    // }
-    newData[i].childrens = data[i].childrens;
-    newData[i].key = data[i].identification + "";
-    // newData[i].key = data[i].dataName + data[i].pkId;
-    newData[i].title = data[i].dataName;
-    newData[i].scopedSlots = { title: "title" };
-  }
-  return newData;
-};
+
 export default {
   name: "Home",
   data() {
@@ -56,32 +37,17 @@ export default {
     };
   },
   created() {
-    // this.getCatalogue();
   },
-  components: { MyConfigTree, ConfigManage, EleCustomeTree },
+  components: {  ConfigManage, EleCustomeTree },
   computed: {},
   methods: {
-    // getCatalogue() {
-    //   getCatalogue().then(res => {
-    //     const { data, code } = res.data;
-    //     if (code === 1000) {
-    //       let result = handleRawData(data);
-    //       this.gData = result;
-    //     }
-    //   });
-    // },
     handleSelect(e) {
       this.selectedId = e.id;
       this.selectedName = e.label;
-      console.log(this.selectedId, this.selectedName);
+      // console.log(this.selectedId, this.selectedName);
 
-      // this.selectedName = this.TreeFlatList.find(
-      //   item => item.key === this.selectedId
-      // ).title;
     },
     handleTreeList(e) {
-      console.log("handleTreeList", e);
-      // this.TreeFlatList = e;
       this.getFlattenList(e);
       // 重新请求datalist
       this.selectedId = this.TreeFlatList[0] && this.TreeFlatList[0]["key"];

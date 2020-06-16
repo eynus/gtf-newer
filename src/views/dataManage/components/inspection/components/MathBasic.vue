@@ -8,15 +8,7 @@
           <FormItem>
             <Button v-auth="['page_5_4_5']" type="primary" @click="handleStopRule">停止启用</Button>
           </FormItem>
-        <!-- <FormItem>
-          <Button type="info" @click="handleAddRule">添加规则</Button>
-        </FormItem>
-        <FormItem>
-          <Button type="warning" @click="handleUpdateRule">修改规则</Button>
-        </FormItem>
-        <FormItem>
-          <Button type="error" @click="handleDeleteRule">删除规则</Button>
-        </FormItem> -->
+     
       </Form>
     </div>
     <Table
@@ -56,7 +48,6 @@
       <div class="modal-item">
         <div class="title mb">规则适用对象</div>
         <div>
-          <!-- <Input v-model.trim="modalForm.obj" placeholder="请输入" clearable /> -->
           <Cascader :data="dataPaths" v-model="modalForm.path" @on-change="handlePathChange"></Cascader>
         </div>
       </div>

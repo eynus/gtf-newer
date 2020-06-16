@@ -93,7 +93,7 @@
   </div>
 </template>
 <script>
-import MyTree from "./components/QueryTree";
+import MyTree from "./components/MyTree";
 import MyMap from "./components/MyMap";
 import { getCatalogue, getMetaByName } from "@/api/dataManage/query";
 
@@ -166,9 +166,10 @@ export default {
         }
       });
     },
-    handleSelect(e,isLeaf) {
-      if(this.activeMode==='meta'&&isLeaf){
-        this.getMetaByName(e[0]);
+    handleSelect(data) {
+      
+      if(this.activeMode==='meta'&&data.isLeaf){
+        this.getMetaByName(data.label);
       }else{
         // 加载地理信息
       }

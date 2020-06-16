@@ -285,15 +285,16 @@ export default {
         updatedTime: "",
         validity: ""
       };
-
+      this.tableLoading = true;
       getListById(postData).then(res => {
         const { data, code } = res.data;
         this.dataPutIn = [];
         this.unstartedArr = [];
         this.startedArr = [];
-        this.tableLoading = false;
+
         if (code === 1000) {
           this.page.total = data.total;
+          this.tableLoading = false;
           if (data.list.length) {
             if (Array.isArray(data.list[0])) {
               data.list.forEach(it => {
@@ -503,7 +504,7 @@ export default {
       this.selectedRowIds.push(row.id + "");
     },
     handleSelectRowAll(selection) {
-      this.selectedRowIds = selection.map((item, index) => item.id+'');
+      this.selectedRowIds = selection.map((item, index) => item.id + "");
     },
     handleCancelRow(selection, row) {
       for (let i = 0; i < this.selectedRowIds.length; i++) {
