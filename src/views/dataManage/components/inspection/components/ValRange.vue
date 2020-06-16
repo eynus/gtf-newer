@@ -160,11 +160,12 @@
                     </Select>
                   </template>
                   <!-- 代码范围 -->
-                  <template v-if="item.selectedValFirst===3">
+                  <template v-else-if="item.selectedValFirst===3">
                     <Select
                       v-model="item.controlChangedDetail.TypeOperator"
                       style="width:8rem"
                       class="ml"
+                      @on-change="handleTypeOperatorChange"
                     >
                       <Option
                         :value="item3.id"
@@ -359,6 +360,8 @@ export default {
     modalForm: {
       handler(newName, oldName) {
         // 重新生成concat
+        console.log(newName, "modalForm");
+
         this.$set(this.modalForm, "ruleDesc", this.concatRuleDescWhenChange());
       },
       deep: true
@@ -519,11 +522,7 @@ export default {
             //取值范围自定义
             codeName = "(" + control.Range + ")";
             return index === 0
-              ? selectedKeyNameCode +
-                  "字段取值在" +
-                  range +
-                  codeName +
-                  "范围内"
+              ? selectedKeyNameCode + "字段取值在" + range + codeName + "范围内"
               : ` ${relationArr[index - 1].value === "and" ? "且" : "或"}` +
                   selectedKeyNameCode +
                   "字段取值在" +
@@ -541,6 +540,7 @@ export default {
               range +
               codeName;
       });
+      console.log(arr);
 
       return `${this.modalForm.path[this.modalForm.path.length - 1]}中 ` + arr;
     },
@@ -581,6 +581,22 @@ export default {
               codeName;
       });
       return `${path}中 ` + arr;
+    },
+    handleTypeOperatorChange(e) {
+      console.log(e);
+      let item = this.modalForm.ruleDefineData.find(
+        item => item.id === this.activeRuleItemId
+      );
+      // if (e === 2) {
+        item.controlChangedDetail = {
+          TypeOperator: e,
+          Range: "",
+          CodeListName: "",
+          CodeListID: "",
+          StartIndex: "",
+          EndIndex: ""
+        };
+      // }
     },
     // 添加规则
     handleAddRule() {
@@ -1009,13 +1025,13 @@ export default {
         let newData = {
           Conditions: this.modalForm.ruleDefineData.map((item, index) => {
             // if (item.selectedValFirst === 3) {
-              // console.log(
-              //   "(" +
-              //     item.controlChangedDetail.Range.split(",")
-              //       .map(i => "'" + i + "'")
-              //       .join(",") +
-              //     ")"
-              // );
+            // console.log(
+            //   "(" +
+            //     item.controlChangedDetail.Range.split(",")
+            //       .map(i => "'" + i + "'")
+            //       .join(",") +
+            //     ")"
+            // );
             // }
             return {
               ConType:
