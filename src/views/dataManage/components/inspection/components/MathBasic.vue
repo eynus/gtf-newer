@@ -5,6 +5,9 @@
         <FormItem>
           <Button v-auth="['page_5_4_1']" type="success" @click="handleStartRule">默认启用</Button>
         </FormItem>
+          <FormItem>
+            <Button v-auth="['page_5_4_5']" type="primary" @click="handleStopRule">停止启用</Button>
+          </FormItem>
         <!-- <FormItem>
           <Button type="info" @click="handleAddRule">添加规则</Button>
         </FormItem>
