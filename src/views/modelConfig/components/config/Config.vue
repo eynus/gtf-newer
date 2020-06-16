@@ -4,12 +4,13 @@
       <i-col span="4" class="h100 zt-scroll-y bg-white">
         <div class="pd h100">
           <card-title title="指标分类"></card-title>
-          <my-config-tree
+          <!-- <my-config-tree
             :gData="gData"
             @handleSelect="handleSelect"
             type="service"
             @handleTreeList="handleTreeList"
-          ></my-config-tree>
+          ></my-config-tree>-->
+          <ele-custome-tree @handleSelect="handleSelect" ></ele-custome-tree>
         </div>
       </i-col>
       <i-col span="20 bg-white h100">
@@ -22,8 +23,9 @@
 </template>
 <script>
 import MyConfigTree from "./components/MyConfigTree";
+import EleCustomeTree from "./components/eleCustomeTree";
 import ConfigManage from "./components/ConfigManage";
-import { getCatalogue } from "@/api/dataManage/query";
+// import { getCatalogue } from "@/api/dataManage/query";
 const handleRawData = data => {
   let newData = [];
   for (let i = 0; i < data.length; i++) {
@@ -54,27 +56,28 @@ export default {
     };
   },
   created() {
-    this.getCatalogue();
+    // this.getCatalogue();
   },
-  components: { MyConfigTree, ConfigManage },
+  components: { MyConfigTree, ConfigManage, EleCustomeTree },
   computed: {},
   methods: {
-    getCatalogue() {
-      getCatalogue().then(res => {
-        const { data, code } = res.data;
-        if (code === 1000) {
-          let result = handleRawData(data);
-          this.gData = result;
-        }
-      });
-    },
+    // getCatalogue() {
+    //   getCatalogue().then(res => {
+    //     const { data, code } = res.data;
+    //     if (code === 1000) {
+    //       let result = handleRawData(data);
+    //       this.gData = result;
+    //     }
+    //   });
+    // },
     handleSelect(e) {
-      this.selectedId = e;
-      console.log(this.selectedId, this.TreeFlatList);
+      this.selectedId = e.id;
+      this.selectedName = e.label;
+      console.log(this.selectedId, this.selectedName);
 
-      this.selectedName = this.TreeFlatList.find(
-        item => item.key === this.selectedId
-      ).title;
+      // this.selectedName = this.TreeFlatList.find(
+      //   item => item.key === this.selectedId
+      // ).title;
     },
     handleTreeList(e) {
       console.log("handleTreeList", e);
@@ -83,8 +86,7 @@ export default {
       // 重新请求datalist
       this.selectedId = this.TreeFlatList[0] && this.TreeFlatList[0]["key"];
       this.selectedName = this.TreeFlatList[0] && this.TreeFlatList[0]["title"];
-      console.log('this.selectedId',this.selectedId,this.selectedName);
-      
+      console.log("this.selectedId", this.selectedId, this.selectedName);
     },
     getFlattenList(data) {
       for (let i = 0; i < data.length; i++) {

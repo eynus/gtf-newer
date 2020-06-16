@@ -236,6 +236,7 @@ export default {
   components: { MyDelete, ConfigManageAddModal },
   methods: {
     getData() {
+      this.tableLoading=true
       getListPage({
         pageNum: this.page.current,
         pageSize: this.page.pageSize,
@@ -244,6 +245,7 @@ export default {
           zbmxName: this.inputVal
         }
       }).then(res => {
+         this.tableLoading=false
         const { code, data } = res.data;
         if (code === 1000) {
           this.page.total = data.total;

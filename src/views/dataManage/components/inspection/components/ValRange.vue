@@ -503,9 +503,33 @@ export default {
           if (control.CodeListID) {
             //取值对应代码表
             codeName = control.CodeListName;
+            return index === 0
+              ? selectedKeyNameCode +
+                  "字段取值在" +
+                  range +
+                  codeName +
+                  "代码表有对应项"
+              : ` ${relationArr[index - 1].value === "and" ? "且" : "或"}` +
+                  selectedKeyNameCode +
+                  "字段取值在" +
+                  range +
+                  codeName +
+                  "代码表有对应项";
           } else {
             //取值范围自定义
             codeName = "(" + control.Range + ")";
+            return index === 0
+              ? selectedKeyNameCode +
+                  "字段取值在" +
+                  range +
+                  codeName +
+                  "范围内"
+              : ` ${relationArr[index - 1].value === "and" ? "且" : "或"}` +
+                  selectedKeyNameCode +
+                  "字段取值在" +
+                  range +
+                  codeName +
+                  "范围内";
           }
         }
 
@@ -790,7 +814,16 @@ export default {
                   } else {
                     typeoperator = 2;
                   }
-                  rangeExceptBrace = item.Range.replace(/(^\()|(\))$/g, ""); //去掉收首尾的括号
+                  console.log(
+                    "处理前的rangeExceptBrace",
+                    item.Range.replace(/(^\()|(\))$/g, "").split(",")
+                  );
+                  rangeExceptBrace = item.Range.replace(
+                    /(^\()|(\))$/g,
+                    ""
+                  ).replace(/\'/g, "");
+                  console.log("处理后的rangeExceptBrace", rangeExceptBrace);
+
                   // console.log(
                   //   "rangeExceptBrace",
                   //   rangeExceptBrace,
@@ -974,27 +1007,42 @@ export default {
         return;
       } else {
         let newData = {
-          Conditions: this.modalForm.ruleDefineData.map((item, index) => ({
-            ConType:
-              item.selectedValFirst === 1
-                ? "数值范围约束"
-                : item.selectedValFirst === 2
-                ? "空值约束"
-                : "代码范围约束",
-            FieldName: item.selectedValSecond,
-            TypeOperator:
-              item.selectedValFirst === 3
-                ? "in"
-                : item.controlChangedDetail.TypeOperator,
-            Range:
-              item.selectedValFirst === 3
-                ? "(" + item.controlChangedDetail.Range + ")"
-                : item.controlChangedDetail.Range,
-            CodeListName: item.controlChangedDetail.CodeListName,
-            CodeListID: item.controlChangedDetail.CodeListID,
-            StartIndex: "",
-            EndIndex: ""
-          })),
+          Conditions: this.modalForm.ruleDefineData.map((item, index) => {
+            if (item.selectedValFirst === 3) {
+              console.log(
+                "(" +
+                  item.controlChangedDetail.Range.split(",")
+                    .map(i => "'" + i + "'")
+                    .join(",") +
+                  ")"
+              );
+            }
+            return {
+              ConType:
+                item.selectedValFirst === 1
+                  ? "数值范围约束"
+                  : item.selectedValFirst === 2
+                  ? "空值约束"
+                  : "代码范围约束",
+              FieldName: item.selectedValSecond,
+              TypeOperator:
+                item.selectedValFirst === 3
+                  ? "in"
+                  : item.controlChangedDetail.TypeOperator,
+              Range:
+                item.selectedValFirst === 3
+                  ? "(" +
+                    item.controlChangedDetail.Range.split(",")
+                      .map(i => "'" + i + "'")
+                      .join(",") +
+                    ")"
+                  : item.controlChangedDetail.Range,
+              CodeListName: item.controlChangedDetail.CodeListName,
+              CodeListID: item.controlChangedDetail.CodeListID,
+              StartIndex: "",
+              EndIndex: ""
+            };
+          }),
 
           Expression: this.modalForm.ruleDefineData
             .map((item, index) =>
