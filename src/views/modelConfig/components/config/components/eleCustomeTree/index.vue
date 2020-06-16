@@ -47,7 +47,7 @@
         <span class="custom-tree-node" slot-scope="{ node, data }">
           <span>{{ node.label }}</span>
           <span v-if="isShowSlot(data,node)">
-            <el-button type="text" size="mini" @click="() => handleAppend(data)">
+            <el-button type="text" size="mini" @click="() => handleAppend(data,node)">
               <Icon type="md-add" size="18" />
             </el-button>
             <el-button type="text" size="mini" @click="() => handleRemove(node, data)">
@@ -99,7 +99,6 @@ let id = 1000;
 
 export default {
   data() {
-    
     return {
       yearList: [],
       selectedYear: "",
@@ -142,10 +141,14 @@ export default {
     this.getYear();
   },
   methods: {
-    isShowSlot(node, data) {
-      console.log(this.selectedData.id, data, node);
-
-      // selectedData.id===data.id
+    // 判断这个节点在不在所勾选的节点的这条回溯路径上：显不显示控制按钮
+    isShowSlot(data) {
+      return (
+        (this.selectedData.code &&
+          this.selectedData.code.includes(data.code)) ||
+        false
+      );
+      //它是选中节点的祖先
     },
     insertZbfl() {
       insertZbfl({
@@ -155,10 +158,17 @@ export default {
         zbflName: this.modalForm.name,
         zbflYear: this.selectedYear
       }).then(res => {
-        const { code, data } = res.data;
+        const { code, data, message } = res.data;
         if (code === 1000) {
-          this.append(this.selectedData);
-          this.modalFlag = false;
+          if (this.modalFlag) {
+            this.modalFlag = false;
+            this.$refs.modalForm.resetFields();
+          }
+          this.getTreeList();
+
+          this.$Message.info("添加成功");
+        } else {
+          this.$Message.warning(message);
         }
       });
     },
@@ -193,18 +203,18 @@ export default {
             return newData;
           };
           this.data = handleRawData(data);
-          // generateList(this.gDatathis.gData);
-          console.log(this.data);
+          this.selectedData = {};
 
           // this.$emit('handleTreeList',this.gData)
         }
       });
     },
-    handleAppend(data) {
+    handleAppend(data, node) {
+      let len = node.childNodes.length + 1;
+      let lenStr = len < 10 ? "0" + len : len;
       this.selectedData = data;
       this.$set(this.modalForm, "type", data.label);
-      this.$set(this.modalForm, "code", "A" + data.id);
-      console.log("?", data);
+      this.$set(this.modalForm, "code", data.code + "-" + lenStr);
 
       this.modalFlag = true;
       //   this.append(data)
@@ -217,7 +227,6 @@ export default {
       data.children.push(newChild);
     },
     handleRemove(node, data) {
-      console.log(node, data);
       if (data.children && data.children.length) {
         this.$Message.warning("该文件夹下存在文件，无法删除，请先删除子文件");
       } else {
@@ -235,7 +244,6 @@ export default {
     handleClick(data, checked, node) {
       if (checked) {
         this.$refs.tree.setCheckedNodes([data]);
-        console.log(data);
         this.selectedData = data;
         this.$emit("handleSelect", data);
       }
@@ -259,11 +267,13 @@ export default {
       console.log("tree drop: ", dropNode.label, dropType);
     },
     allowDrop(draggingNode, dropNode, type) {
-      if (dropNode.data.label === "二级 3-1") {
-        return type !== "inner";
-      } else {
-        return true;
-      }
+      // if (dropNode.data.label === "二级 3-1") {
+        console.log(type);
+        
+        return type !== "inner";//不允许拖拽到子目录中
+      // } else {
+        // return true;
+      // }
     },
     allowDrag(draggingNode) {
       return draggingNode.data.label.indexOf("三级 3-2-2") === -1;
@@ -281,6 +291,7 @@ export default {
     // modal取消按钮
     cancel() {
       this.modalFlag = false;
+      this.$refs.modalForm.resetFields();
     },
     // 确认删除
     confirmDel() {

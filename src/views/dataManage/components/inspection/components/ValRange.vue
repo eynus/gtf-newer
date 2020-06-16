@@ -360,7 +360,6 @@ export default {
     modalForm: {
       handler(newName, oldName) {
         // 重新生成concat
-        console.log(newName, "modalForm");
 
         this.$set(this.modalForm, "ruleDesc", this.concatRuleDescWhenChange());
       },
