@@ -15,8 +15,8 @@
   /**
    * 协调
    */
-  import Table from './Table'
-  import TimeLine from './TimeLine'
+  import Table from './components/Table'
+  import TimeLine from './components/TimeLine'
   export default {
     name: "Coordinate",
     components: {

@@ -29,7 +29,7 @@
     </Layout>
 </template>
 <script>
-import Map from './Map'
+import Map from './components/Map'
 import LineCtrl from './LineCtrl'
 import Structure from './Structure'
 import LifeQuality from "./LifeQuality"
