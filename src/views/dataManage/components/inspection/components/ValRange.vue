@@ -483,6 +483,8 @@ export default {
           range = control.Range;
           TypeOperatorName = this.keyRangeRelListDemo.find(
             it => it.id === control.TypeOperator
+          )&&this.keyRangeRelListDemo.find(
+            it => it.id === control.TypeOperator
           ).name;
         } else if (item.selectedValFirst === 2) {
           //空值约束
@@ -540,7 +542,6 @@ export default {
               range +
               codeName;
       });
-      console.log(arr);
 
       return `${this.modalForm.path[this.modalForm.path.length - 1]}中 ` + arr;
     },
