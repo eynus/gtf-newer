@@ -6,6 +6,7 @@
       class="filter-tree"
       :data="data"
       :load="loadNode"
+      check-strictly
       lazy
       :props="defaultProps"
       :filter-node-method="filterNode"

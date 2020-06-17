@@ -9,6 +9,7 @@
       :filter-node-method="filterNode"
       ref="tree"
       accordion
+      check-strictly
       show-checkbox
       node-key="id"
       :expand-on-click-node="true"

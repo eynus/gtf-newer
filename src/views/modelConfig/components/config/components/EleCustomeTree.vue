@@ -29,6 +29,7 @@
       <el-tree
         :data="data"
         show-checkbox
+        check-strictly
         node-key="id"
         ref="tree"
         @node-drag-start="handleDragStart"
