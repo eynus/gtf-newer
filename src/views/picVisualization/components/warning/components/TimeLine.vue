@@ -1,29 +1,17 @@
 <template>
-  <div class="timeline w100">
-    <!-- <div class="timeline">
-      <a-steps progress-dot :current="current" @change="onChange">
-      <a-step :title="item" v-for="(item, index) in time">
-      </a-step>
-    </a-steps>
-    </div>-->
-    <div class="w100">
-      <el-steps  :active="1" finish-status="success">
-        <el-step title="已完成"></el-step>
-        <el-step title="进行中"></el-step>
-        <el-step title="步骤 3"></el-step>
-      </el-steps>
-    </div>
+  <div class="timeline w100" :key="current && Math.random()">
+    <Steps :current="current" @click.native="stepClick">
+      <Step
+          v-for="item in time"
+          icon="ios-disc"
+          :title="String(item)"
+          :key="item">
+      </Step>
+    </Steps>
   </div>
 </template>
 
 <script>
-import Steps from "ant-design-vue/lib/steps";
-import ElSteps from "element-ui/lib/steps";
-import ElStep from "element-ui/lib/step";
-import Vue from "vue";
-Vue.use(Steps);
-Vue.use(ElSteps);
-Vue.use(ElStep);
 const showNumber = 5;
 const time = [2010, 2011, 2012, 2013, 2014, 2019, 2020, 2021, 2022, 2023];
 export default {
@@ -36,6 +24,12 @@ export default {
     };
   },
   methods: {
+    stepClick(e) {
+      let checked = Number(e.target.innerHTML)
+      if (!checked) return 0
+      let v = this.time.findIndex(item => item === checked)
+      this.onChange(v)
+    },
     onChange(v) {
       this.current = v;
       let checked = this.time[v];
@@ -109,8 +103,7 @@ export default {
         arr = time;
         center = arr.length - 1;
       }
-      center =
-        arr.indexOf(year) !== -1 ? arr.findIndex(item => item === year) : 2;
+      center = arr.indexOf(year) !== -1 ? arr.findIndex(item => item === year) : 2;
       this.time = arr;
       this.current = center;
       this.checked = this.time[center];

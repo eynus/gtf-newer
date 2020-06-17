@@ -22,6 +22,10 @@ class Tool {
     return toString.call(value) === "[object String]"
   }
 
+  static isNumber (value) {
+    return toString.call(value) === "[object Number]"
+  }
+
   static isArray(value) {
     return toString.call(value) === "[object Array]"
   }
