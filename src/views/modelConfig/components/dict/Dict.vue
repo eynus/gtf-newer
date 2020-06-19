@@ -1,11 +1,11 @@
 <template>
   <div class="h100 bg-white pd-lg">
     <!-- <Row :gutter="12"> -->
-      <!-- <i-col span="4"> -->
+      <!-- <Col span="4"> -->
         <!-- <ele-custome-tree></ele-custome-tree> -->
-      <!-- </i-col> -->
-      <!-- <i-col span="20">2</i-col> -->
-      <!-- <i-col></i-col> -->
+      <!-- </Col> -->
+      <!-- <Col span="20">2</Col> -->
+      <!-- <Col></Col> -->
     <!-- </Row> -->
   </div>
 </template>
@@ -17,10 +17,10 @@ export default {
   },
   computed: {},
   created() {
-  
+
   },
   mounted() {
-  
+
   },
   beforeDestroy() {
   },

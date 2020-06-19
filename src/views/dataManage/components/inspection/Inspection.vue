@@ -1,7 +1,7 @@
 <template>
   <div class="h100">
     <Row style="height:100%">
-      <i-col span="4" style="overflow:hidden" class="scroll bg-white h100">
+      <Col span="4" style="overflow:hidden" class="scroll bg-white h100">
         <div class="pd h100">
           <Menu :active-name="activeName" @on-select="onSelect" class="h100" :style="`width:${remToPx(15)}px`">
             <MenuItem
@@ -11,12 +11,12 @@
             >{{item.name}}</MenuItem>
           </Menu>
         </div>
-      </i-col>
-      <i-col span="20 bg-white h100">
+      </Col>
+      <Col span="20 bg-white h100">
         <div class="pd h100">
           <router-view ></router-view>
         </div>
-      </i-col>
+      </Col>
     </Row>
   </div>
 </template>
@@ -49,7 +49,7 @@ export default {
   created(){
     let pathArr = this.$route.path.split('/')
     this.activeName = pathArr[pathArr.length-1]//this.$route.query.id
-    
+
     this.getzjML()
   },
   methods: {
@@ -59,7 +59,7 @@ export default {
     },
     getzjML(){
       getzjML().then(res=>{
-        let {code,data} = res.data 
+        let {code,data} = res.data
         if(code===1000){
           this.siderMenuList.forEach((item,index)=>{
             item.pkId = data.find((it)=>it.rulesName===item.name).pkId

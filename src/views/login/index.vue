@@ -16,7 +16,7 @@
               @keydown.enter.native="handleSubmit"
             >
               <FormItem prop="userName">
-                <i-input
+                <Input
                   v-model="form.userName"
                   class="smzx-input-native"
                   size="large"
@@ -25,10 +25,10 @@
                   <span slot="prepend">
                     <Icon :size="18" :color="'rgba(0,0,0,0.3)'" type="ios-person"></Icon>
                   </span>
-                </i-input>
+                </Input>
               </FormItem>
               <FormItem prop="password">
-                <i-input
+                <Input
                   type="password"
                   class="smzx-input-native"
                   v-model="form.password"
@@ -38,12 +38,12 @@
                   <span slot="prepend">
                     <Icon :size="18" :color="'rgba(0,0,0,0.3)'" type="md-lock"></Icon>
                   </span>
-                </i-input>
+                </Input>
               </FormItem>
               <FormItem prop="validateCode">
                 <Row :gutter="16">
-                  <i-col span="12">
-                    <i-input
+                  <Col span="12">
+                    <Input
                       class="smzx-input-native"
                       v-model="form.validateCode"
                       size="large"
@@ -52,13 +52,13 @@
                       <span slot="prepend">
                         <Icon :size="18" :color="'rgba(0,0,0,0.3)'" type="md-checkbox"></Icon>
                       </span>
-                    </i-input>
-                  </i-col>
-                  <i-col span="12">
+                    </Input>
+                  </Col>
+                  <Col span="12">
                     <div class="validate-code" @click="getPublicKey">
                       <img :src="validateCodeSrc" alt class="w100" />
                     </div>
-                  </i-col>
+                  </Col>
                 </Row>
               </FormItem>
               <FormItem>

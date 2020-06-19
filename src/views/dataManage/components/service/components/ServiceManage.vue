@@ -24,12 +24,12 @@
       width="100%"
     >
       <Row>
-        <i-col :md="4" :xl="4" :xxl="4">
+        <Col :md="4" :xl="4" :xxl="4">
           <FormItem label="服务名称：">
             <Input v-model.trim="formInline.serviceName" placeholder="请输入" clearable />
           </FormItem>
-        </i-col>
-        <i-col :md="4" :xl="4" :xxl="4">
+        </Col>
+        <Col :md="4" :xl="4" :xxl="4">
           <FormItem label="状态：" :label-width="remToPx(4)">
             <Select
               :clearable="true"
@@ -44,8 +44,8 @@
               </Option>
             </Select>
           </FormItem>
-        </i-col>
-        <i-col :md="4" :xl="4" :xxl="4">
+        </Col>
+        <Col :md="4" :xl="4" :xxl="4">
           <FormItem label="服务类型：">
             <Select
               :clearable="true"
@@ -60,8 +60,8 @@
               </Option>
             </Select>
           </FormItem>
-        </i-col>
-        <i-col :md="4" :xl="4" :xxl="4">
+        </Col>
+        <Col :md="4" :xl="4" :xxl="4">
           <FormItem label="专题类型：">
             <Select v-model="formInline.type" class="scroll dropdown" style="width:8.5rem">
               <Option v-for="item in typeList" :value="item.typeId" :key="item.typeId">
@@ -71,8 +71,8 @@
               </Option>
             </Select>
           </FormItem>
-        </i-col>
-        <i-col :md="8" :xl="6" :xxl="6">
+        </Col>
+        <Col :md="8" :xl="6" :xxl="6">
           <FormItem label="发布时间：">
             <DatePicker
               type="daterange"
@@ -83,12 +83,12 @@
               style="width:16.5rem"
             ></DatePicker>
           </FormItem>
-        </i-col>
-        <i-col span="2">
+        </Col>
+        <Col span="2">
           <FormItem :label-width="remToPx(2)">
             <Button type="primary" class="smzx-search-btn" @click="handleSubmit">查询</Button>
           </FormItem>
-        </i-col>
+        </Col>
       </Row>
     </Form>
     <Button type="primary" class="btn-margin">浏览</Button>

@@ -119,17 +119,17 @@
                   :label-width="remToPx(7.5)"
                   inline
                 >
-                  <i-col span="12">
+                  <Col span="12">
                     <FormItem label="字段名称：" prop="keyName">
                       <Input v-model.trim="modalKeyFormItem.keyName" />
                     </FormItem>
-                  </i-col>
-                  <i-col span="12">
+                  </Col>
+                  <Col span="12">
                     <FormItem label="字段代码：" prop="keyCode">
                       <Input v-model="modalKeyFormItem.keyCode" />
                     </FormItem>
-                  </i-col>
-                  <i-col span="12">
+                  </Col>
+                  <Col span="12">
                     <FormItem label="字段类型：" prop="keyType">
                       <Select
                         v-model="modalKeyFormItem.keyType"
@@ -143,13 +143,13 @@
                         <Option value="Date">Date</Option>
                       </Select>
                     </FormItem>
-                  </i-col>
-                  <i-col span="12">
+                  </Col>
+                  <Col span="12">
                     <FormItem label="字段长度：" prop="keyLength">
                       <Input v-model.trim="modalKeyFormItem.keyLength" />
                     </FormItem>
-                  </i-col>
-                  <i-col span="12">
+                  </Col>
+                  <Col span="12">
                     <FormItem
                       label="小数位数："
                       prop="keyDigit"
@@ -157,7 +157,7 @@
                     >
                       <Input v-model="modalKeyFormItem.keyDigit" />
                     </FormItem>
-                  </i-col>
+                  </Col>
                 </Form>
               </Row>
               <div class="text-right divided mr-lg">

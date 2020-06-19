@@ -1,7 +1,7 @@
 <template>
   <div class="h100">
     <Row style="height:100%">
-      <i-col>
+      <Col>
         <div class="pd">
           <div class="module-head">
             <Icon custom="iconfont  icon-type" size="16" color="#2d8cf0" />
@@ -19,33 +19,33 @@
               width="100%"
           >
             <Row>
-              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
+              <Col :md="4" :xl="4" :xxl="4" class="form-col">
                 <FormItem label="登录IP：" style="margin-right: 30px;">
                   <Input v-model.trim="formInline.loginIp" placeholder="请输入登录IP" clearable />
                 </FormItem>
-              </i-col>
-              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
+              </Col>
+              <Col :md="4" :xl="4" :xxl="4" class="form-col">
                 <FormItem label="登录人姓名：">
                   <Input v-model.trim="formInline.loginRealName" placeholder="请输入登录人姓名" clearable />
                 </FormItem>
-              </i-col>
-              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
+              </Col>
+              <Col :md="4" :xl="4" :xxl="4" class="form-col">
                 <FormItem label="登录设备：" style="width: 100%;">
                   <Select v-model="formInline.loginType" placeholder="请选择登录设备" clearable >
                     <Option v-for="item in logType" :value="item.value" :key="item.value">{{ item.label }}</Option>
                   </Select>
                 </FormItem>
-              </i-col>
-              <i-col :md="5" :xl="5" :xxl="5" class="form-col">
+              </Col>
+              <Col :md="5" :xl="5" :xxl="5" class="form-col">
                 <FormItem label="登录时间：">
                   <DatePicker v-model="date_" :value="formInline.date_" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="请选择登录时间范围"></DatePicker>
                 </FormItem>
-              </i-col>
-              <i-col span="2" style="float: right;">
+              </Col>
+              <Col span="2" style="float: right;">
                 <FormItem :label-width="remToPx(2)">
                   <Button type="primary" class="smzx-search-btn" @click="onSearch">查询</Button>
                 </FormItem>
-              </i-col>
+              </Col>
             </Row>
           </Form>
           <Form
@@ -60,33 +60,33 @@
               width="100%"
           >
             <Row>
-              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
+              <Col :md="4" :xl="4" :xxl="4" class="form-col">
                 <FormItem label="操作IP：">
                   <Input v-model.trim="formInline1.operationIp" placeholder="操作IP" clearable />
                 </FormItem>
-              </i-col>
-              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
+              </Col>
+              <Col :md="4" :xl="4" :xxl="4" class="form-col">
                 <FormItem label="操作人：">
                   <Input v-model.trim="formInline1.operationUserRealName" placeholder="请输入操作人姓名" clearable />
                 </FormItem>
-              </i-col>
-              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
+              </Col>
+              <Col :md="4" :xl="4" :xxl="4" class="form-col">
                 <FormItem label="操作类型：" style="width: 100%;">
                   <Select v-model="formInline1.operationType" placeholder="请选择操作类型" clearable >
                     <Option v-for="item in logOpt" :value="item.value" :key="item.value">{{ item.label }}</Option>
                   </Select>
                 </FormItem>
-              </i-col>
-              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
+              </Col>
+              <Col :md="4" :xl="4" :xxl="4" class="form-col">
                 <FormItem label="操作时间：" style="width: 100%;">
                   <DatePicker v-model="date_1" :value="formInline1.date_1" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="请选择登录时间范围"></DatePicker>
                 </FormItem>
-              </i-col>
-              <i-col span="2" style="float: right;">
+              </Col>
+              <Col span="2" style="float: right;">
                 <FormItem :label-width="remToPx(2)">
                   <Button type="primary" class="smzx-search-btn" @click="onSearch">查询</Button>
                 </FormItem>
-              </i-col>
+              </Col>
             </Row>
           </Form>
           <Row>
@@ -141,7 +141,7 @@
             </div>
           </div>
         </div>
-      </i-col>
+      </Col>
     </Row>
   </div>
 </template>

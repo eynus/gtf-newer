@@ -2,11 +2,11 @@
   <div class="home h100 guide guide-bg h100 w100">
     <h1>昭通市国土空间基础信息平台</h1>
     <Row class="h100"   :style="{ height: `calc(100% - ${remToPx(8)}px)` }">
-      <i-col span="2">
+      <Col span="2">
         <div style="color:transparent">1</div>
-      </i-col>
-      <i-col span="21" class="h100">
-        <div class="guide-body h100" 
+      </Col>
+      <Col span="21" class="h100">
+        <div class="guide-body h100"
         >
           <div class="guide-body-top">
             <div
@@ -39,7 +39,7 @@
             </template>
           </div>
         </div>
-      </i-col>
+      </Col>
     </Row>
 
     <my-footer color="rgb(165,165,165)"></my-footer>
@@ -84,7 +84,7 @@ export default {
       bg: require(`../../assets/img/guide/beijing-${index + 1}.png`),
       icon: require(`../../assets/img/guide/icon-${index + 1}.png`)
     }));
-    
+
     // 根据用户权限判断模块的显示
     this.role.forEach((item, index) => {
       switch (item.resIdentif) {
@@ -146,7 +146,7 @@ export default {
     margin-bottom: 0;
   }
   &-body {
-   
+
     display: flex;
     flex-direction: column;
     justify-content: space-around;

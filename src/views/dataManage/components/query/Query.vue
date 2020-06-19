@@ -1,12 +1,12 @@
 <template>
   <div class="h100">
     <Row style="height:100%">
-      <i-col span="4" class="h100 zt-scroll-y bg-white">
+      <Col span="4" class="h100 zt-scroll-y bg-white">
         <div class="pd h100">
           <my-tree @handleSelect="handleSelect" type="query"></my-tree>
         </div>
-      </i-col>
-      <i-col span="20" class="pd h100 bg-white">
+      </Col>
+      <Col span="20" class="pd h100 bg-white">
         <div class="text-right">
           <RadioGroup v-model="activeMode" type="button">
             <Radio label="normal">数据查看</Radio>
@@ -88,7 +88,7 @@
             </div>
           </div>
         </div>
-      </i-col>
+      </Col>
     </Row>
   </div>
 </template>
@@ -135,16 +135,16 @@ export default {
   components: { MyTree,MyMap },
   computed: {},
   created() {
-  
+
   },
   mounted() {
-  
+
   },
   beforeDestroy() {
     clearInterval(this.timer1);
   },
   methods: {
-  
+
     // 获取元数据
     getMetaByName(name) {
       getMetaByName({ dataName: name }).then(res => {
@@ -167,7 +167,7 @@ export default {
       });
     },
     handleSelect(data) {
-      
+
       if(this.activeMode==='meta'&&data.isLeaf){
         this.getMetaByName(data.label);
       }else{

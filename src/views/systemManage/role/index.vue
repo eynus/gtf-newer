@@ -1,7 +1,7 @@
 <template>
   <div class="h100">
     <Row style="height:100%">
-      <i-col>
+      <Col>
         <div class="pd">
           <div class="module-head">
             <Icon custom="iconfont  icon-type" size="16" color="#2d8cf0" />
@@ -18,21 +18,21 @@
               width="100%"
           >
             <Row>
-              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
+              <Col :md="4" :xl="4" :xxl="4" class="form-col">
                 <FormItem label="角色名：">
                   <Input v-model.trim="formInline.roleName" placeholder="请输入角色名" clearable />
                 </FormItem>
-              </i-col>
-              <i-col :md="4" :xl="4" :xxl="4" class="form-col">
+              </Col>
+              <Col :md="4" :xl="4" :xxl="4" class="form-col">
                 <FormItem label="备注：">
                   <Input v-model.trim="formInline.roleRemarks" placeholder="请输入备注" clearable />
                 </FormItem>
-              </i-col>
-              <i-col span="2" style="float: right;">
+              </Col>
+              <Col span="2" style="float: right;">
                 <FormItem :label-width="remToPx(2)">
                   <Button type="primary" class="smzx-search-btn" @click="onSearch">查询</Button>
                 </FormItem>
-              </i-col>
+              </Col>
             </Row>
           </Form>
           <Button v-auth="['page_4_2_1']" type="primary" @click="insert" class="btn-margin">新建</Button>
@@ -70,7 +70,7 @@
           </div>
           <my-delete :show="delModalFlag" @ok="confirmDel" @cancel="delModalFlag=false"></my-delete>
         </div>
-      </i-col>
+      </Col>
     </Row>
     <!--    角色编辑-->
     <uedit ref="uedit" :roles="roles" @close="getList"></uedit>

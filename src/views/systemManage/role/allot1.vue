@@ -9,15 +9,15 @@
     >
       <Form :model="formData" :rules="rules" ref="form" label-position="left" :label-width="100">
         <Row>
-          <i-col class-name="col-item">
+          <Col class-name="col-item">
             <FormItem label="角色名称" prop="roleName">
               <div>{{ roleName }}</div>
             </FormItem>
-          </i-col>
-          <i-col class-name="col-item">
+          </Col>
+          <Col class-name="col-item">
             <FormItem label="权限分配" prop="resourcesIds">
               <Input v-model="formData.resourcesIds" v-show="false" />
-        
+
               <el-tree
                 :data="resource"
                 check-strictly
@@ -30,7 +30,7 @@
                 @check="resourceCheck"
               ></el-tree>
             </FormItem>
-          </i-col>
+          </Col>
         </Row>
       </Form>
       <div class="drawer-footer">
@@ -112,7 +112,7 @@ export default {
     onSubmit() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          
+
           let param = {
             resourcesIds: this.resourcesIds,
             roleId: this.formData.roleId

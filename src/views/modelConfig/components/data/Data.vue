@@ -97,7 +97,7 @@
               :on-format-error="handleFormatError"
               ref="upload"
             >
-              <i-button type="primary">上传</i-button>
+              <Button type="primary">上传</Button>
             </Upload>
             <span class="ml">{{modalFileName}}</span>
           </div>

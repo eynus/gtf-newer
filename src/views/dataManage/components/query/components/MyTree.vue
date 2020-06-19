@@ -1,6 +1,6 @@
 <template>
   <div>
-    <i-input placeholder="输入关键字进行过滤" v-model="filterText"></i-input>
+    <Input placeholder="输入关键字进行过滤" v-model="filterText"></Input>
 
     <el-tree
       class="filter-tree"

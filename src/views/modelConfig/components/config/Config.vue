@@ -1,7 +1,7 @@
 <template>
   <div class="h100">
     <Row style="height:100%">
-      <i-col span="4" class="h100 zt-scroll-y bg-white">
+      <Col span="4" class="h100 zt-scroll-y bg-white">
         <div class="pd h100">
           <card-title title="指标分类"></card-title>
           <!-- <my-config-tree
@@ -12,12 +12,12 @@
           ></my-config-tree>-->
           <ele-custome-tree @handleSelect="handleSelect" ></ele-custome-tree>
         </div>
-      </i-col>
-      <i-col span="20 bg-white h100">
+      </Col>
+      <Col span="20 bg-white h100">
         <div class="pd">
           <config-manage :selectedId="selectedId" :selectedName="selectedName"></config-manage>
         </div>
-      </i-col>
+      </Col>
     </Row>
   </div>
 </template>

@@ -13,22 +13,22 @@
           :label-width="remToPx(7.5)"
           inline
         >
-          <i-col span="12">
+          <Col span="12">
             <FormItem label="指标分类：">
               <Input disabled v-model.trim="modalKeyFormItem.classname" />
             </FormItem>
-          </i-col>
-          <i-col span="12">
+          </Col>
+          <Col span="12">
             <FormItem label="指标代码：">
               <Input disabled v-model.trim="modalKeyFormItem.code" />
             </FormItem>
-          </i-col>
-          <i-col span="12">
+          </Col>
+          <Col span="12">
             <FormItem label="指标名称：" prop="name">
               <Input v-model.trim="modalKeyFormItem.name" />
             </FormItem>
-          </i-col>
-          <i-col span="12">
+          </Col>
+          <Col span="12">
             <FormItem label="指标单位：" prop="unit">
               <Select v-model="modalKeyFormItem.unit" style="width:10.25rem">
                 <Option
@@ -38,8 +38,8 @@
                 >{{item.name}}</Option>
               </Select>
             </FormItem>
-          </i-col>
-          <i-col span="12">
+          </Col>
+          <Col span="12">
             <FormItem label="适用范围：" prop="fitrange">
               <Select v-model="modalKeyFormItem.fitrange" style="width:10.25rem">
                 <Option
@@ -49,8 +49,8 @@
                 >{{item.name}}</Option>
               </Select>
             </FormItem>
-          </i-col>
-          <i-col span="12">
+          </Col>
+          <Col span="12">
             <FormItem label="指标类型：" prop="type">
               <Select v-model="modalKeyFormItem.type" style="width:10.25rem">
                 <Option
@@ -60,29 +60,29 @@
                 >{{item.name}}</Option>
               </Select>
             </FormItem>
-          </i-col>
-          <i-col span="12">
+          </Col>
+          <Col span="12">
             <FormItem label="值域范围：" prop="valrange">
               <!-- <Input v-model="modalKeyFormItem.valrange" /> -->
               <InputNumber :max="100" :min="1" v-model="modalKeyFormItem.valrange[0]"></InputNumber>-
               <InputNumber :max="100" :min="1" v-model="modalKeyFormItem.valrange[1]"></InputNumber>
             </FormItem>
-          </i-col>
-          <i-col span="12">
+          </Col>
+          <Col span="12">
             <FormItem label="指标来源：" prop="source">
               <Input v-model="modalKeyFormItem.source" />
             </FormItem>
-          </i-col>
-          <i-col span="12">
+          </Col>
+          <Col span="12">
             <FormItem label="指标阈值：" prop="max">
               <InputNumber v-model="modalKeyFormItem.max" />
             </FormItem>
-          </i-col>
-          <i-col span="24">
+          </Col>
+          <Col span="24">
             <FormItem label="指标涵义：" prop="content">
               <Input type="textarea" v-model="modalKeyFormItem.content" style="width:30rem" />
             </FormItem>
-          </i-col>
+          </Col>
         </Form>
       </Row>
     </Modal>

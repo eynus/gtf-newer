@@ -1,6 +1,6 @@
 <template>
   <div>
-    <i-input placeholder="输入关键字进行过滤" v-model="filterText"></i-input>
+    <Input placeholder="输入关键字进行过滤" v-model="filterText"></Input>
 
     <el-tree
       class="filter-tree"
@@ -38,7 +38,7 @@ export default {
         this.$emit("handleSelect", data);
       }
     },
- 
+
     filterNode(value, data) {
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
@@ -55,7 +55,7 @@ export default {
               if (data[i].children) {
                 newData[i].children = handleRawData(data[i].children);
               }
-          
+
               newData[i].id = data[i].pkId+'-'+data[i].identification;
               newData[i].identification = data[i].identification;
               newData[i].label = data[i].dataName;

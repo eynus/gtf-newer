@@ -3,7 +3,7 @@
     <div class="card-container card-container1">
       <div class="card-body">
         <Row style="height:100%;margin-left:0" :gutter="remToPx(2)">
-          <i-col span="15" class="h100 card-left" style="padding:0">
+          <Col span="15" class="h100 card-left" style="padding:0">
             <card-title icon="iconfont  icon-fenleihuizong" title="分类汇总"></card-title>
             <div class="h100 w100 flex flex-center flex-wrap card-left-item-list">
               <div
@@ -36,8 +36,8 @@
                 </div>
               </div>
             </div>
-          </i-col>
-          <i-col span="9" class="h100">
+          </Col>
+          <Col span="9" class="h100">
             <div class="h100 w100 position-r card-right">
               <rose-chart
                 class="position-a-c"
@@ -48,7 +48,7 @@
 
               <!-- </div> -->
             </div>
-          </i-col>
+          </Col>
         </Row>
       </div>
     </div>
