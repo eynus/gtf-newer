@@ -42,8 +42,8 @@ export default {
   computed: {},
   methods: {
     handleSelect(e) {
-      this.selectedId = e.id;
-      this.selectedName = e.label;
+      this.selectedId = e.pkId;
+      this.selectedName = e.zbflName;
       // console.log(this.selectedId, this.selectedName);
 
     },

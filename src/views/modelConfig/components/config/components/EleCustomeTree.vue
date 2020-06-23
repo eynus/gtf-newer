@@ -1,15 +1,5 @@
 <template>
   <div class="custom-tree-container">
-    <!-- <div class="block">
-      <p>使用 render-content</p>
-      <el-tree
-        :data="data"
-        node-key="id"
-        default-expand-all
-        :expand-on-click-node="false"
-        :render-content="renderContent"
-      ></el-tree>
-    </div>-->
     <div class="text-right">
       <Select
         :clearable="true"
@@ -26,37 +16,44 @@
       </Select>
     </div>
     <div class="block">
-      <el-tree
-        :data="data"
-        show-checkbox
-        check-strictly
-        node-key="id"
-        ref="tree"
-        @node-drag-start="handleDragStart"
-        @node-drag-enter="handleDragEnter"
-        @node-drag-leave="handleDragLeave"
-        @node-drag-over="handleDragOver"
-        @node-drag-end="handleDragEnd"
-        @node-drop="handleDrop"
-        draggable
-        :allow-drop="allowDrop"
-        :allow-drag="allowDrag"
-        default-expand-all
-        :expand-on-click-node="false"
-        @check-change="handleClick"
-      >
-        <span class="custom-tree-node" slot-scope="{ node, data }">
-          <span>{{ node.label }}</span>
-          <span v-if="isShowSlot(data,node)">
-            <el-button type="text" size="mini" @click="() => handleAppend(data,node)">
-              <Icon type="md-add" size="18" />
-            </el-button>
-            <el-button type="text" size="mini" @click="() => handleRemove(node, data)">
-              <Icon type="md-trash" size="18" />
-            </el-button>
-          </span>
-        </span>
-      </el-tree>
+      <Tree
+          class="tree"
+          children-key="childs"
+          :data="data"
+          :render="treeRender"
+          @on-select-change="handleClick">
+      </Tree>
+<!--      <el-tree-->
+<!--        :data="data"-->
+<!--        show-checkbox-->
+<!--        check-strictly-->
+<!--        node-key="id"-->
+<!--        ref="tree"-->
+<!--        @node-drag-start="handleDragStart"-->
+<!--        @node-drag-enter="handleDragEnter"-->
+<!--        @node-drag-leave="handleDragLeave"-->
+<!--        @node-drag-over="handleDragOver"-->
+<!--        @node-drag-end="handleDragEnd"-->
+<!--        @node-drop="handleDrop"-->
+<!--        draggable-->
+<!--        :allow-drop="allowDrop"-->
+<!--        :allow-drag="allowDrag"-->
+<!--        default-expand-all-->
+<!--        :expand-on-click-node="false"-->
+<!--        @check-change="handleClick"-->
+<!--      >-->
+<!--        <span class="custom-tree-node" slot-scope="{ node, data }">-->
+<!--          <span>{{ node.label }}</span>-->
+<!--          <span v-if="isShowSlot(data,node)">-->
+<!--            <el-button type="text" size="mini" @click="() => handleAppend(data,node)">-->
+<!--              <Icon type="md-add" size="18" />-->
+<!--            </el-button>-->
+<!--            <el-button type="text" size="mini" @click="() => handleRemove(node, data)">-->
+<!--              <Icon type="md-trash" size="18" />-->
+<!--            </el-button>-->
+<!--          </span>-->
+<!--        </span>-->
+<!--      </el-tree>/-->
     </div>
     <Modal
       v-model="modalFlag"
@@ -142,6 +139,51 @@ export default {
     this.getYear();
   },
   methods: {
+    treeRender(h, { root, node, data }) {
+      return h('span',{
+        props: {
+          expand: true
+        }
+      }, [
+        h('span', data.zbflName),
+        h('Icon', {
+          props: {
+            type: 'md-add',
+            size: 16
+          },
+          class: 'tree-tool',
+          style: {
+            marginLeft: '18px'
+          },
+          attrs: {
+            title: '新增'
+          },
+          on: {
+            click: () => {
+              this.handleAppend(node, data)
+            }
+          }
+        }),
+        h('Icon', {
+          props: {
+            type: 'md-trash',
+            size: 16
+          },
+          class: 'tree-tool',
+          style: {
+            marginLeft: '8px'
+          },
+          attrs: {
+            title: '删除'
+          },
+          on: {
+            click: () => {
+              this.handleRemove(node, data)
+            }
+          }
+        }),
+      ])
+    },
     // 判断这个节点在不在所勾选的节点的这条回溯路径上：显不显示控制按钮
     isShowSlot(data) {
       return (
@@ -155,7 +197,7 @@ export default {
       insertZbfl({
         zbflCode: this.modalForm.code,
         zbflExp: this.modalForm.tip,
-        zbflFid: this.selectedData.id,
+        zbflFid: this.selectedData.pkId,
         zbflName: this.modalForm.name,
         zbflYear: this.selectedYear
       }).then(res => {
@@ -190,33 +232,40 @@ export default {
       getTreeList({ zbflYear: this.selectedYear }).then(res => {
         const { data, code } = res.data;
         if (code === 1000) {
-          const handleRawData = data => {
-            let newData = [];
-            for (let i = 0; i < data.length; i++) {
-              newData.push({});
-              if (data[i].childs.length) {
-                newData[i].children = handleRawData(data[i].childs);
-              }
-              newData[i].id = data[i].pkId;
-              newData[i].code = data[i].zbflCode;
-              newData[i].label = data[i].zbflName;
-            }
-            return newData;
-          };
-          this.data = handleRawData(data);
-          this.selectedData = {};
-
+          // const handleRawData = data => {
+          //   let newData = [];
+          //   for (let i = 0; i < data.length; i++) {
+          //     newData.push({});
+          //     if (data[i].childs.length) {
+          //       newData[i].children = handleRawData(data[i].childs);
+          //     }
+          //     newData[i].id = data[i].pkId;
+          //     newData[i].code = data[i].zbflCode;
+          //     newData[i].label = data[i].zbflName;
+          //   }
+          //   return newData;
+          // };
+          this.data = this.handleRow(data);
+          this.selectedData = {}
           // this.$emit('handleTreeList',this.gData)
         }
       });
     },
-    handleAppend(data, node) {
-      let len = node.childNodes.length + 1;
+    handleRow(data) {
+        for (let i = 0; i < data.length; i++) {
+          data[i]['expand'] = true
+          if (data[i].childs.length) {
+            data[i].childs = this.handleRow(data[i].childs);
+          }
+        }
+        return data;
+    },
+    handleAppend(node, data) {
+      let len = node.childs.length + 1;
       let lenStr = len < 10 ? "0" + len : len;
       this.selectedData = data;
-      this.$set(this.modalForm, "type", data.label);
-      this.$set(this.modalForm, "code", data.code + "-" + lenStr);
-
+      this.$set(this.modalForm, "type", data.zbflName);
+      this.$set(this.modalForm, "code", data.zbflCode + "-" + lenStr);
       this.modalFlag = true;
       //   this.append(data)
     },
@@ -228,13 +277,13 @@ export default {
       data.children.push(newChild);
     },
     handleRemove(node, data) {
-      if (data.children && data.children.length) {
-        this.$Message.warning("该文件夹下存在文件，无法删除，请先删除子文件");
-      } else {
-        this.delModalFlag = true;
-        this.selectedData = data;
-        this.selectedNode = node;
+      if (data.childs && data.childs.length) {
+        this.$Message.warning("该分类下存在子分类，无法删除，请先删除子分类")
+        return 0
       }
+      this.delModalFlag = true;
+      this.selectedData = data;
+      this.selectedNode = node;
     },
     remove(node, data) {
       const parent = node.parent;
@@ -242,11 +291,11 @@ export default {
       const index = children.findIndex(d => d.id === data.id);
       children.splice(index, 1);
     },
-    handleClick(data, checked, node) {
+    handleClick(data, checked) {
       if (checked) {
-        this.$refs.tree.setCheckedNodes([data]);
-        this.selectedData = data;
-        this.$emit("handleSelect", data);
+        // this.$refs.tree.setCheckedNodes([data]);
+        // this.selectedData = data;
+        this.$emit("handleSelect", checked);
       }
     },
     handleDragStart(node, ev) {
@@ -270,7 +319,7 @@ export default {
     allowDrop(draggingNode, dropNode, type) {
       // if (dropNode.data.label === "二级 3-1") {
         console.log(type);
-        
+
         return type !== "inner";//不允许拖拽到子目录中
       // } else {
         // return true;
@@ -283,8 +332,6 @@ export default {
     ok() {
       this.$refs["modalForm"].validate(valid => {
         if (valid) {
-          console.log(this.modalForm);
-
           this.insertZbfl();
         }
       });
@@ -299,17 +346,16 @@ export default {
       //   deleteZB({ pkId: this.selectedRowIds[0] }).then(res => {
       //     const { data, code } = res.data;
       //     if (code === 1000) {
-      deleteZbfl({ pkId: this.selectedData.id }).then(res => {
+      deleteZbfl({ pkId: this.selectedData.pkId }).then(res => {
         const { code, data, message } = res.data;
+        this.getTreeList()
         if (code === 1000) {
           // this.remove(this.selectedNode, this.selectedData);
-          this.getTreeList();
-          this.delModalFlag = false;
-          this.$Message.info("删除成功");
+          this.delModalFlag = false
+          this.$Message.info("删除成功")
         } else {
-          this.getTreeList();
-          this.$Message.warning(message);
-          this.delModalFlag = false;
+          this.$Message.warning(message)
+          this.delModalFlag = false
         }
       });
     }
@@ -344,7 +390,20 @@ export default {
 // .custom-tree-container{
 //     display: flex;
 // }
-
+.tree {
+  ::v-deep .ivu-tree-children {
+    .tree-tool {
+      display: none;
+    }
+    .ivu-tree-title {
+      &:hover {
+        .tree-tool{
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
 .custom-tree-node {
   flex: 1;
   display: flex;
