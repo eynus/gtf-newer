@@ -140,49 +140,77 @@ export default {
   },
   methods: {
     treeRender(h, { root, node, data }) {
-      return h('span',{
-        props: {
-          expand: true
-        }
-      }, [
-        h('span', data.zbflName),
-        h('Icon', {
+      if (data.pkId === 0) {
+        return h('span', {
           props: {
-            type: 'md-add',
-            size: 16
-          },
-          class: 'tree-tool',
-          style: {
-            marginLeft: '18px'
-          },
-          attrs: {
-            title: '新增'
-          },
-          on: {
-            click: () => {
-              this.handleAppend(node, data)
-            }
+            expand: true
           }
-        }),
-        h('Icon', {
+        }, [
+          h('span', data.zbflName),
+          h('Icon', {
+            props: {
+              type: 'md-add',
+              size: 16
+            },
+            class: 'tree-tool',
+            style: {
+              marginLeft: '18px'
+            },
+            attrs: {
+              title: '新增'
+            },
+            on: {
+              click: () => {
+                this.handleAppend(node, data)
+              }
+            }
+          }),
+        ])
+      } else {
+        return h('span', {
           props: {
-            type: 'md-trash',
-            size: 16
-          },
-          class: 'tree-tool',
-          style: {
-            marginLeft: '8px'
-          },
-          attrs: {
-            title: '删除'
-          },
-          on: {
-            click: () => {
-              this.handleRemove(node, data)
-            }
+            expand: true
           }
-        }),
-      ])
+        }, [
+          h('span', data.zbflName),
+          h('Icon', {
+            props: {
+              type: 'md-add',
+              size: 16
+            },
+            class: 'tree-tool',
+            style: {
+              marginLeft: '18px'
+            },
+            attrs: {
+              title: '新增'
+            },
+            on: {
+              click: () => {
+                this.handleAppend(node, data)
+              }
+            }
+          }),
+          h('Icon', {
+            props: {
+              type: 'md-trash',
+              size: 16
+            },
+            class: 'tree-tool',
+            style: {
+              marginLeft: '8px'
+            },
+            attrs: {
+              title: '删除'
+            },
+            on: {
+              click: () => {
+                this.handleRemove(node, data)
+              }
+            }
+          }),
+        ])
+      }
     },
     // 判断这个节点在不在所勾选的节点的这条回溯路径上：显不显示控制按钮
     isShowSlot(data) {
@@ -230,7 +258,7 @@ export default {
     },
     getTreeList() {
       getTreeList({ zbflYear: this.selectedYear }).then(res => {
-        const { data, code } = res.data;
+        let { data, code } = res.data;
         if (code === 1000) {
           // const handleRawData = data => {
           //   let newData = [];
@@ -245,6 +273,13 @@ export default {
           //   }
           //   return newData;
           // };
+          data = [{
+            zbflName: '全部分类',
+            zbflCode: 'A',
+            zbflFid: 0,
+            pkId: 0,
+            childs: data
+          }]
           this.data = this.handleRow(data);
           this.selectedData = {}
           // this.$emit('handleTreeList',this.gData)
@@ -292,7 +327,7 @@ export default {
       children.splice(index, 1);
     },
     handleClick(data, checked) {
-      if (checked) {
+      if (checked && checked.zbflFid !== 0) {
         // this.$refs.tree.setCheckedNodes([data]);
         // this.selectedData = data;
         this.$emit("handleSelect", checked);
