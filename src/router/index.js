@@ -209,6 +209,15 @@ const routes = [
                   id: 'page_5_4'
                 }
               },
+              {
+                path: 'TableStruct',
+                name: 'TableStruct',
+                component: () => import('../views/dataManage/components/inspection/components/TableStruct.vue'),
+                meta: {
+                  title: '表格结构规范性',
+                  id: 'page_5_4'
+                }
+              },
             ]
           },
         ]

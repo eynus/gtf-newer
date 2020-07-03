@@ -1,28 +1,14 @@
 <template>
-  <div class="home h100">
-    <Layout style="height:100%;">
-      <Sider class="h100" :width="`${remToPx(5.25)}`" :style="{background: '#fff'}">
-        <my-side-bar :dataList="dataManageList"></my-side-bar>
-      </Sider>
-      <Layout class="h100">
-        <div :style="{ height: `calc(100% - ${remToPx(3.2)}px)` }" class="pd-lg right-up-wrapper">
-          <div class="h100 card-style">
-            <router-view />
-          </div>
-        </div>
-
-        <div>
-          <my-footer color="rgb(200,200,200)"></my-footer>
-        </div>
-      </Layout>
-    </Layout>
-  </div>
+  <Layouts :dataList="dataManageList"></Layouts>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import Layouts from '@/components/Layouts'
 export default {
   name: "dataManage",
+  components: {
+    Layouts
+  },
   data() {
     return {
       dataManageList: []
@@ -63,21 +49,7 @@ export default {
           id: "page_5_4"
         }
       ]
-  },
-  computed: {},
-  watch: {},
-  methods: {}
+  }
 };
 </script>
-<style lang="scss" scoped>
-.right-up-wrapper {
-  box-sizing: border-box;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25) inset;
-  background-color: $wrap-bg;
-}
-.card-style {
-  background: transparent;
-  // border-radius: 4px;
-}
-</style>
 

@@ -41,7 +41,8 @@ export default {
         { name: "属表一致性", key: "genusTableConsis",rules_code:"205"  },
         { name: "表内横向逻辑一致性", key: "tableOrienConsis" ,rules_code:"205" },
         { name: "表内纵向逻辑一致性", key: "tablePortConsis",rules_code:"205"  },
-        { name: "表间逻辑一致性", key: "tableInterConsis",rules_code:"205"  }
+        { name: "表间逻辑一致性", key: "tableInterConsis",rules_code:"205"  },
+        { name: "表格结构规范性", key: "tableStruct",rules_code:"401"  }
       ]
     };
   },
@@ -62,7 +63,10 @@ export default {
         let {code,data} = res.data
         if(code===1000){
           this.siderMenuList.forEach((item,index)=>{
-            item.pkId = data.find((it)=>it.rulesName===item.name).pkId
+            let result = data.find(it => it.rulesName===item.name)
+            if (result) {
+              item.pkId = result.pkId
+            }
           })
         }
       })

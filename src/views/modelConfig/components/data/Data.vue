@@ -158,10 +158,10 @@ export default {
   components: {},
   computed: {
     exportUrlTpl() {
-      return `lsp-model/api/model/downTemplate`;
+      return `/lsp-model/api/model/downTemplate`;
     },
     exportUrlTb() {
-      return `lsp-model/api/model/export?pkId=${this.selectedTypeId}&zbsjXzqhName=${this.selectedAreaName}`;
+      return `/lsp-model/api/model/export?pkId=${this.selectedTypeId}&zbsjXzqhName=${this.selectedAreaName}`;
     }
   },
   created() {
@@ -402,7 +402,7 @@ export default {
       display: flex;
       .card-label {
         font-weight: bold;
-        width: 6rem;
+        width: 10rem;
         padding: 0.25rem 0.5rem;
       }
       .card-list {

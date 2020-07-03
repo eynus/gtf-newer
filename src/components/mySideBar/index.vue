@@ -91,6 +91,6 @@ export default {
   font-size: 0.875rem;
   div {
     margin-top: 6px;
-  }  
+  }
 }
 </style>
