@@ -1,12 +1,9 @@
 <template>
-  <div class="h100">
+  <div class="h100 bg-white">
     <Row style="height:100%">
       <Col>
         <div class="pd">
-          <div class="module-head">
-            <Icon custom="iconfont  icon-type" size="16" color="#2d8cf0" />
-            <span class="ml">服务检索</span>
-          </div>
+          <Breadcrumb></Breadcrumb>
           <Form
               ref="formInline"
               :model="formInline"
@@ -94,6 +91,7 @@
   </div>
 </template>
 <script>
+  import Breadcrumb from '@/components/breadcrumb'
   import { remToPx } from "@/utils/common";
   import { userList, roles, userDel } from "@/api/systemManage/user";
   import { areaList } from '@/api/common'
@@ -103,6 +101,7 @@
   export default {
     name: 'user',
     components: {
+      Breadcrumb,
       uedit: edit,
       MyDelete
     },

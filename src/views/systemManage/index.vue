@@ -1,26 +1,14 @@
 <template>
-  <div class="home h100">
-    <Layout style="height:100%;">
-      <Sider class="h100" :width="`${remToPx(5.25)}`" :style="{background: '#fff'}">
-        <my-side-bar :dataList="dataManageList"></my-side-bar>
-      </Sider>
-      <Layout class="h100">
-        <div :style="{ height: `calc(100% - ${remToPx(3.2)}px)` }" class="pd-lg right-up-wrapper">
-          <div class="h100 card-style bg-white">
-            <router-view />
-          </div>
-        </div>
-        <div>
-          <my-footer color="rgb(200,200,200)"></my-footer>
-        </div>
-      </Layout>
-    </Layout>
-  </div>
+  <Layouts :dataList="dataManageList"></Layouts>
 </template>
 
 <script>
+import Layouts from '@/components/Layouts'
 export default {
   name: "system",
+  components: {
+    Layouts
+  },
   data() {
     return {
       activeMenuItem: "user",
@@ -58,9 +46,6 @@ export default {
       ]
     };
   },
-  computed: {},
-  mounted() {},
-  methods: {}
 };
 </script>
 

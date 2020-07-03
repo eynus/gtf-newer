@@ -22,6 +22,7 @@
 .container {
   height: 100%;
   width: 100%;
+  background: #fff;
   iframe {
     height: 100%;
     width: 100%;

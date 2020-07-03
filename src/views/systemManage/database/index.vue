@@ -1,9 +1,10 @@
 <template>
-  <div class="h100">
+  <div class="h100 bg-white">
     <Row style="height:100%">
       <Col>
         <div class="pd">
-<!--          <div class="module-head">-->
+          <Breadcrumb></Breadcrumb>
+          <!--          <div class="module-head">-->
 <!--            <Icon custom="iconfont  icon-type" size="16" color="#2d8cf0" />-->
 <!--            <span class="ml">服务检索</span>-->
 <!--          </div>-->
@@ -76,6 +77,7 @@
   </div>
 </template>
 <script>
+  import Breadcrumb from '@/components/breadcrumb'
   import { remToPx } from "@/utils/common";
   import { dbList } from "@/api/systemManage/user";
   import edit from './edit'
@@ -85,6 +87,7 @@
   export default {
     name: 'database',
     components: {
+      Breadcrumb,
       edit,
       recover
     },

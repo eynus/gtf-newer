@@ -1,12 +1,9 @@
 <template>
-  <div class="h100">
+  <div class="h100 bg-white">
     <Row style="height:100%">
       <Col>
         <div class="pd">
-          <div class="module-head">
-            <Icon custom="iconfont  icon-type" size="16" color="#2d8cf0" />
-            <span class="ml">服务检索</span>
-          </div>
+          <Breadcrumb></Breadcrumb>
           <Form
               v-if="log === 'log'"
               ref="formInline"
@@ -146,12 +143,16 @@
   </div>
 </template>
 <script>
+  import Breadcrumb from '@/components/breadcrumb'
   import { remToPx } from "@/utils/common";
   import { lnLogList, optLogList } from "@/api/systemManage/user";
   import { logType, logOpt } from '../../../filters/system'
   import { nullStr } from '../../../utils/common'
   export default {
     name: 'log',
+    components: {
+      Breadcrumb
+    },
     data() {
       return {
         buttonSize: "large",
