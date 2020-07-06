@@ -4,12 +4,12 @@
       <my-side-bar :dataList="dataList"></my-side-bar>
     </Sider>
     <Layout class="layouts">
-      <div class="layout-card">
-        <router-view></router-view>
-      </div>
-      <div>
-        <my-footer color="rgb(200,200,200)"></my-footer>
-      </div>
+      <Breadcrumb>
+        <BreadcrumbItem v-for="item in route">
+          {{ item.meta.title }}
+        </BreadcrumbItem>
+      </Breadcrumb>
+      <router-view></router-view>
     </Layout>
   </Layout>
 </template>
@@ -19,19 +19,43 @@
     name: "Layouts",
     props: {
       dataList: Array,
+    },
+    data () {
+      return {
+        route: []
+      }
+    },
+    watch: {
+      '$route' (to, from) {
+        this.routeChange()
+      }
+    },
+    methods: {
+      routeChange() {
+        this.route = this.$route.matched.filter(item => item.redirect !== '/home')
+      }
+    },
+    mounted() {
+      this.routeChange()
     }
   };
 </script>
 <style lang="scss" scoped>
   .layouts {
     width: 100%;
-  }
-  .layout-card {
-    width: 100%;
-    height: calc(100% - 40px);
+    height: 100%;
     padding: 15px;
+    padding-top: 0;
+    overflow: hidden;
+    box-sizing: border-box;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25) inset;
     background-color: $wrap-bg;
+    ::v-deep .ivu-breadcrumb{
+      padding: 3px 0;
+    }
+    ::v-deep .ivu-breadcrumb-item-separator {
+      color: #3c8fff;
+    }
   }
 </style>
 

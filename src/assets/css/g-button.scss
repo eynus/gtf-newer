@@ -1,0 +1,29 @@
+.g-button-wrapper {
+  height: 35px;
+  line-height: 35px;
+  padding: 0 20px;
+  border-bottom: 1px solid #cfd1d7;
+  box-sizing: border-box;
+  background: #fff;
+}
+.g-button {
+  display: inline-block;
+  font-size: 14px;
+  line-height: 14px;
+  padding: 8px;
+  margin-left: 5px;
+  border: 0;
+  color: #a1a5b8;
+  background: inherit;
+  box-sizing: border-box;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  i {
+    font-size: 16px;
+  }
+  &:hover {
+    color: #3c8fff;
+    background: #cfe3ff;
+  }
+}

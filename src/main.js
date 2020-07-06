@@ -13,6 +13,8 @@ import ArcgisMap from '@/components/arcgis/ArcgisMap'
 import MyFooter from "@/components/MyFooter";
 import MySideBar from "@/components/mySideBar";
 import CardTitle from "@/components/cardTitle/CardTitle";
+import Query from '@/components/query'
+
 import { Tree } from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import './assets/css/reset.scss'
@@ -21,14 +23,17 @@ import 'element-ui/lib/theme-chalk/index.css';
 import { authDirective } from './utils/directives'
 // element
 import { Tree as eleTree,Button as eleButton } from 'element-ui';
+
 Vue.component('ElTree', eleTree);
 Vue.component('ElButton', eleButton);
 Vue.use(authDirective)
-Vue.mixin(Mixin);
+Vue.mixin(Mixin)
 Vue.config.productionTip = false
 
 Vue.use(ViewUI);
 Vue.use(Tree);
+
+Vue.component('Query', Query)
 Vue.component('ArcgisMap',ArcgisMap)
 Vue.component('MySideBar',MySideBar)
 Vue.component('MyFooter',MyFooter)

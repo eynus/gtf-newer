@@ -1,133 +1,129 @@
 <template>
   <div>
-    <div class="module-head">
-      <Icon custom="iconfont  icon-type" size="16" color="#2d8cf0" />
-      <span class="ml">服务检索</span>
+    <div ref="opt">
+      <div class="module-head">
+        <Icon custom="iconfont  icon-type" size="16" color="#2d8cf0" />
+        <span class="ml">服务检索</span>
+      </div>
+      <Form
+        ref="formInline"
+        :model="formInline"
+        inline
+        style="margin-top:.75rem"
+        class="search-box smzx-search-box"
+        label-position="right"
+        :label-width="remToPx(6.25)"
+        width="100%"
+      >
+        <Row>
+          <Col :md="4" :xl="4" :xxl="4">
+            <FormItem label="服务名称：">
+              <Input v-model.trim="formInline.serviceName" placeholder="请输入" clearable />
+            </FormItem>
+          </Col>
+          <Col :md="4" :xl="4" :xxl="4">
+            <FormItem label="状态：" :label-width="remToPx(4)">
+              <Select
+                :clearable="true"
+                v-model="formInline.serviceStatus"
+                class="scroll dropdown"
+                style="width:8.5rem"
+              >
+                <Option v-for="item in statusList" :value="item.id" :key="item.id">
+                  {{
+                  item.name
+                  }}
+                </Option>
+              </Select>
+            </FormItem>
+          </Col>
+          <Col :md="4" :xl="4" :xxl="4">
+            <FormItem label="服务类型：">
+              <Select
+                :clearable="true"
+                v-model="formInline.type"
+                class="scroll dropdown"
+                style="width:8.5rem"
+              >
+                <Option v-for="item in typeList" :value="item.typeId" :key="item.typeId">
+                  {{
+                  item.typeName
+                  }}
+                </Option>
+              </Select>
+            </FormItem>
+          </Col>
+          <Col :md="4" :xl="4" :xxl="4">
+            <FormItem label="专题类型：">
+              <Select v-model="formInline.type" class="scroll dropdown" style="width:8.5rem">
+                <Option v-for="item in typeList" :value="item.typeId" :key="item.typeId">
+                  {{
+                  item.typeName
+                  }}
+                </Option>
+              </Select>
+            </FormItem>
+          </Col>
+          <Col :md="8" :xl="6" :xxl="6">
+            <FormItem label="发布时间：">
+              <DatePicker
+                type="daterange"
+                :value="formInline.date"
+                @on-change="handleDateChange"
+                placeholder="请选择起止日期"
+                :clearable="false"
+                style="width:16.5rem"
+              ></DatePicker>
+            </FormItem>
+          </Col>
+          <Col span="2">
+            <FormItem :label-width="remToPx(2)">
+              <Button type="primary" class="smzx-search-btn" @click="handleSubmit">查询</Button>
+            </FormItem>
+          </Col>
+        </Row>
+      </Form>
+      <div>
+        <Button type="primary" class="btn-margin">浏览</Button>
+        <Button v-auth="['page_5_3_1']" type="primary" @click="handleStart" class="btn-margin">启动</Button>
+        <Button v-auth="['page_5_3_2']" type="primary" @click="handleStop" class="btn-margin">停止</Button>
+        <Button v-auth="['page_5_3_3']" type="primary" @click="handleDelete" class="btn-margin">删除</Button>
+        <Button v-auth="['page_5_3_4']" type="primary" to="/data/service/register" class="btn-margin">注册</Button>
+      </div>
     </div>
-
-    <!-- <Form ref="formInline" inline class="mt">
-      <FormItem prop="name">
-        <Input style placeholder="请输入服务名称关键字" />
-      </FormItem>
-      <FormItem>
-        <Button type="primary">查询</Button>
-      </FormItem>
-    </Form>-->
-    <Form
-      ref="formInline"
-      :model="formInline"
-      inline
-      style="margin-top:.75rem"
-      class="search-box smzx-search-box"
-      label-position="right"
-      :label-width="remToPx(6.25)"
-      width="100%"
-    >
-      <Row>
-        <Col :md="4" :xl="4" :xxl="4">
-          <FormItem label="服务名称：">
-            <Input v-model.trim="formInline.serviceName" placeholder="请输入" clearable />
-          </FormItem>
-        </Col>
-        <Col :md="4" :xl="4" :xxl="4">
-          <FormItem label="状态：" :label-width="remToPx(4)">
-            <Select
-              :clearable="true"
-              v-model="formInline.serviceStatus"
-              class="scroll dropdown"
-              style="width:8.5rem"
-            >
-              <Option v-for="item in statusList" :value="item.id" :key="item.id">
-                {{
-                item.name
-                }}
-              </Option>
-            </Select>
-          </FormItem>
-        </Col>
-        <Col :md="4" :xl="4" :xxl="4">
-          <FormItem label="服务类型：">
-            <Select
-              :clearable="true"
-              v-model="formInline.type"
-              class="scroll dropdown"
-              style="width:8.5rem"
-            >
-              <Option v-for="item in typeList" :value="item.typeId" :key="item.typeId">
-                {{
-                item.typeName
-                }}
-              </Option>
-            </Select>
-          </FormItem>
-        </Col>
-        <Col :md="4" :xl="4" :xxl="4">
-          <FormItem label="专题类型：">
-            <Select v-model="formInline.type" class="scroll dropdown" style="width:8.5rem">
-              <Option v-for="item in typeList" :value="item.typeId" :key="item.typeId">
-                {{
-                item.typeName
-                }}
-              </Option>
-            </Select>
-          </FormItem>
-        </Col>
-        <Col :md="8" :xl="6" :xxl="6">
-          <FormItem label="发布时间：">
-            <DatePicker
-              type="daterange"
-              :value="formInline.date"
-              @on-change="handleDateChange"
-              placeholder="请选择起止日期"
-              :clearable="false"
-              style="width:16.5rem"
-            ></DatePicker>
-          </FormItem>
-        </Col>
-        <Col span="2">
-          <FormItem :label-width="remToPx(2)">
-            <Button type="primary" class="smzx-search-btn" @click="handleSubmit">查询</Button>
-          </FormItem>
-        </Col>
-      </Row>
-    </Form>
-    <Button type="primary" class="btn-margin">浏览</Button>
-    <Button v-auth="['page_5_3_1']" type="primary" @click="handleStart" class="btn-margin">启动</Button>
-    <Button v-auth="['page_5_3_2']" type="primary" @click="handleStop" class="btn-margin">停止</Button>
-    <Button v-auth="['page_5_3_3']" type="primary" @click="handleDelete" class="btn-margin">删除</Button>
-    <Button v-auth="['page_5_3_4']" type="primary" to="/data/service/register" class="btn-margin">注册</Button>
     <div class="mt">
       <Table
-        :loading="tableLoading"
         border
+        stripe
         size="small"
-        :columns="columnsPutIn"
-        :data="dataPutIn"
         ref="selection"
+        :height="tbhopt"
+        :columns="columnsPutIn"
+        :loading="tableLoading"
+        :data="dataPutIn"
         @on-select="handleSelectRow"
         @on-select-cancel="handleCancelRow"
         @on-select-all="handleSelectRowAll"
         @on-select-all-cancel="handleCancelRowAll"
       >
-        <template slot="status" slot-scope="{row}">
-          <div href="#" :style="`color:${row.serviceStatus==='0'?'#2d8cf0':'#f00'}`">{{row.status}}</div>
-        </template>
       </Table>
-      <div class="text-right mr-lg mt">
-        <Page
-          :total="page.total"
-          @on-change="changePage"
-          show-total
-          show-elevator
-          :current="page.current"
-          :page-size="page.pageSize"
-        ></Page>
-      </div>
+      <Page
+        class="pagination"
+        :total="page.total"
+        @on-change="changePage"
+        @on-page-size-change="changePageSize"
+        show-total
+        show-sizer
+        show-elevator
+        :current="page.current"
+        :page-size="page.pageSize"
+      ></Page>
     </div>
     <my-delete :show="delModalFlag" @ok="confirmDel" @cancel="delModalFlag=false"></my-delete>
   </div>
 </template>
 <script>
+import { ivtable } from '@/mixin/table'
 import { remToPx } from "@/utils/common";
 import { format, subMonths } from "date-fns";
 import MyDelete from "_c/delete";
@@ -140,13 +136,9 @@ import {
 } from "@/api/dataManage/service";
 export default {
   name: "serviceManage",
+  mixins: [ivtable],
   props: {
     selectedId: String
-  },
-  computed: {
-    selectedId() {
-      return selectedId;
-    }
   },
   data() {
     return {
@@ -201,7 +193,7 @@ export default {
         },
         {
           title: "状态",
-          slot: "status",
+          key: "status",
           align: "center",
           width: remToPx(6)
         },
@@ -251,6 +243,7 @@ export default {
   watch: {
     selectedId(newVal, oldVal) {
       //重新請求数据 不为空则代表选择了模块
+      console.log(newVal)
       if (newVal) {
         this.page.current = 1;
         this.getListById(newVal);
@@ -260,7 +253,6 @@ export default {
   created() {
     this.getFWListPage();
   },
-  computed: {},
   components: { MyDelete },
   methods: {
     // 分页查询模块服务列表
@@ -295,6 +287,7 @@ export default {
         if (code === 1000) {
           this.page.total = data.total;
           this.tableLoading = false;
+          console.log(data)
           if (data.list.length) {
             if (Array.isArray(data.list[0])) {
               data.list.forEach(it => {
@@ -433,6 +426,14 @@ export default {
         this.getListById(this.selectedId);
       } else {
         this.getFWListPage();
+      }
+    },
+    changePageSize(val) {
+      this.page.pageSize = val
+      if (this.selectedId) {
+        this.getListById(this.selectedId);
+      } else {
+        this.getFWListPage()
       }
     },
     //选择日期变化

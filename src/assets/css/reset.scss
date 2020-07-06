@@ -1,6 +1,6 @@
 @import './variable.scss';
 /* sider 高度百分之百 */
-.ivu-layout.ivu-layout-has-sider{  
+.ivu-layout.ivu-layout-has-sider{
     height: 100%;
 }
 .ivu-layout-footer{
@@ -15,7 +15,7 @@
    color: $text-normal;
 }
 .ivu-table th{
-    background-color: $table-head;
+   background-color: $table-head;
    color: $text-title;
 }
 .ivu-table-small td{
@@ -27,7 +27,7 @@
 .ivu-table-overflowX {
     overflow-x: hidden !important;
   }
-  
+
   .ivu-table-tip {
     overflow-x: hidden !important;
   }

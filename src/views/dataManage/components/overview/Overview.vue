@@ -54,91 +54,18 @@
     </div>
     <div class="card-container mt-lg card-container2 w100">
       <card-title icon="iconfont  icon-rukulishi" title="入库历史"></card-title>
-      <div class="card-body w100">
-        <Form
-          ref="formInline"
-          :model="formInline"
-          inline
-          style="width:calc(100% - 2.5rem )"
-          class="search-box smzx-search-box ml-lg mr-lg"
-          label-position="right"
-          :label-width="remToPx(6.5)"
-          width="100%"
-        >
-          <FormItem
-            label="入库时间："
-            style="margin-top:1.5rem;margin-bottom:1rem;width:calc(22% - 0.625rem )"
-          >
-            <DatePicker
-              type="daterange"
-              :value="formInline.date"
-              @on-change="handleDateChange"
-              placeholder="请选择起止日期"
-              :clearable="false"
-              class="smzx-normal-datepick smzx-date-range"
-              style="width:90%"
-            ></DatePicker>
-          </FormItem>
-          <FormItem
-            label="数据路径："
-            style="margin-top:1.5rem;margin-bottom:1rem;width:calc(22% - 0.625rem )"
-          >
-            <Cascader
-              :data="dataPaths"
-              v-model="formInline.path"
-              @on-change="handlePathChange"
-              style="width:90%"
-            ></Cascader>
-          </FormItem>
-          <FormItem
-            label="数据类型："
-            style="margin-top:1.5rem;margin-bottom:1rem;width:calc(22% - 0.625rem )"
-          >
-            <Select v-model="formInline.type" class="scroll dropdown" style="width:90%">
-              <Option v-for="item in typeList" :value="item.id" :key="item.id">
-                {{
-                item.name
-                }}
-              </Option>
-            </Select>
-          </FormItem>
-          <FormItem
-            label="上传用户："
-            style="margin-top:1.5rem;margin-bottom:1rem;width:calc(22% - 0.625rem )"
-          >
-            <Input v-model.trim="formInline.uploader" placeholder="请输入" clearable />
-          </FormItem>
-          <FormItem
-            :label-width="remToPx(0)"
-            style="margin-top:1.5rem;margin-bottom:1rem;width:12%;margin-right:0;text-align:right"
-          >
-            <Button type="primary" class="smzx-search-btn" @click="handleSubmit">查询</Button>
-          </FormItem>
-        </Form>
-
-        <Table
-          border
-          size="small"
-          :columns="columnsPutIn"
-          :data="dataPutIn"
-          class="ml-lg mr-lg tb-min-height"
-        >
-          <template slot="path" slot-scope="{row}">
-            <div>{{row.dataPath}}</div>
-          </template>
-        </Table>
-        <div class="text-right mr-lg mt">
-          <Page
-            :total="page.total"
-            @on-change="changePage"
-            show-total
-            show-elevator
-            :current="page.current"
-            :page-size="page.pageSize"
-          ></Page>
+      <div class="increate">
+        <div class="increate-item" v-for="item in 3">
+          <span>昨日新增</span>
+          <Tag color="success">100</Tag>
         </div>
       </div>
-    </div>
+      <div class="increate-list">
+        <ul>
+          <li v-for="item in 50">上传用户: admin 于 2020-07-06 13:46:32 上传了 XX 数据，路径为: .................</li>
+        </ul>
+      </div>
+      </div>
   </div>
 </template>
 <script>
@@ -267,7 +194,7 @@ export default {
       page: {
         current: 1,
         total: 0,
-        pageSize: 4
+        pageSize: 10
       }
     };
   },
@@ -470,5 +397,22 @@ export default {
 }
 .tb-min-height {
   min-height: 198px;
+}
+
+.increate {
+  overflow: hidden;
+  padding: 15px;
+  .increate-item {
+    float: left;
+    width: 150px;
+    margin-right: 30px;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+.increate-list {
+  height: 18rem;
+  padding: 0 15px;
+  overflow: auto;
 }
 </style>

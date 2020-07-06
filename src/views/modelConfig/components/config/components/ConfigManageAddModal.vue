@@ -1,7 +1,12 @@
 <template>
   <div>
-    <Modal v-model="visible" class-name="vertical-center-modal" :title="title" :width="remToPx(60)">
-      <div slot="footer">
+    <Drawer
+        class-name="vertical-center-modal"
+        v-model="visible"
+        :title="title"
+        :width="550"
+        @on-close="cancel">
+      <div class="drawer-footer">
         <Button type="primary" @click="ok">确定</Button>
         <Button @click="cancel">取消</Button>
       </div>
@@ -11,24 +16,24 @@
           ref="modalKeyFormItem"
           :rules="modalKeyFormRuleValidate"
           :label-width="remToPx(7.5)"
-          inline
+          label-position="left"
         >
-          <Col span="12">
+          <Col span="24">
             <FormItem label="指标分类：">
               <Input disabled v-model.trim="modalKeyFormItem.classname" />
             </FormItem>
           </Col>
-          <Col span="12">
+          <Col span="24">
             <FormItem label="指标代码：">
               <Input disabled v-model.trim="modalKeyFormItem.code" />
             </FormItem>
           </Col>
-          <Col span="12">
+          <Col span="24">
             <FormItem label="指标名称：" prop="name">
               <Input v-model.trim="modalKeyFormItem.name" />
             </FormItem>
           </Col>
-          <Col span="12">
+          <Col span="24">
             <FormItem label="指标单位：" prop="unit">
               <Select v-model="modalKeyFormItem.unit" style="width:10.25rem">
                 <Option
@@ -39,7 +44,7 @@
               </Select>
             </FormItem>
           </Col>
-          <Col span="12">
+          <Col span="24">
             <FormItem label="适用范围：" prop="fitrange">
               <Select v-model="modalKeyFormItem.fitrange" style="width:10.25rem">
                 <Option
@@ -50,7 +55,7 @@
               </Select>
             </FormItem>
           </Col>
-          <Col span="12">
+          <Col span="24">
             <FormItem label="指标类型：" prop="type">
               <Select v-model="modalKeyFormItem.type" style="width:10.25rem">
                 <Option
@@ -61,35 +66,34 @@
               </Select>
             </FormItem>
           </Col>
-          <Col span="12">
+          <Col span="24">
             <FormItem label="值域范围：" prop="valrange">
               <!-- <Input v-model="modalKeyFormItem.valrange" /> -->
               <InputNumber :max="100" :min="1" v-model="modalKeyFormItem.valrange[0]"></InputNumber>-
               <InputNumber :max="100" :min="1" v-model="modalKeyFormItem.valrange[1]"></InputNumber>
             </FormItem>
           </Col>
-          <Col span="12">
+          <Col span="24">
             <FormItem label="指标来源：" prop="source">
               <Input v-model="modalKeyFormItem.source" />
             </FormItem>
           </Col>
-          <Col span="12">
+          <Col span="24">
             <FormItem label="指标阈值：" prop="max">
               <InputNumber v-model="modalKeyFormItem.max" />
             </FormItem>
           </Col>
           <Col span="24">
             <FormItem label="指标涵义：" prop="content">
-              <Input type="textarea" v-model="modalKeyFormItem.content" style="width:30rem" />
+              <Input type="textarea" v-model="modalKeyFormItem.content"/>
             </FormItem>
           </Col>
         </Form>
       </Row>
-    </Modal>
+    </Drawer>
   </div>
 </template>
 <script>
-import { remToPx } from "@/utils/common";
 import { insertZB, updateZB } from "@/api/modelConfig/config";
 export default {
   name: "add-modal",
@@ -125,7 +129,7 @@ export default {
         this.modalKeyFormItem = this.data;
       } else {
         this.title = "修改指标";
-        this.modalKeyFormItem = this.data;
+        this.modalKeyFormItem = JSON.parse(JSON.stringify(this.data))
       }
     }
   },
@@ -222,14 +226,9 @@ export default {
       }
     };
   },
-
-  computed: {},
-  created() {},
   methods: {
     // modal取消按钮
     cancel() {
-      console.log("cancel");
-
       this.visible = false;
       this.$emit("showModel", this.visible);
       this.clearFormItem();
@@ -248,7 +247,8 @@ export default {
         valrange: [0, 0],
         source: "",
         content: ""
-      };
+      }
+      this.$refs['modalKeyFormItem'].resetFields()
     },
     // modal确认按钮
     ok() {

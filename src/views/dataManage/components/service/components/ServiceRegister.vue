@@ -158,6 +158,7 @@ export default {
         const { data, code, total } = res.data;
         if (code === 1000) {
           this.tableLoading = false;
+          console.log(res.data)
           if (data.list.length) {
             //查詢结果不为空
             this.page.total = data.total;
@@ -167,8 +168,7 @@ export default {
               uploader: item.realName,
               time: item.createdTime,
               id: item.pkId,
-              statusName: this.statusList.find(it => it.id === item.status)
-                .name,
+              statusName: this.statusList.find(it => it.id === item.status).name,
               _disabled: item.status === "0" ? true : false
             }));
           } else {

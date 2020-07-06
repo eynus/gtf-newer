@@ -4,12 +4,6 @@
       <Col span="4" class="h100 zt-scroll-y bg-white">
         <div class="pd h100">
           <card-title title="指标分类"></card-title>
-          <!-- <my-config-tree
-            :gData="gData"
-            @handleSelect="handleSelect"
-            type="service"
-            @handleTreeList="handleTreeList"
-          ></my-config-tree>-->
           <ele-custome-tree @handleSelect="handleSelect" ></ele-custome-tree>
         </div>
       </Col>
@@ -42,10 +36,8 @@ export default {
   computed: {},
   methods: {
     handleSelect(e) {
-      this.selectedId = e.pkId;
-      this.selectedName = e.zbflName;
-      // console.log(this.selectedId, this.selectedName);
-
+      this.selectedId = e ? e.pkId : null
+      this.selectedName = e ? e.zbflName : null
     },
     handleTreeList(e) {
       this.getFlattenList(e);

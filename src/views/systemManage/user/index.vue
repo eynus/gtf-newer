@@ -1,59 +1,26 @@
 <template>
   <div class="h100 bg-white">
     <Row style="height:100%">
-      <Col>
-        <div class="pd">
-          <Breadcrumb></Breadcrumb>
-          <Form
-              ref="formInline"
-              :model="formInline"
-              inline
-              style="margin-top:.75rem"
-              class="search-box smzx-search-box"
-              label-position="left"
-              :label-width="remToPx(6.25)"
-              width="100%"
-          >
-            <Row>
-                <Col :md="4" :xl="4" :xxl="4" class="form-col">
-                  <FormItem label="用户名：">
-                    <Input v-model.trim="formInline.userName" placeholder="请输入用户名" clearable />
-                  </FormItem>
-                </Col>
-                <Col :md="4" :xl="4" :xxl="4" class="form-col">
-                  <FormItem label="角色名：">
-                    <Input v-model.trim="formInline.roleName" placeholder="请输入角色名" clearable />
-                  </FormItem>
-                </Col>
-                <Col :md="4" :xl="4" :xxl="4" class="form-col">
-                  <FormItem label="真实姓名：">
-                    <Input v-model.trim="formInline.realName" placeholder="请输入真实姓名" clearable />
-                  </FormItem>
-                </Col>
-                <Col :md="4" :xl="4" :xxl="4" class="form-col">
-                  <FormItem label="电话号码：">
-                    <Input v-model.trim="formInline.userPhone" placeholder="请输入电话号码" clearable />
-                  </FormItem>
-                </Col>
-                <Col span="2" style="float: right;">
-                  <FormItem :label-width="remToPx(2)" >
-                    <Button type="primary" class="smzx-search-btn" @click="onSearch">查询</Button>
-                  </FormItem>
-                </Col>
-              </Row>
-            <Row>
-              <Col :md="4" :xl="4" :xxl="4" class="form-col">
-                <FormItem label="邮箱：">
-                  <Input v-model.trim="formInline.userEmail" placeholder="请输入邮箱" clearable />
-                </FormItem>
-              </Col>
-            </Row>
-          </Form>
-          <Button v-auth="['page_4_1_1']" type="primary" @click="insert" class="btn-margin">新建</Button>
-          <Button v-auth="['page_4_1_2']" type="primary" @click="edit" class="btn-margin">修改</Button>
-          <Button v-auth="['page_4_1_3']" type="primary" @click="del" class="btn-margin">删除</Button>
-          <div class="mt">
+          <div ref="opt">
+            <div class="g-button-wrapper">
+              <button v-auth="['page_4_1_1']" @click="insert" class="g-button">
+                <Icon type="ios-add-circle-outline" />
+                <span> 新建</span>
+              </button>
+              <button v-auth="['page_4_1_2']" @click="edit" class="g-button">
+                <Icon type="ios-create-outline" />
+                <span> 修改</span>
+              </button>
+              <button v-auth="['page_4_1_3']" @click="del" class="g-button">
+                <Icon type="ios-trash-outline" />
+                <span> 删除</span>
+              </button>
+            </div>
+            <Query :formArr="queryForm" @query="onSearch"></Query>
+          </div>
+          <div class="pd">
             <Table
+                :height="tbhopt"
                 :loading="tableLoading"
                 border
                 stripe
@@ -70,20 +37,19 @@
                 <div href="#" :style="`color:${row.serviceStatus==='0'?'#2d8cf0':'#f00'}`">{{row.status}}</div>
               </template>
             </Table>
-            <div class="text-right mr-lg mt">
-              <Page
-                  :total="page.total"
-                  @on-change="changePage"
-                  show-total
-                  show-elevator
-                  :current="page.current"
-                  :page-size="page.pageSize"
-              ></Page>
-            </div>
+            <my-delete :show="delModalFlag" @ok="confirmDel" @cancel="delModalFlag=false"></my-delete>
           </div>
-          <my-delete :show="delModalFlag" @ok="confirmDel" @cancel="delModalFlag=false"></my-delete>
-        </div>
-      </Col>
+        <Page
+            class="pagination"
+            :total="page.total"
+            @on-change="changePage"
+            @on-page-size-change="changePageSize"
+            show-total
+            show-sizer
+            show-elevator
+            :current="page.current"
+            :page-size="page.pageSize"
+        ></Page>
     </Row>
 <!--    用户信息编辑-->
     <uedit ref="uedit" :roles="roles" :areas="areas" @close="getList"></uedit>
@@ -92,25 +58,54 @@
 </template>
 <script>
   import Breadcrumb from '@/components/breadcrumb'
+  import Query from '@/components/query'
   import { remToPx } from "@/utils/common";
   import { userList, roles, userDel } from "@/api/systemManage/user";
   import { areaList } from '@/api/common'
   import edit from './edit'
   import MyDelete from '../../../components/delete'
   import { nullStr } from "../../../utils/common";
+  import { ivtable } from "@/mixin/table"
+
   export default {
     name: 'user',
     components: {
       Breadcrumb,
+      Query,
       uedit: edit,
       MyDelete
     },
+    mixins: [ivtable],
     data() {
       return {
         buttonSize: "large",
         tableLoading: false,
         delModalFlag: false,
         selections: [],
+        tbheight: window.innerHeight - 300,
+        queryForm: [
+          {
+            type: 1,
+            field: 'userName',
+            title: '用户名',
+          }, {
+            type: 1,
+            field: 'roleName',
+            title: '角色名',
+          }, {
+            type: 1,
+            field: 'realName',
+            title: '真实姓名',
+          }, {
+            type: 1,
+            field: 'userPhone',
+            title: '电话号码',
+          }, {
+            type: 1,
+            field: 'userEmail',
+            title: '邮箱',
+          }
+        ],
         columns: [
           {
             title: "选中",
@@ -131,7 +126,6 @@
             align: "center",
             width: remToPx(18),
             tooltip: true,
-            sortable: true
           },
           {
             title: "角色名",
@@ -139,7 +133,6 @@
             align: "center",
             width: remToPx(10),
             tooltip: true,
-            sortable: true
           },
           {
             title: "真实姓名",
@@ -147,7 +140,6 @@
             align: "center",
             width: remToPx(10),
             tooltip: true,
-            sortable: true
           },
           {
             title: "所属行政区划",
@@ -155,7 +147,6 @@
             align: "center",
             width: remToPx(11),
             tooltip: true,
-            sortable: true
           },
           {
             title: "电话号码",
@@ -163,38 +154,29 @@
             align: "center",
             width: remToPx(16),
             tooltip: true,
-            sortable: true
           },
           {
             title: "邮箱",
             key: "userEmail",
             align: "center",
             tooltip: true,
-            sortable: true
           },
           {
             title: "创建时间",
             key: "createDate",
             align: "center",
             tooltip: true,
-            sortable: true
           },
           {
             title: "更新时间",
             key: "updateDate",
             align: "center",
             tooltip: true,
-            sortable: true
           }
         ],
         datas: [],
         roles: [],
         areas: [],
-        page: {
-          current: 1,
-          total: 0,
-          pageSize: 10
-        },
         formInline: {
           userEmail: null,
           roleName: null,
@@ -213,8 +195,9 @@
         this.getRole()
         this.getArea()
       },
-      onSearch() {
-        this.formInline = nullStr(this.formInline)
+      onSearch(data) {
+        console.log(data)
+        this.formInline = nullStr(data)
         this.getList()
       },
       insert() {
@@ -291,11 +274,6 @@
           }
           this.tableLoading = false
         })
-      },
-      //切换页数
-      changePage(index) {
-        this.page.current = index
-        this.getList()
       },
       // 选择某一行
       handleSelectRow(selection, row) {

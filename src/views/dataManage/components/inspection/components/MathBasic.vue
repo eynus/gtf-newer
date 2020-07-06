@@ -1,6 +1,6 @@
 <template>
   <div class="h100">
-    <div class="mt ">
+    <div class="mt opt-area" ref="opt">
       <Form inline>
         <FormItem>
           <Button v-auth="['page_5_4_1']" type="success" @click="handleStartRule">默认启用</Button>
@@ -8,12 +8,12 @@
           <FormItem>
             <Button v-auth="['page_5_4_5']" type="primary" @click="handleStopRule">停止启用</Button>
           </FormItem>
-     
       </Form>
     </div>
     <Table
       border
       size="small"
+      :height="tbhopt"
       :columns="tableColumns"
       :data="tableData"
       ref="selection"
@@ -26,16 +26,15 @@
     <span :class="`${row.ruleStatus==='启用'?'text-blue':'text-normal'}`">{{row.ruleStatus}}</span>
       </template>
     </Table>
-    <div class="text-right mr-lg mt">
-      <Page
-        :total="page.total"
-        @on-change="changePage"
-        show-total
-        show-elevator
-        :current="page.current"
-        :page-size="page.pageSize"
-      ></Page>
-    </div>
+    <Page
+      class="pagination"
+      :total="page.total"
+      @on-change="changePage"
+      show-total
+      show-elevator
+      :current="page.current"
+      :page-size="page.pageSize"
+    ></Page>
 
     <Modal
       v-model="modalFlag"
@@ -138,6 +137,7 @@ import { remToPx } from "@/utils/common";
 import { getPaths } from "@/api/dataManage/overview";
 import MyDelete from "_c/delete";
 import { InspectionMixins } from "../inspection-mixins.js";
+import { ivtable } from "@/mixin/table"
 
 const handleRawData = data => {
   let newData = [];
@@ -153,7 +153,7 @@ const handleRawData = data => {
 };
 export default {
   name: "propstruct",
-  mixins: [InspectionMixins],
+  mixins: [InspectionMixins, ivtable],
   components: { MyDelete },
   data() {
     return {
@@ -256,8 +256,9 @@ export default {
       tableData: []
     };
   },
-  created() {
+  mounted() {
     this.getPaths();
+    console.log(this.tbhopt)
   },
   methods: {
     // 添加字段

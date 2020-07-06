@@ -60,6 +60,7 @@ export default {
     //   });
     // },
     handleSelect(e) {
+      console.log(e)
       this.selectedId = e.identification;
     }
   }

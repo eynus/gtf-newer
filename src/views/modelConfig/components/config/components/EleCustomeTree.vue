@@ -19,6 +19,7 @@
       <Tree
           class="tree"
           children-key="childs"
+          :multiple="false"
           :data="data"
           :render="treeRender"
           @on-select-change="handleClick">
@@ -327,10 +328,14 @@ export default {
       children.splice(index, 1);
     },
     handleClick(data, checked) {
+      if (!checked.selected) {
+        this.$emit("handleSelect", null)
+        return 0
+      }
       if (checked && checked.zbflFid !== 0) {
         // this.$refs.tree.setCheckedNodes([data]);
         // this.selectedData = data;
-        this.$emit("handleSelect", checked);
+        this.$emit("handleSelect", checked)
       }
     },
     handleDragStart(node, ev) {

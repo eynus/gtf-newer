@@ -41,6 +41,7 @@
           <div class="mt">
             <Table
                 :loading="tableLoading"
+                :height="tbheight"
                 border
                 stripe
                 size="small"
@@ -53,20 +54,21 @@
                 @on-select-all-cancel="handleCancelRowAll"
             >
             </Table>
-            <div class="text-right mr-lg mt">
-              <Page
-                  :total="page.total"
-                  @on-change="changePage"
-                  show-total
-                  show-elevator
-                  :current="page.current"
-                  :page-size="page.pageSize"
-              ></Page>
-            </div>
           </div>
 <!--          <my-delete :show="delModalFlag" @ok="confirmDel" @cancel="delModalFlag=false"></my-delete>-->
         </div>
       </Col>
+      <Page
+          class="pagination"
+          :total="page.total"
+          @on-change="changePage"
+          @on-page-size-change="changePageSize"
+          show-total
+          show-sizer
+          show-elevator
+          :current="page.current"
+          :page-size="page.pageSize"
+      ></Page>
     </Row>
     <!--    新建备份-->
     <edit ref="edit" :roles="roles" @close="getList"></edit>
@@ -97,6 +99,7 @@
         tableLoading: false,
         delModalFlag: false,
         selections: [],
+        tbheight: window.innerHeight - 200,
         columns: [
           {
             title: "选中",

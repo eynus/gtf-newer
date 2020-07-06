@@ -1,6 +1,6 @@
 <template>
   <div class="breadcrumb">
-    <Icon custom="iconfont  icon-type" size="16" color="#2d8cf0" />
+    <Icon custom="iconfont icon-type" size="16" color="#2d8cf0" />
     <span class="ml">{{ name }}</span>
   </div>
 </template>
@@ -21,10 +21,8 @@
 
 <style scoped>
 .breadcrumb {
-  font-weight: bold;
-  font-size: 1rem;
-  line-height: 1.75;
-  color: rgb(81, 81, 81);
-  padding: 0 .25rem;
+  color: #515a6e;
+  font-size: 14px;
+  margin-bottom: 14px;
 }
 </style>
