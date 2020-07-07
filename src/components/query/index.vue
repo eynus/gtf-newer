@@ -163,7 +163,6 @@
       z-index: 100;
       width: 100%;
       padding: 10px 0;
-      overflow: hidden;
       border: 1px solid #d1d1d1;
       border-top: 0;
       background: #fff;

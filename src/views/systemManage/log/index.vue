@@ -3,17 +3,10 @@
     <Row style="height:100%">
       <Col>
         <div ref="opt">
-          <Query :formArr="queryForm" @query="onSearch"></Query>
-          <div class="pd">
-            <Row>
-              <Col style="padding-bottom: 5px;">
-                <RadioGroup v-model="log" @on-change="logChange">
-                  <Radio label="log">登录日志</Radio>
-                  <Radio label="opt">操作日志</Radio>
-                </RadioGroup>
-              </Col>
-            </Row>
+          <div class="g-button-wrapper">
+            <selbtn :options="options" check="log" @trigger-change="logChange">日志类型</selbtn>
           </div>
+          <Query ref="query" :formArr="queryForm" @query="onSearch"></Query>
         </div>
         <div class="pd">
           <Table
@@ -66,22 +59,30 @@
   </div>
 </template>
 <script>
-  import Breadcrumb from '@/components/breadcrumb'
-  import { remToPx } from "@/utils/common";
+  import selbtn from '@/components/selbtn'
+  import { remToPx, nullStr } from "@/utils/common";
   import { lnLogList, optLogList } from "@/api/systemManage/user";
   import { logType, logOpt } from '../../../filters/system'
-  import { nullStr } from '../../../utils/common'
   import { ivtable } from "@/mixin/table";
 
   export default {
     name: 'log',
     components: {
-      Breadcrumb
+      selbtn
     },
     mixins: [ivtable],
     data() {
       return {
-        buttonSize: "large",
+        options: [
+          {
+            label: '登录日志',
+            value: 'log'
+          },
+          {
+            label: '操作日志',
+            value: 'opt'
+          }
+        ],
         tableLoading: false,
         log: 'log',
         loginForm: [
@@ -94,9 +95,10 @@
             field: 'loginRealName',
             title: '登录人姓名',
           }, {
-            type: 1,
+            type: 2,
             field: 'loginType',
             title: '登录设备',
+            data: logType.value
           }, {
             type: 1,
             field: 'date_',
@@ -113,9 +115,10 @@
             field: 'operationUserRealName',
             title: '操作人',
           }, {
-            type: 1,
+            type: 2,
             field: 'operationType',
             title: '操作类型',
+            data: logOpt.value
           }, {
             type: 1,
             field: 'date_1',
@@ -133,26 +136,23 @@
             align: 'center'
           },
           {
-            title: "登陆人姓名",
+            title: "登录人姓名",
             key: "loginRealName",
             align: "center",
             width: remToPx(18),
             tooltip: true,
-            sortable: true
           },
           {
             title: "登录IP",
             key: "loginIp",
             align: "center",
             tooltip: true,
-            sortable: true
           },
           {
             title: "登录设备",
             key: "loginType",
             align: "center",
             tooltip: true,
-            sortable: true,
             render: (h, params) => {
               return h('div', logType.handler(params.row.loginType))
             }
@@ -162,7 +162,6 @@
             key: "loginTime",
             align: "center",
             tooltip: true,
-            sortable: true
           },
         ],
         columns1: [
@@ -176,41 +175,35 @@
             align: "center",
             width: remToPx(10),
             tooltip: true,
-            sortable: true
           }, {
             title: "操作人",
             key: "operationUserRealName",
             align: "center",
             width: remToPx(10),
             tooltip: true,
-            sortable: true
           }, {
             title: "操作地址",
             key: "operationUrl",
             align: "center",
             tooltip: true,
-            sortable: true
           }, {
             title: "操作模块",
             key: "operationModular",
             align: "center",
             width: remToPx(18),
             tooltip: true,
-            sortable: true
           }, {
             title: "操作方法",
             key: "operationMethod",
             align: "center",
             width: remToPx(10),
             tooltip: true,
-            sortable: true
           },  {
             title: "操作类型",
             key: "operationType",
             align: "center",
             width: remToPx(8),
             tooltip: true,
-            sortable: true,
             render: (h, params) => {
               return h('div', logOpt.handler(params.row.operationType))
             }
@@ -220,13 +213,11 @@
             align: "center",
             width: remToPx(10),
             tooltip: true,
-            sortable: true
           }, {
             title: "操作时间",
             key: "operationDate",
             align: "center",
             tooltip: true,
-            sortable: true
           }
         ],
         datas: [],
@@ -271,9 +262,9 @@
         this.log = 'log'
         this.onSearch()
       },
-      onSearch() {
+      onSearch(data = '') {
+        this.page.current = 1
         let { date_, date_1 } = this
-        console.log()
         if (this.log === 'log') {
           if (date_ && date_.length) {
             this.formInline.loginTimeStr = date_[0]
@@ -286,19 +277,23 @@
             this.formInline1.operationDateEnd = date_1[1]
           }
         }
-        this.formInline = nullStr(this.formInline)
-        this.formInline1 = nullStr(this.formInline1)
-        console.log(this.formInline1)
+        this.formInline = nullStr(data)
         this.logChange()
       },
       logChange(val) {
         if (val) {
+          this.log = val
+          this.$refs.query.cleardata()
+          this.formInline = {}
           this.page.current = 1
+        } else {
+          val = this.log
         }
-        val = this.log
         if (val === 'log') {
+          this.queryForm = this.loginForm
           this.getLogList()
         } else {
+          this.queryForm = this.optForm
           this.getOptList()
         }
       },
@@ -328,7 +323,7 @@
           pageNum: current,
           pageSize: pageSize,
           queryTerms: {
-            ...this.formInline1
+            ...this.formInline
           }
         }
         optLogList(param).then(res => {

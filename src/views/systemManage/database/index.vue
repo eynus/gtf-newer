@@ -1,75 +1,51 @@
 <template>
-  <div class="h100 bg-white">
-    <Row style="height:100%">
-      <Col>
-        <div class="pd">
-          <Breadcrumb></Breadcrumb>
-          <!--          <div class="module-head">-->
-<!--            <Icon custom="iconfont  icon-type" size="16" color="#2d8cf0" />-->
-<!--            <span class="ml">服务检索</span>-->
-<!--          </div>-->
-<!--          <Form-->
-<!--              ref="formInline"-->
-<!--              :model="formInline"-->
-<!--              inline-->
-<!--              style="margin-top:.75rem"-->
-<!--              class="search-box smzx-search-box"-->
-<!--              label-position="right"-->
-<!--              :label-width="remToPx(6.25)"-->
-<!--              width="100%"-->
-<!--          >-->
-<!--            <Row>-->
-<!--              <Col :md="4" :xl="4" :xxl="4">-->
-<!--                <FormItem label="备份文件名称 ：">-->
-<!--                  <Input v-model.trim="formInline.backupName" placeholder="请输入角色名" clearable />-->
-<!--                </FormItem>-->
-<!--              </Col>-->
-<!--              <Col :md="4" :xl="4" :xxl="4">-->
-<!--                <FormItem label="备份说明：">-->
-<!--                  <Input v-model.trim="formInline.backupExplain" placeholder="请输入备注" clearable />-->
-<!--                </FormItem>-->
-<!--              </Col>-->
-<!--              <Col span="2">-->
-<!--                <FormItem :label-width="remToPx(2)">-->
-<!--                  <Button type="primary" class="smzx-search-btn" @click="onSearch">查询</Button>-->
-<!--                </FormItem>-->
-<!--              </Col>-->
-<!--            </Row>-->
-<!--          </Form>-->
-          <Button v-auth="['page_4_4_1']" type="primary" @click="insert" class="btn-margin">新建备份</Button>
-          <Button v-auth="['page_4_4_2']" type="primary" @click="recover" class="btn-margin">恢复备份</Button>
-          <div class="mt">
-            <Table
-                :loading="tableLoading"
-                :height="tbheight"
-                border
-                stripe
-                size="small"
-                :columns="columns"
-                :data="datas"
-                ref="selection"
-                @on-select="handleSelectRow"
-                @on-select-cancel="handleCancelRow"
-                @on-select-all="handleSelectRowAll"
-                @on-select-all-cancel="handleCancelRowAll"
-            >
-            </Table>
-          </div>
-<!--          <my-delete :show="delModalFlag" @ok="confirmDel" @cancel="delModalFlag=false"></my-delete>-->
-        </div>
-      </Col>
-      <Page
-          class="pagination"
-          :total="page.total"
-          @on-change="changePage"
-          @on-page-size-change="changePageSize"
-          show-total
-          show-sizer
-          show-elevator
-          :current="page.current"
-          :page-size="page.pageSize"
-      ></Page>
-    </Row>
+  <!--                <FormItem label="备份文件名称 ：">-->
+  <!--                  <Input v-model.trim="formInline.backupName" placeholder="请输入角色名" clearable />-->
+  <!--                </FormItem>-->
+  <!--                <FormItem label="备份说明：">-->
+  <!--                  <Input v-model.trim="formInline.backupExplain" placeholder="请输入备注" clearable />-->
+  <!--                </FormItem>-->
+  <div class="h100 bg-white position-r">
+    <div ref="opt">
+      <div class="g-button-wrapper">
+        <button v-auth="['page_4_4_1']" @click="insert" class="g-button">
+          <Icon type="ios-add-circle-outline" />
+          <span> 新建</span>
+        </button>
+        <button v-auth="['page_4_4_2']" @click="recover" class="g-button">
+          <Icon type="md-redo" />
+          <span> 恢复</span>
+        </button>
+      </div>
+    </div>
+    <div class="pd">
+      <Table
+          :loading="tableLoading"
+          :height="tbhopt"
+          border
+          stripe
+          size="small"
+          :columns="columns"
+          :data="datas"
+          ref="selection"
+          @on-select="handleSelectRow"
+          @on-select-cancel="handleCancelRow"
+          @on-select-all="handleSelectRowAll"
+          @on-select-all-cancel="handleCancelRowAll"
+      >
+      </Table>
+    </div>
+    <Page
+        class="pagination"
+        :total="page.total"
+        @on-change="changePage"
+        @on-page-size-change="changePageSize"
+        show-total
+        show-sizer
+        show-elevator
+        :current="page.current"
+        :page-size="page.pageSize"
+    ></Page>
     <!--    新建备份-->
     <edit ref="edit" :roles="roles" @close="getList"></edit>
     <!--    新建备份-->
@@ -86,6 +62,7 @@
   import recover from './recover'
   import { dbback } from '../../../filters/system'
   import { nullStr } from '../../../utils/common'
+  import { ivtable } from '@/mixin/table'
   export default {
     name: 'database',
     components: {
@@ -93,13 +70,12 @@
       edit,
       recover
     },
+    mixins: [ivtable],
     data() {
       return {
-        buttonSize: "large",
         tableLoading: false,
         delModalFlag: false,
         selections: [],
-        tbheight: window.innerHeight - 200,
         columns: [
           {
             title: "选中",
