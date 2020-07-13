@@ -39,9 +39,10 @@
           </Col>
           <Col span="9" class="h100">
             <div class="h100 w100 position-r card-right">
+              <card-title icon="iconfont  icon-fenleihuizong" title="数据类型统计"></card-title>
               <rose-chart
                 class="position-a-c"
-                style="margin-bottom:1rem;height:calc(100% - 1rem)"
+                style="margin:1rem;height:calc(100% - 2rem)"
                 :data="chartData"
                 :dataTotal="chartDataTotal"
               ></rose-chart>
@@ -55,28 +56,50 @@
     <div class="card-container mt-lg card-container2 w100">
       <card-title icon="iconfont  icon-rukulishi" title="入库历史"></card-title>
       <div class="increate">
-        <div class="increate-item" v-for="item in 3">
-          <span>昨日新增</span>
-          <Tag color="success">100</Tag>
+        <div class="ins-left-box">
+          <div class="ins-left">
+            <Card>
+              <p slot="title">昨日新增</p>
+              <div class="card-content">{{sum.newDay}}</div>
+            </Card>
+          </div>
+          <div class="ins-left">
+            <Card>
+              <p slot="title">上周新增</p>
+              <div class="card-content">{{sum.newWeek}}</div>
+            </Card>
+          </div>
+          <div class="ins-left">
+            <Card>
+              <p slot="title">本月新增</p>
+              <div class="card-content">{{sum.newMonth}}</div>
+            </Card>
+          </div>
         </div>
-      </div>
-      <div class="increate-list">
-        <ul>
-          <li v-for="item in 50">上传用户: admin 于 2020-07-06 13:46:32 上传了 XX 数据，路径为: .................</li>
-        </ul>
-      </div>
-      </div>
+        <div class="increate-list" ref="insList">
+            <ul>
+              <li class="ins-list-item" v-for="(item, idx) in inslist" v-html>
+                {{ idx + 1 }}.
+                <span v-html="item">
+                  {{item}}
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </div>
   </div>
 </template>
 <script>
 import { format, subMonths } from "date-fns";
 import { remToPx } from "@/utils/common";
 import RoseChart from "./components/RoseChart.vue";
-import { getCatalogue } from "@/api/dataManage/query";
 import {
   getSJListPage,
   getTypeDetail,
-  getPaths
+  getPaths,
+  getSum,
+  getByType,
 } from "@/api/dataManage/overview";
 const handleRawData = data => {
   let newData = [];
@@ -163,6 +186,7 @@ export default {
           align: "center"
         }
       ],
+      inslist: [],
       dataPutIn: [],
       formInline: {
         path: [""],
@@ -195,7 +219,12 @@ export default {
         current: 1,
         total: 0,
         pageSize: 10
-      }
+      },
+      sum: {
+        newDay: 0,
+        newMonth: 0,
+        newWeek: 0
+      },
     };
   },
   computed: {
@@ -211,7 +240,7 @@ export default {
     this.getPaths();
     this.setTypesTotalData();
     this.getSJListPage();
-    this.getCatalogue(); //先请求一次，为查询浏览做准备
+    this.getByType()
   },
   methods: {
     init() {
@@ -220,6 +249,16 @@ export default {
         iconUrl: require(`../../../../assets/img/dataManage/overview/${index +
           1}.png`)
       }));
+    },
+    getByType() {
+      getByType({}).then(res => {
+        const { code, data } = res.data
+        let arr = []
+        for(let k in data) {
+          arr.push([k, data[k]])
+        }
+        this.chartData = arr
+      })
     },
     //设置四大类各自的数据详情
     setTypesTotalData() {
@@ -251,32 +290,11 @@ export default {
     },
     //获取查询列表
     getSJListPage() {
-      getSJListPage({
-        identification: "",
-        fidentification: [],
-        createdBy: this.formInline.uploader,
-        dataPath: this.formInline.path.join("/"),
-        dataType: this.formInline.type,
-        endTime: this.formInline.date[1],
-        pageNum: this.page.current,
-        pageSize: this.page.pageSize,
-        startTime: this.formInline.date[0]
-      }).then(res => {
+      getSJListPage({}).then(res => {
+        console.log(res)
         const { data, code, total } = res.data;
         if (code === 1000) {
-          this.page.total = data.total;
-          if (data.list.length) {
-            this.dataPutIn = data.list.map((item, index) => ({
-              uploader: item.realName,
-              type: this.typeList.find((it, id) => it.id === item.dataType)
-                .name,
-              time: item.createdTime,
-              dataPath: item.dataPath
-            }));
-          } else {
-            // 置空
-            this.dataPutIn = [];
-          }
+          this.inslist = data.map(item => `上传用户：<span style="border-bottom: dashed 1px #ccc;"> ${item.createdBy} </span> 于 <span style="border-bottom: dashed 1px #ccc;"> ${item.createdTime} </span> 上传了 <span style="border-bottom: dashed 1px #ccc;"> ${item.dataName} </span> 数据，路径为： <span style="border-bottom: dashed 1px #ccc;"> ${item.dataPath} </span>`)
         }
       });
     },
@@ -298,13 +316,48 @@ export default {
       this.formInline.path = a;
     },
     // 获取左侧目录
-    getCatalogue() {
-      getCatalogue().then(res => {
-        const { data, code } = res.data;
+    getSum() {
+      getSum({}).then(res => {
+        const { data, code } = res.data
         if (code === 1000) {
+          this.sum = data
         }
-      });
+      })
+    },
+    scroll1() {
+      let _dom = this.$refs.insList
+      let height = _dom.offsetHeight
+      if(_dom.scrollTop % height == 0){
+        clearInterval(this.time);
+      } else {
+        this.$refs.insList.scrollTop++;
+        if(_dom.scrollTop >= _dom.scrollHeight - _dom.offsetHeight - 20){
+          this.$refs.insList.scrollTop = 0
+        }
+      }
+    },
+    scroll() {
+      let _dom = this.$refs.insList
+      let height = _dom.offsetHeight
+      this.$refs.insList.scrollTop += 2;
+      if(_dom.scrollTop >= _dom.scrollHeight - height){
+        this.$refs.insList.scrollTop = 0
+      }
+    },
+    start() {
+      this.insList = this.$refs.insList
+      this.time = setInterval(this.scroll.bind(this), 100)
+      this.insList.scrollTop++
     }
+  },
+  mounted() {
+    this.getSum()
+    this.$nextTick(() => {
+      this.start()
+    })
+  },
+  beforeDestroy() {
+    this.time && clearInterval(this.time);
   }
 };
 </script>
@@ -400,19 +453,60 @@ export default {
 }
 
 .increate {
+  height: calc(24rem - 32px);
   overflow: hidden;
   padding: 15px;
-  .increate-item {
+  box-sizing: border-box;
+  .ins-left-box {
+    width: 30%;
+    height: 100%;
     float: left;
-    width: 150px;
-    margin-right: 30px;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
+    align-items: center;
+    .ins-left {
+      width: 150px;
+      .card-content {
+        text-align: center;
+        font-size: 36px;
+      }
+      ::v-deep .ivu-card {
+        margin-bottom: 10px;
+        .ivu-card-body {
+          padding: 0;
+        }
+      }
+      ::v-deep .ivu-card-head {
+        padding: 10px;
+        p {
+          margin: 0;
+        }
+      }
+      .increate-item {
+        width: 300px;
+        margin-right: 30px;
+        display: flex;
+        justify-content: space-between;
+      }
+    }
   }
+  .increate-list {
+    float: left;
+    height: calc(24rem - 32px);
+    padding: 0 15px 30px 15px;
+    box-sizing: border-box;
+    overflow: hidden;
+    .ins-list-item {
+      line-height: 36px;
+      padding: 0 5px;
+      /*&:hover {*/
+      /*  background: #7bb1ff;*/
+      /*  color: #fff;*/
+      /*}*/
+    }
+  }
+
+
 }
-.increate-list {
-  height: 18rem;
-  padding: 0 15px;
-  overflow: auto;
-}
+
 </style>
