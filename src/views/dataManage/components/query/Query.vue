@@ -1,238 +1,181 @@
 <template>
-  <div class="h100">
-    <Row style="height:100%">
-      <Col span="4" class="h100 zt-scroll-y bg-white">
-        <div class="pd h100">
-          <my-tree @handleSelect="handleSelect" type="query"></my-tree>
-        </div>
-      </Col>
-      <Col span="20" class="pd h100 bg-white">
-        <div class="text-right">
-          <RadioGroup v-model="activeMode" type="button">
-            <Radio label="normal">数据查看</Radio>
-            <Radio label="meta">元数据信息</Radio>
-          </RadioGroup>
-        </div>
-        <div class="bordered w100 h100 mt img-container" :style="{ height: `calc(100% - ${remToPx(2.65)}px)` }">
-          <div v-if="activeMode==='normal'" class="h100">
-            <my-map></my-map>
-          </div>
-          <div v-else-if="activeMode==='meta'" class="pd meta_info zt-scroll-y h100">
-            <div>
-              <div class="meta_title">内容信息</div>
-              <div>
-                <span class="meta_label">数据名称：</span>
-                <span>{{activeMetaData.dataName}}</span>
-              </div>
-              <div>
-                <span class="meta_label">数据类型：</span>
-                <span>{{activeMetaData.typeName}}</span>
-              </div>
-              <div>
-                <span class="meta_label">内容描述：</span>
-                <span>{{activeMetaData.contentDoc}}</span>
-              </div>
-            </div>
-            <div>
-              <div class="meta_title">分发信息</div>
-              <div>
-                <span class="meta_label">负责单位名称：</span>
-                <span>{{activeMetaData.proUnit}}</span>
-              </div>
-              <div>
-                <span class="meta_label">联系人：</span>
-                <span>{{activeMetaData.realName}}</span>
-              </div>
-              <div>
-                <span class="meta_label">电话：</span>
-                <span>{{activeMetaData.userPhone}}</span>
-              </div>
-              <div>
-                <span class="meta_label">通信地址：</span>
-                <span>{{activeMetaData.address}}</span>
-              </div>
-              <div>
-                <span class="meta_label">邮政编码：</span>
-                <span>{{activeMetaData.postCode}}</span>
-              </div>
-            </div>
-            <div>
-              <div class="meta_title">范围信息</div>
-              <div>
-                <span class="meta_label">上：</span>
-                <span>{{activeMetaData.scopeUp}}</span>
-              </div>
-              <div>
-                <span class="meta_label">左：</span>
-                <span>{{activeMetaData.scopeLeft}}</span>
-              </div>
-              <div>
-                <span class="meta_label">右：</span>
-                <span>{{activeMetaData.scopeRight}}</span>
-              </div>
-              <div>
-                <span class="meta_label">下：</span>
-                <span>{{activeMetaData.scopeDown}}</span>
-              </div>
-            </div>
-            <div>
-              <div class="meta_title">空间参考</div>
-              <div>
-                <span class="meta_label">空间参考名称：</span>
-                <span>{{activeMetaData.spaceName}}</span>
-              </div>
-              <div>
-                <span class="meta_label">投影：</span>
-                <span>{{activeMetaData.projection}}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Col>
-    </Row>
+  <div class="query-container pd bg-white h100">
+    <div class="query-tree-box">
+      <Collapse v-model="collapse" simple>
+        <Panel name="1">
+          空间数据
+          <p slot="content">
+            <Tabs value="name1" :animated="false">
+              <TabPane label="图层" name="name1">
+                <Tree
+                    :data="space"
+                    show-checkbox
+                    :render="renderContent">
+                </Tree>
+              </TabPane>
+              <TabPane label="图例" name="name2">
+
+              </TabPane>
+            </Tabs>
+          </p>
+        </Panel>
+        <Panel name="2">
+          结构数据
+          <p slot="content">
+            <Tree
+                :data="nospace"
+                :render="renderContent"
+                @on-select-change="nospaceSelect">
+            </Tree>
+          </p>
+        </Panel>
+      </Collapse>
+    </div>
+    <div class="query-content">
+      <component :is="activeComponent" :path="datapath"></component>
+    </div>
   </div>
 </template>
 <script>
-import MyTree from "./components/MyTree";
+import pdfView from "@/components/pdfview/pdfView";
+import imgView from "./components/imgView";
 import MyMap from "./components/MyMap";
-import { getCatalogue, getMetaByName } from "@/api/dataManage/query";
+import { getCatalogue } from "@/api/dataManage/query";
 
 export default {
   name: "Home",
+  components: { MyMap, imgView, pdfView },
   data() {
     return {
-      activeMode: "normal",
-      activeMetaData: {
-        dataName: "",
-        dataType: "",
-        proUnit: "",
-        realName: "",
-        userEmail: "",
-        userPhone: ""
-      },
-      gData: [],
-      typeList: [
-        {
-          typeId: "0",
-          typeName: "矢量"
-        },
-        {
-          typeId: "1",
-          typeName: "栅格"
-        },
-        {
-          typeId: "2",
-          typeName: "表格"
-        },
-        {
-          typeId: "3",
-          typeName: "其他"
-        }
-      ],
-      timer1: null
+      collapse: '1',
+      activeComponent: 'imgView',
+      space: [], // 空间数据
+      nospace: [], // 结构数据
+      datapath: '',
     };
   },
-  components: { MyTree,MyMap },
   computed: {},
-  created() {
-
-  },
-  mounted() {
-
-  },
-  beforeDestroy() {
-    clearInterval(this.timer1);
-  },
   methods: {
-
-    // 获取元数据
-    getMetaByName(name) {
-      getMetaByName({ dataName: name }).then(res => {
+    // 空间数据树自定义渲染
+    nospaceSelect(select, node) {
+      if (!node.selected) return
+      let activeComponent = ''
+      if (node.type === 1) {
+        activeComponent = 'pdfView'
+      } else if (node.type === 2) {
+        activeComponent = 'imgView'
+      }
+      this.activeComponent = activeComponent
+      this.datapath = node.dataPath
+    },
+    renderContent(h, { root, node, data }) {
+      return h('span', data.dataName)
+    },
+    getCatalogue() {
+      this.nospace = [
+        {
+          dataName: 'pdf',
+          dataPath: '/pdf/123.pdf',
+          type: 1,
+          children: [
+            {
+              dataName: 2,
+              dataName: 'pic',
+              type: 2,
+              dataPath: 'https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1594606105&di=887e4a4be7bd1a043fc2dc19dc9fcd96&src=http://dik.img.kttpdq.com/pic/142/99386/5bdc6bc2302e4423_1440x900.jpg',
+            }
+          ]
+        },
+        {
+          dataName: 'pdf',
+          dataPath: '/pdf/openlayer.pdf',
+          type: 1,
+          children: [
+            {
+              dataName: 2,
+              dataName: 'pic',
+              type: 2,
+              dataPath: 'https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1594606105&di=887e4a4be7bd1a043fc2dc19dc9fcd96&src=http://dik.img.kttpdq.com/pic/142/99386/5bdc6bc2302e4423_1440x900.jpg',
+            }
+          ]
+        },
+        {
+          dataName: 'excel',
+          dataPath: '',
+          type: 3,
+          children: [
+            {
+              dataName: 2,
+              dataName: 'pic',
+              type: 2,
+              dataPath: 'https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1594606105&di=887e4a4be7bd1a043fc2dc19dc9fcd96&src=http://dik.img.kttpdq.com/pic/142/99386/5bdc6bc2302e4423_1440x900.jpg',
+            }
+          ]
+        },
+      ]
+      getCatalogue().then(res => {
         const { data, code } = res.data;
         if (code === 1000) {
-          this.activeMetaData = Object.assign(
-            data,
-            this.typeList.find((item, index) => item.typeId === data.dataType)
-          );
-        } else {
-          this.activeMetaData = {
-            dataName: "",
-            dataType: "",
-            proUnit: "",
-            realName: "",
-            userEmail: "",
-            userPhone: ""
-          };
+          this.space = data.spaceData.data
+          this.nospace = data.noSpaceData.data
         }
       });
     },
-    handleSelect(data) {
+    loadPdfHandler() {
 
-      if(this.activeMode==='meta'&&data.isLeaf){
-        this.getMetaByName(data.label);
-      }else{
-        // 加载地理信息
-      }
     }
+  },
+  mounted() {
+    // this.pdfsrc = pdf.createLoadingTask('http://59.110.219.45/')
+    // console.log(this.pdfsrc)
+      this.getCatalogue()
   }
 };
 </script>
 <style lang="scss" scoped>
-.card-container {
-  .card-title {
-    background-color: rgba(0, 0, 0, 0.1);
-    font-weight: bold;
-  }
-  .card-body {
-    .card-left-item {
-      background-color: rgba(0, 0, 0, 0.3);
-      border-radius: 2px;
-      margin: 10px;
-      padding: 6px;
-      color: white;
-      .card-left-item-title {
-        font-size: 26px;
-
-        font-weight: bold;
-      }
-      .card-left-item-total {
-        font-size: 26px;
-        font-weight: bold;
-      }
-    }
-  }
-}
-.bordered {
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
-}
-.img-container {
+.query-container {
   overflow: hidden;
-  .img {
-    width: 100%;
-  }
-}
-.meta_info {
-  .meta_title {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    font-size: 1rem;
-    font-weight: bold;
-    &:before {
-      content: "";
-      display: inline-block;
-      width: 0.625rem;
-      height: 0.625rem;
-      background-color: #2d8cf0;
-      // border-radius: 50%;
-      margin-right: 0.375rem;
+  .query-tree-box {
+    float: left;
+    width: 300px;
+    height: 100%;
+    overflow: auto;
+    ::v-deep .ivu-tabs {
+      overflow: auto;
+    }
+    .query-tree {
+      width: 300px;
+      height: 50%;
     }
   }
-  .meta_label {
-    display: inline-block;
-    width: 10rem;
-    line-height: 2;
-    margin-left: 20px;
+
+  // iview tab
+  ::v-deep .ivu-tabs-nav {
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    .ivu-tabs-tab {
+      text-align: center;
+      width: 50%;
+    }
+  }
+
+  // iview tree
+  ::v-deep .ivu-tree{
+    margin-left: 16px;
+    ul {
+      font-size: 16px;
+    }
+    .ivu-tree-arrow {
+      margin: 0 16px 0 0px;
+    }
+  }
+
+  .query-content {
+    float: left;
+    width: calc(100% - 300px);
+    height: 100%;
+    overflow: hidden;
   }
 }
 </style>

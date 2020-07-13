@@ -27,7 +27,6 @@
     },
     methods: {
       handleLiClick(e) {
-        console.log(e)
         if (e.target.nodeName.toLowerCase() === 'li') {
           let label = e.target.innerHTML
           let option = this.options.find(item => item.label === label)

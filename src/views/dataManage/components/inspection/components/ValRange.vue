@@ -1,38 +1,23 @@
 <template>
   <div>
-    <div class="mt flex flex-sb">
-      <div>
-        <Form inline>
-          <FormItem>
-            <Button v-auth="['page_5_4_1']" type="success" @click="handleStartRule">默认启用</Button>
-          </FormItem>
-          <FormItem>
-            <Button v-auth="['page_5_4_5']" type="primary" @click="handleStopRule">停止启用</Button>
-          </FormItem>
-          <FormItem>
-            <Button v-auth="['page_5_4_2']" type="info" @click="handleAddRule">添加规则</Button>
-          </FormItem>
-          <FormItem>
-            <Button v-auth="['page_5_4_3']" type="warning" @click="handleUpdateRule">修改规则</Button>
-          </FormItem>
-          <FormItem>
-            <Button v-auth="['page_5_4_4']" type="error" @click="handleDeleteRule">删除规则</Button>
-          </FormItem>
-        </Form>
-      </div>
-      <div>
-        <Form :label-width="200" inline>
-          <FormItem label="规则适用对象：">
-            <Input v-model="queryRulesFitObj" clearable />
-          </FormItem>
-          <FormItem :label-width="remToPx(2)">
-            <Button type="primary" @click="handleQuery">查询</Button>
-          </FormItem>
-        </Form>
+    <div ref="opt" class="mt">
+      <div class="g-button-wrapper">
+        <button v-auth="['page_5_4_1']" class="g-button" @click="handleStartRule">
+          <Icon :type="$btn.play" /> 启用</button>
+        <button v-auth="['page_5_4_5']" class="g-button" @click="handleStopRule">
+          <Icon :type="$btn.stop" /> 停止</button>
+        <button v-auth="['page_5_4_2']" class="g-button" @click="handleAddRule">
+          <Icon :type="$btn.create" /> 新建</button>
+        <button v-auth="['page_5_4_3']" class="g-button" @click="handleUpdateRule">
+          <Icon :type="$btn.edit" /> 修改</button>
+        <button v-auth="['page_5_4_4']" class="g-button" @click="handleDeleteRule">
+          <Icon :type="$btn.del" /> 删除</button>
       </div>
     </div>
     <Table
+      class="inspection-table"
       border
+      stripe
       size="small"
       :columns="tableColumns"
       :data="tableData"
@@ -43,30 +28,26 @@
       @on-select-all-cancel="handleCancelRowAll"
     >
       <template slot="ruleStatusSlot" slot-scope="{row,index}">
-        <span :class="`${row.ruleStatus==='启用'?'text-blue':'text-normal'}`">{{row.ruleStatus}}</span>
+        <span>{{row.ruleStatus}}</span>
       </template>
     </Table>
-    <div class="text-right mr-lg mt">
-      <Page
-        :total="page.total"
-        @on-change="changePage"
-        show-total
-        show-elevator
-        :current="page.current"
-        :page-size="page.pageSize"
-      ></Page>
-    </div>
-
-    <Modal
+    <Page
+        class="pagination"
+      :total="page.total"
+      show-total
+      show-sizer
+      show-elevator
+      :current="page.current"
+      :page-size="page.pageSize"
+      @on-change="changePage"
+      @on-page-size-change="changePageSize"
+    ></Page>
+    <Drawer
       v-model="modalFlag"
       class-name="vertical-center-modal"
-      title="值域规范性规则添加"
-      :width="remToPx(50)"
+      title="值域规范性规则"
+      :width="800"
     >
-      <div slot="footer">
-        <Button type="primary" @click="ok">确定</Button>
-        <Button @click="cancel">取消</Button>
-      </div>
       <div class="modal-item">
         <div class="title mb">规则适用对象</div>
         <div>
@@ -138,12 +119,7 @@
                         :key="`vfr_${index3}`"
                       >{{item3.name}}</Option>
                     </Select>
-                    <Input
-                      class="ml"
-                      v-model="item.controlChangedDetail.Range"
-                      style="width:8rem"
-                      clearable
-                    />
+                    <InputNumber :min="0" v-model="item.controlChangedDetail.Range" class="ml" style="width:8rem"></InputNumber>
                   </template>
                   <!-- 面积 -->
                   <template v-else-if="item.selectedValFirst===2">
@@ -223,7 +199,11 @@
           </div>
         </div>
       </div>
-    </Modal>
+      <div class="drawer-footer">
+        <Button style="margin-right: 8px" type="primary" @click="ok">提交</Button>
+        <Button @click="cancel">关闭</Button>
+      </div>
+    </Drawer>
     <my-delete :show="delModalFlag" @ok="confirmDel" @cancel="quitDel"></my-delete>
     <my-delete :show="delModalKeyFlag" @ok="confirmDelKey" @cancel="quitDelKey"></my-delete>
   </div>
@@ -347,7 +327,7 @@ export default {
           // align: "center"
         },
         {
-          title: "默认启用",
+          title: "必须应用规则",
           slot: "ruleStatusSlot",
           align: "center",
           width: remToPx(10)
@@ -736,7 +716,6 @@ export default {
       // item.controlChangedDetail.Range
       let target = this.keyCRFromTableListDemo.find(item => item.id === e);
       // let name = target.name;
-      // TODO
       // console.log(target.range);
       this.$set(
         this.modalForm.ruleDefineData[targetIdx]["controlChangedDetail"],
@@ -1131,6 +1110,16 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.drawer-footer{
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid #e8e8e8;
+  padding: 10px 16px;
+  text-align: center;
+  background: #fff;
+}
 .vertical-center-modal {
   display: flex;
   align-items: center;

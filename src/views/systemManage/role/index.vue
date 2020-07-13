@@ -5,19 +5,19 @@
         <div ref="opt">
           <div class="g-button-wrapper">
             <button v-auth="['page_4_1_1']" @click="insert" class="g-button">
-              <Icon type="ios-add-circle-outline" />
+              <Icon :type="$btn.create" />
               <span> 新建</span>
             </button>
             <button v-auth="['page_4_1_2']" @click="edit" class="g-button">
-              <Icon type="ios-create-outline" />
+              <Icon :type="$btn.edit" />
               <span> 修改</span>
             </button>
             <button v-auth="['page_4_1_3']" @click="del" class="g-button">
-              <Icon type="ios-trash-outline" />
+              <Icon :type="$btn.del" />
               <span> 删除</span>
             </button>
             <button v-auth="['page_4_2_4']" @click="allot" class="g-button">
-              <Icon type="ios-trash-outline" />
+              <Icon type="ios-hand-outline" />
               <span> 权限分配</span>
             </button>
           </div>
@@ -122,29 +122,21 @@
             key: "roleName",
             align: "center",
             width: remToPx(18),
-            tooltip: true,
-            sortable: true
           },
           {
             title: "备注",
             key: "roleRemarks",
             align: "center",
-            tooltip: true,
-            sortable: true
           },
           {
             title: "创建时间",
             key: "createDate",
             align: "center",
-            tooltip: true,
-            sortable: true
           },
           {
             title: "更新时间",
             key: "updateDate",
             align: "center",
-            tooltip: true,
-            sortable: true
           }
         ],
         datas: [],

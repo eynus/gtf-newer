@@ -5,6 +5,10 @@
         <div ref="opt">
           <div class="g-button-wrapper">
             <selbtn :options="options" check="log" @trigger-change="logChange">日志类型</selbtn>
+            <button @click="exportData" class="g-button">
+              <Icon :type="$btn.export" />
+              <span> 导出</span>
+            </button>
           </div>
           <Query ref="query" :formArr="queryForm" @query="onSearch"></Query>
         </div>
@@ -61,9 +65,10 @@
 <script>
   import selbtn from '@/components/selbtn'
   import { remToPx, nullStr } from "@/utils/common";
-  import { lnLogList, optLogList } from "@/api/systemManage/user";
+  import { lnLogList, optLogList, elogData, eoptData } from "@/api/systemManage/user";
   import { logType, logOpt } from '../../../filters/system'
   import { ivtable } from "@/mixin/table";
+  import Download from "@/utils/download";
 
   export default {
     name: 'log',
@@ -100,7 +105,7 @@
             title: '登录设备',
             data: logType.value
           }, {
-            type: 1,
+            type: 4,
             field: 'date_',
             title: '登录时间',
           }
@@ -120,7 +125,7 @@
             title: '操作类型',
             data: logOpt.value
           }, {
-            type: 1,
+            type: 4,
             field: 'date_1',
             title: '操作时间',
           }
@@ -140,19 +145,16 @@
             key: "loginRealName",
             align: "center",
             width: remToPx(18),
-            tooltip: true,
           },
           {
             title: "登录IP",
             key: "loginIp",
             align: "center",
-            tooltip: true,
           },
           {
             title: "登录设备",
             key: "loginType",
             align: "center",
-            tooltip: true,
             render: (h, params) => {
               return h('div', logType.handler(params.row.loginType))
             }
@@ -161,7 +163,6 @@
             title: "登录时间",
             key: "loginTime",
             align: "center",
-            tooltip: true,
           },
         ],
         columns1: [
@@ -174,36 +175,30 @@
             key: "operationIp",
             align: "center",
             width: remToPx(10),
-            tooltip: true,
           }, {
             title: "操作人",
             key: "operationUserRealName",
             align: "center",
             width: remToPx(10),
-            tooltip: true,
           }, {
             title: "操作地址",
             key: "operationUrl",
             align: "center",
-            tooltip: true,
           }, {
             title: "操作模块",
             key: "operationModular",
             align: "center",
             width: remToPx(18),
-            tooltip: true,
           }, {
             title: "操作方法",
             key: "operationMethod",
             align: "center",
             width: remToPx(10),
-            tooltip: true,
           },  {
             title: "操作类型",
             key: "operationType",
             align: "center",
             width: remToPx(8),
-            tooltip: true,
             render: (h, params) => {
               return h('div', logOpt.handler(params.row.operationType))
             }
@@ -212,12 +207,10 @@
             key: "operationDuration",
             align: "center",
             width: remToPx(10),
-            tooltip: true,
           }, {
             title: "操作时间",
-            key: "operationDate",
+            key: "operationDateStr",
             align: "center",
-            tooltip: true,
           }
         ],
         datas: [],
@@ -258,26 +251,42 @@
       this.init()
     },
     methods: {
+      exportData() {
+        const download = new Download()
+        if (this.log === 'log') {
+          elogData({}).then(res => {
+            download.filename = decodeURI(res.headers['content-disposition'].split('=')[1])
+            download.xlsx(res.data)
+          })
+        } else {
+          eoptData({}).then(res => {
+            download.filename = decodeURI(res.headers['content-disposition'].split('=')[1])
+            download.xlsx(res.data)
+          })
+        }
+      },
       init() {
         this.log = 'log'
         this.onSearch()
       },
       onSearch(data = '') {
         this.page.current = 1
-        let { date_, date_1 } = this
+        this.formInline = nullStr(data)
+        let { date_, date_1 } = this.formInline
         if (this.log === 'log') {
           if (date_ && date_.length) {
             this.formInline.loginTimeStr = date_[0]
             this.formInline.loginTimeEnd = date_[1]
+            delete this.formInline.date_
           }
         }
         if (this.log !== 'log') {
           if (date_1 && date_1.length) {
-            this.formInline1.operationDateStr = date_1[0]
-            this.formInline1.operationDateEnd = date_1[1]
+            this.formInline.operationDateStr = date_1[0]
+            this.formInline.operationDateEnd = date_1[1]
+            delete this.formInline.date_1
           }
         }
-        this.formInline = nullStr(data)
         this.logChange()
       },
       logChange(val) {

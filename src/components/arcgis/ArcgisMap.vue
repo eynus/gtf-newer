@@ -1,45 +1,50 @@
 <template>
-  <div style="width: 100%; height: 100%"  id="mapbox" v-on:keyup.122 = "fullClose" v-on:keyup.27 = "fullClose">
+  <div class="arcgis" id="mapbox">
+    <!--  地图view  -->
     <div id="viewDiv" ref="viewDiv" style="width: 100%; height: 100%"></div>
-    <div style="position: absolute;bottom: 20;left: 50%"></div>
-    <!-- 地图的工具框 -->
-    <ButtonGroup id="toolbar" vertical style="display: flex;flex-direction: column">
-      <Tooltip content="描点" placement="right">
-        <Button
-          :type="type=='point'?'primary':'default'"
-          @click="clickToolbar('point')"
-          style="width: 32Px;height: 32Px;padding:5Px 5Px 0Px;"
-        >
-           <Icon custom="iconfont icon-dingwei" :size="20"  />
-        </Button>
-      </Tooltip>
-      <Tooltip content="距离测量" placement="right">
-        <Button
-          :type="type=='distance'?'primary':'default'"
-          @click="clickToolbar('distance')"
-          style="width: 32Px;height: 32Px;padding:5Px 5Px 0Px;"
-        >
-          <img src="@/assets/map_images/length.png" alt style="width: 20px;height: 20px;" />
-        </Button>
-      </Tooltip>
-      <Tooltip content="测量面积" placement="right">
-        <Button
-          :type="type=='area'?'primary':'default'"
-          @click="clickToolbar('area')"
-          style="width: 32Px;height: 32Px;padding:5Px 5Px 0Px;"
-        >
-          <img src="@/assets/map_images/area.png" alt style="width: 20px;height: 20px;" />
-        </Button>
-      </Tooltip>
-      <Tooltip content="清除工具" placement="right">
-        <Button
-            @click="clearWidget"
-            style="width: 32Px;height: 32Px;padding:5Px 5Px 0Px;"
-        >
-          <img src="@/assets/map_images/clear.png" alt style="width: 20Px;height: 20Px;" />
-        </Button>
-      </Tooltip>
-    </ButtonGroup>
+    <!--  地图view  -->
+
+    <!--  比例尺  -->
+    <div id="scaleBar">
+      <p class="jwTip">{{latitude}},{{longitude}}</p>
+    </div>
+    <!--  比例尺  -->
+
+    <!--  工具框  -->
+    <div id="tool-bar">
+      <div id="toolBar">
+        <ul class="toolBar" @click="toggleMap" :class="{active: showMapBox}">
+          <li class="mapType" title="切换底图" v-if="type1 === 0"><Icon type="md-images" /></li>
+          <li class="mapType" title="折叠" v-else-if="type1 === 1"><Icon type="ios-fastforward-outline" style="font-size: 16px;"/></li>
+        </ul>
+        <ul class="toolBar" @click="toggleOperates" :class="{active: showToolBox}">
+          <li class="mapType" title="测量工具" v-if="type2 === 0"><Icon type="ios-apps-outline"/></li>
+          <li class="mapType" title="折叠" v-else-if="type2 === 1"><Icon type="ios-fastforward-outline" /></li>
+        </ul>
+      </div>
+      <div class="mapBox" v-show="showMapBox">
+        <div @click="toggleMapType(1)" :class="{isActive: activeMapClass1 === 1}">
+          <img src="../../assets/map_images/Basemapthumbnail1.png" alt="">
+          <p>矢量图</p>
+        </div>
+        <div @click="toggleMapType(2)" :class="{isActive: activeMapClass2 === 1}">
+          <img src="../../assets/map_images/Basemapthumbnail.png" alt="">
+          <p>影像图</p>
+        </div>
+      </div>
+      <div class="mapBox1" v-show="showToolBox">
+        <div @click="mapHandle(1)" :class="{isActive: activeToolClass1 === 1}" title="测量距离">
+          <Icon type="ios-barcode" />
+        </div>
+        <div @click="mapHandle(2)" :class="{isActive: activeToolClass2 === 1}" title="测量面积">
+          <Icon type="ios-calendar" style="font-size: 16px;"/>
+        </div>
+        <div @click="mapHandle(3)" :class="{isActive: activeToolClass3 === 1}">
+          <i class="el-icon-delete" title="清除"></i>
+        </div>
+      </div>
+    </div>
+    <!--  工具框  -->
   </div>
 </template>
 
@@ -74,7 +79,21 @@ export default {
       drawGeometry: null, // 地图绘制出的结果
       grouplayer: null, // 加载在地图的数组
       mousePoint: null, // 鼠标的位置
-      type: ""
+      latitude: null,
+      longitude: null,
+      type: "",
+      type1: 0, // 切换底图
+      showMapBox: false, // 地图切换
+      activeMap: 0,
+      activeMapClass: 0,
+      activeMapClass1: 0,
+      activeMapClass2: 1,
+      type2: 0, // 切换测量工具
+      showToolBox: false, // 测量工具切换
+      activeTool: 0,
+      activeToolClass1: 0,
+      activeToolClass2: 0,
+      activeToolClass3: 0,
     };
   },
   props: {
@@ -103,18 +122,12 @@ export default {
       type: Boolean,
       default: false
     },
-
     /**
-     * 标绘工具--标绘的人类活动图层
+     * arcgis底图切换工具
      * */
-    // plottingLayerUrl: {
-    //   type: String
-    // },
-    /**
-     * 标绘工具--当前解译任务的id
-     * */
-    ioha_hait_id: {
-      type: Number
+    basemapToggle: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
@@ -127,31 +140,30 @@ export default {
      * @Description:初始化地图
      */
     async createMap() {
-      // todo 修改能够兼容84与非84地图
       // 加载arcgis地图的依赖
-      let MapView = await arcgisPackage.MapView;
-      let Map = await arcgisPackage.Map;
-      let Basemap = await arcgisPackage.Basemap;
-      let BasemapToggle = await arcgisPackage.BasemapToggle;
-      let Fullscreen = await arcgisPackage.Fullscreen;
-      // let Plotting = await arcgisPackage.Plotting;
+      let MapView = await arcgisPackage.MapView
+      let Map = await arcgisPackage.Map
+      let Basemap = await arcgisPackage.Basemap
+      let BasemapToggle = await arcgisPackage.BasemapToggle
+      let Fullscreen = await arcgisPackage.Fullscreen
 
-      // 天地图影像地图
+      // 天地图-影像地图
       let tdtylayer = await tdtlayer().then(res => {
-        return res;
+        return res
       });
-      // 天地图矢量地图
+      // 天地图-矢量地图
       let tdtylayer1 = await tdtclayer().then(res => {
-        return res;
-      });
-      // 天地图的矢量标注图层
+        return res
+      })
+      // 天地图-矢量标注图层
       let tdtylayer2 = await tdtcNoteslayer().then(res => {
-        return res;
-      });
-      // 天地图影像标注图层
+        return res
+      })
+      // 天地图-影像标注图层
       let tdtylayer3 = await tdtyNoteslayer().then(res => {
-        return res;
-      });
+        return res
+      })
+      // 底图
       let customBasemap = new Basemap({
         baseLayers: [tdtylayer1, tdtylayer2],
         title: "矢量地图",
@@ -163,47 +175,61 @@ export default {
         title: "影像地图",
         id: "myBasemap1",
         thumbnailUrl: Basemapthumbnail1
-      });
+      })
+      this.basemap = [customBasemap, customBasemap1]
+
       this.map = new Map({
         basemap: {
           vector: customBasemap,
           image: customBasemap1
         }[this.baseMapType]
-      });
+      })
       this.view = new MapView({
         map: this.map,
         container: "viewDiv", // this.mapId,
         center: config.centerPoint,
         zoom: 11
-      });
+      })
       this.$emit('created', this.map, this.view)
-      // 添加工具框
-      this.view.ui.add(document.getElementById("toolbar"), "top-left");
+
+      // 添加鼠标移动框
+      this.view.on('pointer-move', e => {
+        let point = this.view.toMap({x: e.x, y: e.y});
+        this.latitude = point.latitude.toFixed(6)
+        this.longitude = point.longitude.toFixed(6)
+      })
+
+      // 添加比例尺
+      let scaleBar = await arcgisPackage.ScaleBar
+      scaleBar = new scaleBar({
+        view: this.view,
+        unit: 'metric'
+      }, document.getElementById('scaleBar'))
+      this.view.ui.add(scaleBar, 'bottom-left')
+
       // 添加全屏
       this.fullscreen = new Fullscreen({
         view: this.view,
       });
-      this.view.ui.add(this.fullscreen, "top-left");
+      this.view.ui.add(this.fullscreen, "top-right");
+
       this.$emit('map', this.map, this.view)
-      // 添加工具框
-      this.view.ui.add(document.getElementById("toolbar"), "top-left");
 
-      // 增加底图切换插件
-      let basemapToggle = new BasemapToggle({
-        view: this.view,
-        nextBasemap: {
-          vector: customBasemap1,
-          image: customBasemap
-        }[this.baseMapType]
-      })
-      this.view.ui.add(basemapToggle, "bottom-right")
+      // 底图切换
+      if (this.basemapToggle) {
+        let basemapToggle = new BasemapToggle({
+          view: this.view,
+          nextBasemap: {
+            vector: customBasemap1,
+            image: customBasemap
+          }[this.baseMapType]
+        })
+        this.view.ui.add(basemapToggle, "bottom-right")
+      }
 
-      this.view.on("pointer-move", ["Shift"], e => {
-        let point = this.view.toMap({ x: e.x, y: e.y });
-      })
-      /* 将图层加载至地图上 */
-      this.addLayers(this.layers);
-      /* 判断是否需要创建图+形编辑工具sketch */
+
+      this.view.ui.add(document.getElementById("tool-bar"), "top-right")
+
       if (this.isSketch) {
         let GraphicsLayer = await arcgisPackage.GraphicsLayer;
         let Sketch = await arcgisPackage.Sketch;
@@ -239,6 +265,153 @@ export default {
             this.$emit("sketchcreatecomplete", e.graphic);
           }
         });
+      }
+    },
+    /**
+     * @Description:切换地图
+     */
+    toggleMap () {
+      if (this.type1 === 1) {
+        this.type1 = 0
+        this.showMapBox = false
+      } else {
+        this.type1 = 1
+        this.showMapBox = true
+        /*当显示地图切换弹窗关闭操作弹窗及清空操作*/
+        this.type2 = 0
+        this.activeToolClass1 = 0
+        this.activeToolClass2 = 0
+        this.activeToolClass3 = 0
+        this.showToolBox = false
+        this.setActiveWidget(null)
+        // // 关闭打印
+        // this.showPrint = false
+        // this.removePrint()
+        // // 关闭统计
+        // this.type5 = 0
+        // this.showStatisticAnalysis = false
+      }
+    },
+    /**
+     * @Description:切换测量工具
+     */
+    toggleOperates () {
+      if (this.type2 === 1) {
+        this.type2 = 0
+        this.activeToolClass1 = 0
+        this.activeToolClass2 = 0
+        this.activeToolClass3 = 0
+        this.showToolBox = false
+        this.setActiveWidget(null)
+      } else {
+        this.type2 = 1
+        this.showToolBox = true
+        /*当显示操作弹窗关闭操作地图切换弹窗*/
+        this.type1 = 0
+        this.showMapBox = false
+        // // 关闭打印
+        // this.showPrint = false
+        // this.removePrint()
+        // // 关闭统计
+        // this.type5 = 0
+        // this.showStatisticAnalysis = false
+      }
+    },
+
+    mapHandle (n) {
+      if (n === 1) {
+        if (this.activeToolClass1 === 0) {
+          this.activeToolClass1 = 1
+          this.setActiveWidget(null)
+          this.setActiveWidget('distance')
+        } else {
+          this.activeToolClass1 = 0
+          this.setActiveWidget(null)
+        }
+        this.activeToolClass2 = 0
+        this.activeToolClass3 = 0
+      } else if (n === 2) {
+        if (this.activeToolClass2 === 0) {
+          this.activeToolClass2 = 1
+          this.setActiveWidget(null)
+          this.setActiveWidget('area')
+        } else {
+          this.activeToolClass2 = 0
+          this.setActiveWidget(null)
+        }
+        this.activeToolClass1 = 0
+        this.activeToolClass3 = 0
+      } else if (n === 3) {
+        if (this.activeToolClass3 === 0) {
+          this.activeToolClass3 = 1
+          this.setActiveWidget(null)
+        } else {
+          this.activeToolClass3 = 0
+          this.setActiveWidget(null)
+        }
+        this.activeToolClass1 = 0
+        this.activeToolClass2 = 0
+      }
+    },
+
+    toggleMapType (n) {
+      if (n === 1) {
+        this.activeMapClass1 = 1
+        this.activeMapClass2 = 0
+        this.getTdtBasemap(0)
+      } else if (n === 2) {
+        this.activeMapClass2 = 1
+        this.activeMapClass1 = 0
+        this.getTdtBasemap(1)
+      }
+    },
+
+    /**
+     * @Description:切换地图
+     */
+    getTdtBasemap(num) {
+      this.map.basemap = this.basemap[num]
+    },
+    /**
+     * 测距测面
+     * @param  type distance或area 为null时清空
+     */
+    async setActiveWidget(type) {
+      let view = this.view
+      let that = this
+      if (that.activeWidget) {
+        view.ui.remove(that.activeWidget);
+        that.activeWidget.destroy();
+        that.activeWidget = null;
+      }
+      switch (type) {
+        case "distance":
+          let DistanceMeasurement2D = await arcgisPackage.DistanceMeasurement2D;
+          that.activeWidget = new DistanceMeasurement2D({
+            view: view
+          });
+          // skip the initial 'new measurement' button
+          that.activeWidget.viewModel.newMeasurement();
+          view.ui.add(that.activeWidget, "bottom-right");
+          break;
+        case "area":
+          let AreaMeasurement2D = await arcgisPackage.AreaMeasurement2D;
+          that.activeWidget = new AreaMeasurement2D({
+            view: view
+          });
+          // skip the initial 'new measurement' button
+          that.activeWidget.viewModel.newMeasurement();
+          this.view.ui.add(that.activeWidget, "bottom-right");
+          break;
+        case null:
+          if (that.activeWidget) {
+            this.view.ui.remove(that.activeWidget);
+            that.activeWidget.destroy();
+            that.activeWidget = null;
+          }
+          break;
+        default:
+          break;
       }
     },
     /* 测量工具点击事件 */
@@ -318,47 +491,7 @@ export default {
         return areasAndLengths.areas[0].toFixed(2);
       }
     },
-    /**
-     * 测距测面
-     * @param  type distance或area 为null时清空
-     */
-    async setActiveWidget(view, type) {
-      let that = this;
-      if (that.activeWidget) {
-        view.ui.remove(that.activeWidget);
-        that.activeWidget.destroy();
-        that.activeWidget = null;
-      }
-      switch (type) {
-        case "distance":
-          let DistanceMeasurement2D = await arcgisPackage.DistanceMeasurement2D;
-          that.activeWidget = new DistanceMeasurement2D({
-            view: view
-          });
-          // skip the initial 'new measurement' button
-          that.activeWidget.viewModel.newMeasurement();
-          view.ui.add(that.activeWidget, "bottom-right");
-          break;
-        case "area":
-          let AreaMeasurement2D = await arcgisPackage.AreaMeasurement2D;
-          that.activeWidget = new AreaMeasurement2D({
-            view: view
-          });
-          // skip the initial 'new measurement' button
-          that.activeWidget.viewModel.newMeasurement();
-          this.view.ui.add(that.activeWidget, "bottom-right");
-          break;
-        case null:
-          if (that.activeWidget) {
-            this.view.ui.remove(that.activeWidget);
-            that.activeWidget.destroy();
-            that.activeWidget = null;
-          }
-          break;
-        default:
-          break;
-      }
-    },
+
     /**
      *  触发绘图功能
      *  @param ,{String} drawType - 绘制地图的类型，point，poly，polygon三个值有效
@@ -426,9 +559,7 @@ export default {
       let graphic = new Graphic({
         geometry: point,
         symbol: markerSymbol
-      });
-      // console.log(graphic)
-      // console.log(this.view.graphics)
+      })
       // 添加点
       this.view.graphics.add(graphic);
       this.drawGeometry = point;
@@ -556,95 +687,117 @@ export default {
   },
   mounted() {
     this.mapId = "mapview" + this._uid;
-    this.createMap();
+    let { longitude, latitude } = config.centerPoint
+    this.longitude = longitude
+    this.latitude = latitude
+    this.createMap()
   }
 };
 </script>
 <style lang="scss" scoped>
-  #mapbox{
+  .arcgis {
+    width: 100%;
     height: 100%;
-    display: flex;
-    position: relative;
-  }
-  #layersControl{
-    .layersControl_box{
-      padding:3px;
-      background: #fff;
-      border: 1px solid #d1d1d1;
-      .fraggableBox{
-        padding: 0;
-        .fraggableLi{
-          min-width: 100px;
-          padding: 5px 8px;
-          border-top: 1px solid #d1d1d1;
+    #scaleBar {
+      min-width: 100px;
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(255,255,255,.8);
+      padding: 20px 10px 10px 10px;
+      ::v-deep .esri-scale-bar__bar-container {
+        position: absolute;
+        top: 20px;
+        left: 10px;
+      }
+      .blTip {
+        margin: 25px 0 0;
+        span {
+          font-weight: bold;
+          color: #00a1ff;
         }
       }
-    }
-  }
-  #viewDiv{
-    height: 100%;
-    flex-grow: 2;
-  }
-  #maptab{
-    width: 300px;
-    .firstmenu{
-      >li{
-        margin-bottom: 6px;
-        text-align: left;
-        >ul{
-          >li{
-            padding-left: 20px;
-          }
-        }
-        >p{
-          line-height: 40px;
-          text-align: left;
-          font-size: 16px;
-          background-color: rgb(42,177,245);
-          color: white;
-          padding-left: 10px;
-          border-radius: 4px;
-          cursor: pointer;
-          i{
-            font-size: 16px;
-            line-height: 40px;
-            margin-right: 10px;
-          }
-        }
-        .secondmenu{
-          label{
-            line-height: 30px;
-            font-size: 14px;
-          }
-        }
+      .jwTip {
+        margin: 25px 0 0;
       }
     }
-  }
-  #basemapToggle{
-    border: 5px #000 solid;
-  }
-</style>
-<style scoped>
-  #maptab >>> .ivu-tabs-content{
-    height: calc(100% - 40px);
-    margin-top: -16px;
-  }
-  #maptab >>> .ivu-tabs-content > .ivu-tabs-tabpane{
-    padding: 16px;
-    border: 1px solid #dcdee2;
-    border-radius: 0 0 4px 4px;
-    border-top: none;
-  }
-  #maptab >>> .ivu-tabs-nav{
-    display: flex;
-    float: none;
-  }
-  #maptab >>> .ivu-tabs-nav .ivu-tabs-tab{
-    flex-grow: 2;
-    margin-right: 0;
-  }
-  .sliderBox >>> .ivu-slider-wrap{
-    margin: 0 0 3px
-  }
-</style>
 
+    #toolBar {
+      position: absolute;
+      top: 45Px;
+      right: 0Px;
+      li {
+        cursor: pointer;
+        background-color: #fff;
+        color: #6e6e6e;
+        width: 32Px;
+        height: 32Px;
+        margin-bottom: 10Px;
+        line-height: 32Px;
+        text-align: center;
+        box-shadow: 0px 0px 20Px 0Px rgba(34, 44, 72, 0.2);
+        i {
+          font-size: 20Px;
+        }
+      }
+      .active {
+        li {
+          color: #0079c1;
+        }
+      }
+    }
+
+    .mapBox {
+      position: absolute;
+      top: 45Px;
+      right: 60Px;
+      background: #fff;
+      padding: 15Px;
+      overflow: hidden;
+      div {
+        padding: 12Px;
+        float: left;
+        img {
+          width: 64Px;
+          height: 64Px;
+        }
+        p {
+          width: 64Px;
+          text-align: center;
+          color: #6e6e6e;
+          font-size: 12Px;
+          margin-bottom: 0;
+          margin-top: 5Px;
+        }
+        &:hover {
+          background-color: #f2f2f2;
+        }
+        &.isActive {
+          border: 1px solid #0079c1;
+          background-color: rgba(225,241,251,.5);
+        }
+      }
+    }
+    .mapBox1 {
+      position: absolute;
+      top: 90Px;
+      right: 60Px;
+      background: #fff;
+      padding: 10Px;
+      div {
+        width: 30Px;
+        height: 30Px;
+        text-align: center;
+        line-height: 30Px;
+        &:hover {
+          background-color: #f2f2f2;
+        }
+        &.isActive {
+          border: 1Px solid #0079c1;
+          background-color: rgba(225,241,251,.5);
+        }
+      }
+    }
+  }
+
+</style>

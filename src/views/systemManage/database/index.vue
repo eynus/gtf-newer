@@ -1,20 +1,10 @@
 <template>
-  <!--                <FormItem label="备份文件名称 ：">-->
-  <!--                  <Input v-model.trim="formInline.backupName" placeholder="请输入角色名" clearable />-->
-  <!--                </FormItem>-->
-  <!--                <FormItem label="备份说明：">-->
-  <!--                  <Input v-model.trim="formInline.backupExplain" placeholder="请输入备注" clearable />-->
-  <!--                </FormItem>-->
   <div class="h100 bg-white position-r">
     <div ref="opt">
       <div class="g-button-wrapper">
         <button v-auth="['page_4_4_1']" @click="insert" class="g-button">
-          <Icon type="ios-add-circle-outline" />
+          <Icon :type="$btn.create" />
           <span> 新建</span>
-        </button>
-        <button v-auth="['page_4_4_2']" @click="recover" class="g-button">
-          <Icon type="md-redo" />
-          <span> 恢复</span>
         </button>
       </div>
     </div>
@@ -60,7 +50,7 @@
   import { dbList } from "@/api/systemManage/user";
   import edit from './edit'
   import recover from './recover'
-  import { dbback } from '../../../filters/system'
+  import { dbback, dbbackModule } from '../../../filters/system'
   import { nullStr } from '../../../utils/common'
   import { ivtable } from '@/mixin/table'
   export default {
@@ -82,55 +72,53 @@
             type: "selection",
             key: "pkId",
             align: "center",
-            width: remToPx(5)
+            width: remToPx(5),
+            fixed: 'left',
           },
           {
             title: '序号',
             type: 'index',
             width: remToPx(5),
-            align: 'center'
+            align: 'center',
+            fixed: 'left'
           },
           {
             title: "备份文件名称",
             key: "backupName",
             align: "center",
             width: remToPx(18),
-            tooltip: true,
-            sortable: true
+            fixed: 'left',
+          },
+          {
+            title: "备份模块",
+            key: "backupModule",
+            align: "center",
+            width: remToPx(18),
+            render: (h, params) => {
+              return h('div', dbbackModule.handler(params.row.backupModule))
+            }
+          },
+          {
+            title: "备份类型 ",
+            key: "backupType",
+            align: "center",
+            width: remToPx(18),
+            render: (h, params) => {
+              return h('div', dbback.handler(params.row.backupType))
+            }
           },
           {
             title: "备份说明 ",
             key: "backupExplain",
             align: "center",
             width: remToPx(18),
-            tooltip: true,
-            sortable: true
-          },
-          {
-            title: "备份表名 ",
-            key: "backupTableNames",
-            align: "center",
-            width: remToPx(18),
-            tooltip: true,
-            sortable: true
-          },
-          {
-            title: "备份类型 ",
-            key: "backupIsWhole",
-            align: "center",
-            width: remToPx(18),
-            tooltip: true,
-            sortable: true,
-            render: (h, params) => {
-              return h('div', dbback.handler(params.row.backupIsWhole))
-            }
           },
           {
             title: "备份时间 ",
             key: "backupTime",
             align: "center",
+            minWidth: remToPx(18),
             tooltip: true,
-            sortable: true
           },
         ],
         datas: [],
@@ -188,12 +176,14 @@
         this.tableLoading = true
         let { current, pageSize } = this.page
         let param = {
-          ...this.formInline
+          ...this.formInline,
+          pageNum: current,
+          pageSize: pageSize
         }
         dbList(param).then(res => {
           let { data, code } = res.data
           if (code === 1000) {
-            this.datas = data
+            this.datas = data.records
             this.page.total = data.total
           }
           this.tableLoading = false

@@ -2,7 +2,6 @@
   <div class="h100">
     <ArcgisMap
       ref="arcgismap"
-      :isSketch="true"
     ></ArcgisMap>
   </div>
 </template>
@@ -78,9 +77,8 @@ export default {
     // },
     /* 创建人类活动事件 */
     async createcomplete(graphic) {
-      
+
     }
   }
 };
 </script>
- 

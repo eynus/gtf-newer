@@ -18,12 +18,14 @@
   <script>
      let fun = function(doc, win) {
       let docEl = doc.documentElement,
-        resizeEvt =
-          "orientationchange" in window ? "orientationchange" : "resize",
+        resizeEvt = "orientationchange" in window ? "orientationchange" : "resize",
         recalc = function() {
           let clientWidth = docEl.clientWidth;
           if (!clientWidth) return;
-          docEl.style.fontSize = 16 * (clientWidth / 1920) + "px";
+          console.log(clientWidth)
+          let fontSize = 16  * (clientWidth / 1920)
+          fontSize = fontSize <= 14 ? 14 : fontSize
+          docEl.style.fontSize = fontSize + "px"
         };
       if (!doc.addEventListener) return;
       win.addEventListener(resizeEvt, recalc, false);

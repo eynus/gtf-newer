@@ -359,7 +359,7 @@ export default {
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(28%, -48%);
+    transform: translate(30%, -48%);
     width: 400px;
     z-index: 1001;
     h2 {

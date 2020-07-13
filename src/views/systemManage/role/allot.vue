@@ -17,15 +17,24 @@
         <Col class-name="col-item">
           <FormItem label="权限分配" prop="resourcesIds">
             <Input v-model="formData.resourcesIds"  v-show="false" />
-            <a-tree
-                checkable
-                checkStrictly
-                v-model="resourcesIds"
-                :tree-data="resource"
-                :replaceFields="treeFields"
-                @check="resourceCheck"
-            >
-            </a-tree>
+            <Tree
+                show-checkbox
+                multiple
+                check-strictly
+                children-key="childs"
+                :data="resource"
+                :render="renderContent"
+                @on-check-change="resourceCheck">
+            </Tree>
+<!--            <a-tree-->
+<!--                checkable-->
+<!--                checkStrictly-->
+<!--                v-model="resourcesIds"-->
+<!--                :tree-data="resource"-->
+<!--                :replaceFields="treeFields"-->
+<!--                @check="resourceCheck"-->
+<!--            >-->
+<!--            </a-tree>-->
           </FormItem>
         </Col>
       </Row>
@@ -87,7 +96,7 @@
         this.drawer = true
         this.formData.roleId = selection[0].pkId
         this.roleName = selection[0].roleName
-        this.getList()
+        this.getRList()
       },
       close() {
         this.drawer = false
@@ -97,8 +106,10 @@
         this.$refs['form'].resetFields()
       },
       resourceCheck(v, e) {
-        if (v.checked.length) {
+        console.log(v)
+        if (v.length) {
           this.formData.resourcesIds = 1
+          this.resourcesIds = v.map(item => item.pkId)
         } else {
           this.formData.resourcesIds = ''
         }
@@ -107,7 +118,7 @@
         this.$refs['form'].validate((valid) => {
           if (valid) {
             let param = {
-              resourcesIds: this.resourcesIds.checked,
+              resourcesIds: this.resourcesIds,
               roleId: this.formData.roleId
             }
             resourceToUser(param).then(res => {
@@ -122,11 +133,22 @@
           }
         })
       },
+      renderContent (h, { root, node, data }) {
+        return h('span', {
+          props: {
+            label: node.nodeKey
+          },
+          style: {
+            width: '100%'
+          }
+        }, data.resName)
+      },
+
       getList() {
         resources().then(res => {
           if (res.data.code === 1000) {
-            this.resource = res.data.data
-            this.getRList()
+            let result = this.handleData(res.data.data)
+            this.resource = result
           } else {
             this.$Message.error(res.data.message)
           }
@@ -137,13 +159,22 @@
           if (res.data.code === 1000) {
             let data = res.data.data
             data = data ? handleData(data) : []
-            console.log(data)
             this.resourcesIds = data
             this.formData.resourcesIds = data.length ? 1 : null
+            this.getList()
           } else {
             this.$Message.error(res.data.message)
           }
         })
+      },
+      handleData(data) {
+        data.forEach(item => {
+          item['checked'] =  this.resourcesIds.indexOf(item.pkId) !== -1 ? true : false
+          if (item.childs.length) {
+            item.childs = this.handleData(item.childs)
+          }
+        })
+        return data
       }
     }
   }

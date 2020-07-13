@@ -1,5 +1,5 @@
 <template>
-  <div class="h100">
+  <div class="h100 overflow-hidden">
     <div class="card-container card-container1">
       <div class="card-body">
         <Row style="height:100%;margin-left:0" :gutter="remToPx(2)">
@@ -14,7 +14,7 @@
                 <div class="card-left-item-inner h100 w100">
                   <div
                     class="flex flex-sa h100 w100"
-                    :style="{borderBottom:`2px solid ${item.bgColor}`}"
+                    :style="{padding: `0 1.5rem`, borderBottom:`2px solid ${item.bgColor}`,}"
                   >
                     <div class="card-left-item-inner-right">
                       <div class="block-up">
@@ -78,7 +78,7 @@
         </div>
         <div class="increate-list" ref="insList">
             <ul>
-              <li class="ins-list-item" v-for="(item, idx) in inslist" v-html>
+              <li class="ins-list-item" v-for="(item, idx) in 12" v-html>
                 {{ idx + 1 }}.
                 <span v-html="item">
                   {{item}}
@@ -367,10 +367,9 @@ export default {
 }
 .card-container {
   background-color: #fff;
-
   &1 {
     background-color: transparent;
-    height: calc(100% - 25.5rem);
+    height: calc(100% - 23rem);
 
     .card-body {
       height: 100%;
@@ -378,7 +377,7 @@ export default {
         background-color: #fff;
         &-item-list {
           height: calc(100% - 4rem);
-          margin: 1rem;
+          /*margin: 1rem;*/
         }
         .card-left-item:nth-of-type(1) .card-left-item-inner,
         .card-left-item:nth-of-type(2) .card-left-item-inner {
@@ -396,8 +395,6 @@ export default {
             color: $text-normal;
             margin-right: 1rem;
             padding: 0 1.5rem;
-            width: calc(100% - 1rem);
-            height: calc(100% - 0.5rem);
             &-left {
               height: 80%;
               width: 22%;
@@ -408,17 +405,17 @@ export default {
             }
             &-right {
               width: 78%;
-              margin: 0 2rem;
+              /*margin: 0 2rem;*/
               .block-up {
                 .title {
                   display: inline-block;
                   color: $text-title;
-                  font-size: 1.5rem;
+                  font-size: 1.4rem;
                 }
                 .value {
                   display: inline-block;
-                  font-size: 2.25rem;
-                  min-width: 10rem;
+                  font-size: 2rem;
+                  min-width: 8.2rem;
                   i {
                     font-style: normal;
                     font-size: 1.25rem;
@@ -429,7 +426,7 @@ export default {
                 margin-top: 1rem;
                 .left {
                   display: inline-block;
-                  min-width: 10rem;
+                  min-width: 8.2rem;
                 }
               }
             }
@@ -443,7 +440,6 @@ export default {
     }
   }
   &2 {
-    min-height: 24rem;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   }
   padding-top: 0;
@@ -451,9 +447,8 @@ export default {
 .tb-min-height {
   min-height: 198px;
 }
-
 .increate {
-  height: calc(24rem - 32px);
+  height: calc(24rem - 64px);
   overflow: hidden;
   padding: 15px;
   box-sizing: border-box;

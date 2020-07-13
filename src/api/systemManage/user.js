@@ -41,3 +41,7 @@ export const dbList = data => request({ url: baseUrl_user + 'api/backupRestore/g
 export const dbExecute = data => request({ url: baseUrl_user + 'api/backupRestore/executeBackup', method: 'post', data })
 // 执行 数据恢复
 export const dbRecover = data => request({ url: baseUrl_user + 'api/backupRestore/recoverBackUp', method: 'post', data })
+// 导出登录日志
+export const elogData = data => request({ url: baseUrl_user + 'api/system/log/exportLogin', method: 'post', data, responseType: 'blob' })
+// 导出操作日志
+export const eoptData = data => request({ url: baseUrl_user + 'api/system/log/exportOperation', method: 'post', data, responseType: 'blob' })

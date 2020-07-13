@@ -38,6 +38,18 @@ Vue.component('ArcgisMap',ArcgisMap)
 Vue.component('MySideBar',MySideBar)
 Vue.component('MyFooter',MyFooter)
 Vue.component('CardTitle',CardTitle)
+
+Vue.prototype.$btn = {
+  create: 'md-add',
+  edit: 'md-create',
+  del: 'md-trash',
+  export: 'md-share-alt',
+  play: 'md-play',
+  stop: 'md-pause',
+  look: 'md-eye',
+  register: 'md-checkmark-circle',
+  download: 'md-download'
+}
 new Vue({
   router,
   store,

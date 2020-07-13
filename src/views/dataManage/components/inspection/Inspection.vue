@@ -1,13 +1,13 @@
 <template>
-  <div class="h100">
-    <Row style="height:100%">
-      <Col span="4" style="overflow:hidden" class="scroll bg-white h100">
-        <div class="pd h100">
-          <Menu :active-name="activeName" @on-select="onSelect" class="h100" :style="`width:${remToPx(15)}px`">
+  <div class="h100 inspection">
+    <Row style="height:100%;">
+      <Col span="4" style="overflow:hidden; height: 100%;" class="bg-white">
+        <div class="mg h100" style="overflow: auto;">
+          <Menu :active-name="activeName" @on-select="onSelect" class="h100">
             <MenuItem
-              :name="item.key"
-              v-for="(item,index) in siderMenuList"
-              :key="`menu_${index}`"
+                :name="item.key"
+                v-for="(item,index) in siderMenuList"
+                :key="`menu_${index}`"
             >{{item.name}}</MenuItem>
           </Menu>
         </div>
@@ -21,9 +21,9 @@
   </div>
 </template>
 <script>
-import { remToPx } from "@/utils/common";
-import { getzjML } from "@/api/dataManage/inspection";
-export default {
+  import {getzjML} from "@/api/dataManage/inspection";
+
+  export default {
   name: "Home",
   data() {
     return {
@@ -50,7 +50,6 @@ export default {
   created(){
     let pathArr = this.$route.path.split('/')
     this.activeName = pathArr[pathArr.length-1]//this.$route.query.id
-
     this.getzjML()
   },
   methods: {
@@ -75,4 +74,17 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+  .inspection {
+    overflow: hidden;
+    ::v-deep .inspection-table {
+      margin-top: 10px;
+    }
+    /* 去除menu组件自带1px边框*/
+    ::v-deep .ivu-menu {
+      width: 90% !important;
+      &:after {
+        width: 0;
+      }
+    }
+  }
 </style>

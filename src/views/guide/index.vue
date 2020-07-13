@@ -1,11 +1,8 @@
 <template>
   <div class="home h100 guide guide-bg h100 w100">
     <h1>昭通市国土空间基础信息平台</h1>
-    <Row class="h100"   :style="{ height: `calc(100% - ${remToPx(8)}px)` }">
-      <Col span="2">
-        <div style="color:transparent">1</div>
-      </Col>
-      <Col span="21" class="h100">
+    <Row class="h100" :style="{ height: `calc(100% - ${remToPx(8)}px)` }">
+      <Col span="24" class="h100">
         <div class="guide-body h100"
         >
           <div class="guide-body-top">
@@ -156,6 +153,7 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 0 120px;
     }
     &-top {
       &-left {
@@ -191,8 +189,7 @@ export default {
         background-repeat: no-repeat;
         background-position: center center;
         background-size: 100% 100%;
-        width: 14%;
-
+        width: 230px;
         padding-top: 4rem;
         padding-bottom: 2rem;
         color: rgba(0, 0, 0, 0.6);

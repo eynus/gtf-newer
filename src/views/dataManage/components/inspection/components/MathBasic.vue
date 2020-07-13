@@ -1,17 +1,17 @@
 <template>
   <div class="h100">
     <div class="mt opt-area" ref="opt">
-      <Form inline>
-        <FormItem>
-          <Button v-auth="['page_5_4_1']" type="success" @click="handleStartRule">默认启用</Button>
-        </FormItem>
-          <FormItem>
-            <Button v-auth="['page_5_4_5']" type="primary" @click="handleStopRule">停止启用</Button>
-          </FormItem>
-      </Form>
+      <div class="g-button-wrapper">
+        <div v-auth="['page_5_4_1']" @click="handleStartRule" class="g-button">
+          <Icon :type="$btn.play" /> 启用</div>
+        <div v-auth="['page_5_4_5']" @click="handleStopRule" class="g-button">
+          <Icon :type="$btn.stop" /> 停用</div>
+      </div>
     </div>
     <Table
+      class="inspection-table"
       border
+      stripe
       size="small"
       :height="tbhopt"
       :columns="tableColumns"
@@ -23,14 +23,16 @@
       @on-select-all-cancel="handleCancelRowAll"
     >
       <template slot="ruleStatusSlot" slot-scope="{row,index}">
-    <span :class="`${row.ruleStatus==='启用'?'text-blue':'text-normal'}`">{{row.ruleStatus}}</span>
+        <span>{{row.ruleStatus}}</span>
       </template>
     </Table>
     <Page
       class="pagination"
       :total="page.total"
       @on-change="changePage"
+      @on-page-size-change="changePageSize"
       show-total
+      show-sizer
       show-elevator
       :current="page.current"
       :page-size="page.pageSize"
@@ -247,7 +249,7 @@ export default {
           // align: "center"
         },
         {
-          title: "默认启用",
+          title: "必须应用规则",
           slot: "ruleStatusSlot",
           align: "center",
           width: remToPx(10)

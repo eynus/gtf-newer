@@ -91,7 +91,10 @@ const InspectionMixins = {
         //切换页数
         changePage(index) {
             this.page.current = index;
-            this.getZJListPageById();
+        },
+        changePageSize(val) {
+          this.page.pageSize = val
+          this.getZJListPageById()
         },
         // 请求list
         getZJListPageById() {
@@ -155,7 +158,7 @@ const InspectionMixins = {
         handleSelectRowAll(selection) {
             this.selectedRowIds = selection.map((item, index) => item.id + '');
         },
-        //   取消选择某一行
+        //   取消选择某一行isRuleUpdate
         handleCancelRow(selection, row) {
             for (let i = 0; i < this.selectedRowIds.length; i++) {
                 if (this.selectedRowIds[i] === row.id + "") {

@@ -13,12 +13,15 @@
 
         <div class="opt-area">
           <div class="gohome" @click="returnHome">
-            返回主页
+            <span>
+              <Icon type="ios-home" />
+              主页
+            </span>
           </div>
           <div class="user-info">
-            <Icon type="md-person" class="mr" />
             <Dropdown placement="bottom-start">
               <a href="javascript:void(0)">
+                <Icon type="md-person" />
                 {{userName}}
                 <Icon type="ios-arrow-down"></Icon>
               </a>
@@ -96,7 +99,7 @@ export default {
 #head {
   height: 6vh;
   line-height: 6vh;
-  font-size: 1.75rem;
+  font-size: 24px;
   font-weight: bold;
   color: rgba(255, 255, 255, 0.9);
   padding-left: 10px;
@@ -114,25 +117,40 @@ export default {
       font-style: normal;
     }
   }
-  .gohome {
-    color: #fff;
-    font-weight: normal;
-    cursor: pointer;
-    font-size: 1.25rem;
-    margin-right: 1rem;
-    float: left;
-  }
-  .user-info {
-    float: left;
-    margin-right: 1rem;
-    color: #fff;
-    font-weight: normal;
-    cursor: pointer;
-    font-size: 1.25rem;
-    a {
+  .opt-area {
+    .gohome {
+      float: left;
+      margin-right: 1rem;
+      margin-top: -3px;
+      box-sizing: border-box;
+      cursor: pointer;
       color: #fff;
+      span {
+        font-weight: normal;
+        font-size: 14px;
+        background: #7bb1ff;
+        padding: 7px 10px;
+        border-radius: 10px;
+      }
+    }
+    .user-info {
+       height: 100%;
+       float: left;
+       margin-right: 1rem;
+       color: #fff;
+       font-weight: normal;
+       cursor: pointer;
+       font-size: 1.25rem;
+       a {
+         color: #fff;
+       }
+     }
+    ::v-deep .ivu-select-dropdown {
+      z-index: 2000;
     }
   }
+
+
 }
 #content {
   height: 94vh;

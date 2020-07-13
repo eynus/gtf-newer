@@ -47,11 +47,36 @@ export const logOpt = {
 export const dbback = {
   value: [
     {
-      label: '全部备份',
-      value: 0
-    }, {
-      label: '局部备份',
+      label: '数据库备份',
       value: 1
+    }, {
+      label: '文件备份',
+      value: 2
+    }
+  ],
+  handler: function (val) {
+    let result = this.value.filter(item => item.value === val)
+    return result.length ? result[0].label : ''
+  }
+}
+
+export const dbbackModule = {
+  value: [
+    {
+      label: '一张图可视化',
+      value: 1
+    }, {
+      label: '实施监督管理',
+      value: 2
+    }, {
+      label: '模型指标配置管理',
+      value: 3
+    }, {
+      label: '数据管理',
+      value: 4
+    }, {
+      label: '运维管理',
+      value: 5
     }
   ],
   handler: function (val) {

@@ -24,13 +24,20 @@
 .ivu-table-small{
     font-size: 0.875rem;
 }
-.ivu-table-overflowX {
-    overflow-x: hidden !important;
-  }
+// 去除table 固定列时凸起的阴影
+.ivu-table-fixed {
+  box-shadow: none !important;
+}
 
-  .ivu-table-tip {
-    overflow-x: hidden !important;
-  }
+// table无数据时去除横向滚动条
+.ivu-table-tip {
+  height: auto !important;
+}
+
+
+  //.ivu-table-tip {
+  //  overflow-x: hidden !important;
+  //}
 //   下拉框高度
   .ivu-select-dropdown{
     ol, ul, dl{

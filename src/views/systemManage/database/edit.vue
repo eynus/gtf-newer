@@ -20,24 +20,39 @@
             </FormItem>
           </Col>
           <Col class-name="col-item">
-            <Row>
-              <FormItem label="备份数据表" prop="backupTableNames">
-                <Select v-model="formData.backupTableNames" v-show="false"></Select>
-                <div>{{ formData.backupTableNames.join(' ')}}</div>
-              </FormItem>
-
-            </Row>
+            <FormItem label="备份类型" prop="backupType">
+              <RadioGroup v-model="formData.backupType">
+                <Radio label="1">
+                  <span>数据库备份</span>
+                </Radio>
+                <Radio label="2">
+                  <span>文件备份</span>
+                </Radio>
+              </RadioGroup>
+            </FormItem>
           </Col>
-
+          <Col class-name="col-item">
+            <FormItem label="备份模块" prop="backupModule">
+              <RadioGroup v-model="formData.backupModule">
+                <Radio label="1">
+                  <span>一张图可视化</span>
+                </Radio>
+                <Radio label="2">
+                  <span>实施监督管理</span>
+                </Radio>
+                <Radio label="3">
+                  <span>模型指标配置管理</span>
+                </Radio>
+                <Radio label="4">
+                  <span>数据管理</span>
+                </Radio>
+                <Radio label="5">
+                  <span>运维管理</span>
+                </Radio>
+              </RadioGroup>
+            </FormItem>
+          </Col>
         </Row>
-      </Form>
-      <Form :label-width="0" inline>
-        <FormItem style="width: 80%;">
-          <Input v-model.trim="tablename" type="text" placeholder="请填写备份数据表"  style="width: 100%;"/>
-        </FormItem>
-        <FormItem style="width: 15%;">
-          <Button @click="addTbname" style="width: 100%;">添加</Button>
-        </FormItem>
       </Form>
       <div class="drawer-footer">
         <Button style="margin-right: 8px" type="primary" @click="onSubmit">提交</Button>
@@ -66,7 +81,10 @@
           position: 'static'
         },
         formData: {
-          backupTableNames: []
+          backupName: '',
+          backupExplain: '',
+          backupModule: "1",
+          backupType: "1"
         },
         tablename: '',
         rules: {
@@ -76,9 +94,12 @@
           backupExplain: [
             { required: true, message: '请填写备份说明！', trigger: 'blur' }
           ],
-          backupTableNames: [
-            { required: true, type: 'array', message: '请填写表名称！', trigger: 'change' }
+          backupModule: [
+            { required: true, message: '请选择备份模块！', trigger: 'change' }
           ],
+          backupType: [
+            { required: true, message: '请选择备份类型！', trigger: 'change' }
+          ]
         }
       }
     },
@@ -99,9 +120,10 @@
       resetForm() {
         this.$refs['form'].resetFields()
         this.formData = {
-          backupTableNames: [],
           backupName: '',
-          backupExplain: ''
+          backupExplain: '',
+          backupModule: '',
+          backupType: ''
         }
         this.tablename = ''
       },

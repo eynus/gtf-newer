@@ -4,15 +4,15 @@
           <div ref="opt">
             <div class="g-button-wrapper">
               <button v-auth="['page_4_1_1']" @click="insert" class="g-button">
-                <Icon type="ios-add-circle-outline" />
+                <Icon :type="$btn.create" />
                 <span> 新建</span>
               </button>
               <button v-auth="['page_4_1_2']" @click="edit" class="g-button">
-                <Icon type="ios-create-outline" />
+                <Icon :type="$btn.edit" />
                 <span> 修改</span>
               </button>
               <button v-auth="['page_4_1_3']" @click="del" class="g-button">
-                <Icon type="ios-trash-outline" />
+                <Icon :type="$btn.del" />
                 <span> 删除</span>
               </button>
             </div>
@@ -112,66 +112,66 @@
             type: "selection",
             key: "pkId",
             align: "center",
-            width: remToPx(5)
+            width: remToPx(5),
+            fixed: 'left'
           },
           {
             title: '序号',
             type: 'index',
             width: remToPx(5),
-            align: 'center'
+            align: 'center',
+            fixed: 'left'
           },
           {
             title: "用户名",
             key: "userName",
             align: "center",
-            width: remToPx(18),
+            minWidth: remToPx(10),
             tooltip: true,
+            fixed: 'left'
           },
           {
             title: "角色名",
             key: "roleName",
             align: "center",
-            width: remToPx(10),
+            minWidth: remToPx(10),
             tooltip: true,
           },
           {
             title: "真实姓名",
             key: "realName",
             align: "center",
-            width: remToPx(10),
-            tooltip: true,
+            minWidth: remToPx(10),
           },
           {
             title: "所属行政区划",
             key: "placeName",
             align: "center",
-            width: remToPx(11),
-            tooltip: true,
+            minWidth: remToPx(11),
           },
           {
             title: "电话号码",
             key: "userPhone",
             align: "center",
-            width: remToPx(16),
-            tooltip: true,
+            minWidth: remToPx(16),
           },
           {
             title: "邮箱",
             key: "userEmail",
             align: "center",
-            tooltip: true,
+            minWidth: remToPx(16),
           },
           {
             title: "创建时间",
             key: "createDate",
             align: "center",
-            tooltip: true,
+            minWidth: remToPx(16),
           },
           {
             title: "更新时间",
             key: "updateDate",
             align: "center",
-            tooltip: true,
+            minWidth: remToPx(16),
           }
         ],
         datas: [],
